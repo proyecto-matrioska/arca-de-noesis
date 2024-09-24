@@ -3,7 +3,7 @@ import './Editor.css'
 const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
 
-function Duality({ duality, onChange }) {
+function Duality({ duality, onChange, intentional = true }) {
   const [a, b, c, d] = duality
   const changeHandler = index => e => {
     const updatedDuality = [a, b, c, d]
@@ -15,14 +15,18 @@ function Duality({ duality, onChange }) {
       <thead>
         <tr>
           <th>&nbsp;</th>
+          <th>&nbsp;</th>
           <th>Intensión</th>
           <th>Extensión</th>
         </tr>
       </thead>
       <tbody>
         <tr>
+          <td rowSpan="2">
+            <b>{intentional ? 'I.' : 'E.'}</b>
+          </td>
           <td>
-            <b>D.I.</b>
+            <b>I.</b>
           </td>
           <td>
             <input type="text" value={a} onChange={changeHandler(0)} />
@@ -33,7 +37,7 @@ function Duality({ duality, onChange }) {
         </tr>
         <tr>
           <td>
-            <b>D.E.</b>
+            <b>E.</b>
           </td>
           <td>
             <input type="text" value={c} onChange={changeHandler(2)} />
@@ -67,10 +71,18 @@ function DataItem({ index, item, onChange }) {
             </center>
           </li>
           <li>
-            <Duality duality={x} onChange={changeHandler(0)} />
+            <Duality
+              duality={x}
+              onChange={changeHandler(0)}
+              intentional={true}
+            />
           </li>
           <li>
-            <Duality duality={y} onChange={changeHandler(1)} />
+            <Duality
+              duality={y}
+              onChange={changeHandler(1)}
+              intentional={false}
+            />
           </li>
         </ul>
       </div>
