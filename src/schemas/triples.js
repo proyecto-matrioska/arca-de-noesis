@@ -15,6 +15,43 @@ export const toEmpiricalTriples = (x, y) => [
   [y[3], x[1], x[3]],
 ]
 
+const squareLines = () => [
+  {
+    type: 'line',
+    x: 285,
+    y: 80,
+    width: 100,
+    strokeStyle: 'dotted',
+    strokeColor: palette.LIGHT_BLUE,
+  },
+  {
+    type: 'line',
+    x: 285,
+    y: 530,
+    width: 100,
+    strokeStyle: 'dotted',
+    strokeColor: palette.LIGHT_BLUE,
+  },
+  {
+    type: 'line',
+    x: 105,
+    y: 260,
+    width: 1,
+    height: 100,
+    strokeStyle: 'dotted',
+    strokeColor: palette.PURPLE,
+  },
+  {
+    type: 'line',
+    x: 555,
+    y: 260,
+    width: 1,
+    height: 100,
+    strokeStyle: 'dotted',
+    strokeColor: palette.PURPLE,
+  },
+]
+
 export const triple = (
   a,
   b,
@@ -120,6 +157,7 @@ export const tripleSquare = (a, b, c, d) =>
         })
       )
     )
+    .concat(squareLines())
 
 export const empiricalTripleSquare = (a, b, c, d) =>
   triple(...c, {
@@ -172,3 +210,4 @@ export const empiricalTripleSquare = (a, b, c, d) =>
         })
       )
     )
+    .concat(squareLines())
