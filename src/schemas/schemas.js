@@ -11,26 +11,10 @@ import { complexSquare, square } from './squares'
 import { complexOctagon } from './octagons'
 import { dialectic } from './dialectics'
 import { logo } from './logo'
-
-export const palette = {
-  BLUE: '#3846C8',
-  RED: '#FF2B2B',
-  BLACK: '#000000',
-  DARK_GRAY: '#495057',
-  LIGHT_BLUE: '#7F89E1',
-  PURPLE: '#872BC5',
-  CYAN: '#007C7C',
-}
+import { palette } from './palette'
+import { translateElements } from './translateElements'
 
 const swapTetrads = ([x, y]) => [y, x]
-
-export const translateElements = (x, y, elements) =>
-  elements.map(e => {
-    const r = { ...e }
-    if (!isNaN(r.x)) r.x = r.x + x
-    if (!isNaN(r.y)) r.y = r.y + y
-    return r
-  })
 
 export const initialScreen = () =>
   logo().concat([

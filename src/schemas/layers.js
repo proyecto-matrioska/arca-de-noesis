@@ -1,4 +1,4 @@
-import { palette } from './schemas'
+import { palette } from './palette'
 
 export const dialecticLayers = (x, y, z) => [
   {

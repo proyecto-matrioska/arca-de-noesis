@@ -1,4 +1,4 @@
-import { palette } from './schemas'
+import { palette } from './palette'
 import { complexSquare } from './squares'
 
 export const complexOctagon = (s1, s2, [a, b, c, d]) =>

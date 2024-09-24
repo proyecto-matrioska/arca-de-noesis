@@ -1,4 +1,4 @@
-import { palette } from './schemas'
+import { palette } from './palette'
 
 export const procesual = (a, b, c) => [
   {

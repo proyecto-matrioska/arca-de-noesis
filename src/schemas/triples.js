@@ -1,4 +1,5 @@
-import { palette, translateElements } from './schemas'
+import { translateElements } from './translateElements'
+import { palette } from './palette'
 
 export const toTriples = (x, y) => [
   [y[0], x[2], x[1]],

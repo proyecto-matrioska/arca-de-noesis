@@ -1,5 +1,6 @@
 import { dual } from './duals'
-import { palette, translateElements } from './schemas'
+import { translateElements } from './translateElements'
+import { palette } from './palette'
 
 export const dialectic = (
   a,

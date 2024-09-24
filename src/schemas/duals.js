@@ -1,4 +1,5 @@
-import { palette, translateElements } from './schemas'
+import { translateElements } from './translateElements'
+import { palette } from './palette'
 
 export const dual = (
   a,
