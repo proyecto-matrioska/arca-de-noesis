@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/arca-de-noesis/static/css/main.4e024343.css",
+    "main.js": "/arca-de-noesis/static/js/main.f7bd1020.js",
+    "index.html": "/arca-de-noesis/index.html",
+    "main.4e024343.css.map": "/arca-de-noesis/static/css/main.4e024343.css.map",
+    "main.f7bd1020.js.map": "/arca-de-noesis/static/js/main.f7bd1020.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4e024343.css",
+    "static/js/main.f7bd1020.js"
+  ]
+}
