@@ -204,6 +204,27 @@ function App() {
     setData(updatedData)
   }
 
+  const dispatchInsert = index => {
+    if (data.length <= 0) {
+      setData([
+        [
+          ['', '', '', ''],
+          ['', '', '', ''],
+        ],
+      ])
+      return
+    }
+    const updatedData = [
+      ...data.slice(0, index + 1),
+      [
+        ['', '', '', ''],
+        ['', '', '', ''],
+      ],
+      ...data.slice(index + 1),
+    ]
+    setData(updatedData)
+  }
+
   const dispatchDelete = index => {
     if (data.length <= 1) {
       setData([])
@@ -229,6 +250,9 @@ function App() {
         break
       case 'append':
         dispatchAppend(index)
+        break
+      case 'insert':
+        dispatchInsert(index)
         break
       case 'delete':
         dispatchDelete(index)

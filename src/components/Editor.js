@@ -59,6 +59,7 @@ function DataItem({ index, item, onChange }) {
     onChange({
       action: 'update',
       data: updatedDataItem,
+      index,
     })
   }
   return (
@@ -92,7 +93,7 @@ function DataItem({ index, item, onChange }) {
           type="button"
           className={`${smallButtonClasses}`}
           title="Subir"
-          onClick={() => onChange({ action: 'move-up' })}
+          onClick={() => onChange({ action: 'move-up', index })}
         >
           ▲
         </button>
@@ -100,15 +101,23 @@ function DataItem({ index, item, onChange }) {
           type="button"
           className={`${smallButtonClasses}`}
           title="Bajar"
-          onClick={() => onChange({ action: 'move-down' })}
+          onClick={() => onChange({ action: 'move-down', index })}
         >
           ▼
         </button>
         <button
           type="button"
           className={`${smallButtonClasses}`}
+          title="Insertar dualidad"
+          onClick={() => onChange({ action: 'insert', index })}
+        >
+          ✚
+        </button>
+        <button
+          type="button"
+          className={`${smallButtonClasses}`}
           title="Eliminar"
-          onClick={() => onChange({ action: 'delete' })}
+          onClick={() => onChange({ action: 'delete', index })}
         >
           ✖
         </button>
@@ -118,12 +127,6 @@ function DataItem({ index, item, onChange }) {
 }
 
 function Editor({ data, onChange }) {
-  const changeHandler = index => action => {
-    onChange({
-      ...action,
-      index,
-    })
-  }
   const appendHandler = () => onChange({ action: 'append' })
   return (
     <div className="Editor">
@@ -132,7 +135,7 @@ function Editor({ data, onChange }) {
           <DataItem
             key={`DataItem-${index}`}
             item={item}
-            onChange={changeHandler(index)}
+            onChange={onChange}
             index={index}
           />
         ))}
