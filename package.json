@@ -1,0 +1,41 @@
+{
+  "name": "arca-de-noesis",
+  "version": "0.1.0",
+  "homepage": "https://proyecto-matrioska.github.io/arca-de-noesis",
+  "private": true,
+  "dependencies": {
+    "@excalidraw/excalidraw": "^0.17.6",
+    "file-saver": "^2.0.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-responsive": "^10.0.0",
+    "react-scripts": "^5.0.1"
+  },
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
+  }
+}

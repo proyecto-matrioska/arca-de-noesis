@@ -1,0 +1,43 @@
+.Editor {
+  font-size: 0.7rem;
+  overflow: auto;
+}
+
+.excalidraw .Editor input[type="text"] {
+  width: 6rem;
+  padding: 0.2rem;
+  font-size: 0.7rem;
+}
+
+.Editor .Dualities {
+  list-style: none;
+  padding: 0.5rem;
+}
+
+.Editor .Dualities > li {
+  padding-bottom: 1rem;
+  border-bottom: 1pt solid lightgray;
+}
+
+.Editor .Dualities ul {
+  list-style: none;
+  padding: 0.5rem 0;
+}
+
+.Editor .Duality {
+  list-style: none;
+  padding: 0.5rem;
+}
+
+.Editor .EditorControls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding-bottom: 3rem;
+}
+
+.Editor .DataItem .ItemControls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
