@@ -1,4 +1,12 @@
+import { useDispatch, useSelector } from 'react-redux'
 import './Editor.css'
+import {
+  deleteEntry,
+  insertEntry,
+  moveDownEntry,
+  moveUpEntry,
+  updateEntry,
+} from '../state/dialecticsSlice'
 
 function Duality({ duality, onChange, intentional = true }) {
   const [a, b, c, d] = duality
@@ -48,17 +56,18 @@ function Duality({ duality, onChange, intentional = true }) {
   )
 }
 
-function DataItem({ index, item, onChange }) {
+function DataItem({ index, item }) {
+  const dispatch = useDispatch()
   const [x, y] = item
   const changeHandler = dualityIndex => updatedDuality => {
-    const updatedDataItem = [x, y]
-    updatedDataItem[dualityIndex] = updatedDuality
-    onChange({
-      action: 'update',
-      data: updatedDataItem,
-      index,
-    })
+    const update = [x, y]
+    update[dualityIndex] = updatedDuality
+    dispatch(updateEntry({ update, index }))
   }
+  const moveUpHandler = () => dispatch(moveUpEntry({ index }))
+  const moveDownHandler = () => dispatch(moveDownEntry({ index }))
+  const insertHandler = () => dispatch(insertEntry({ index }))
+  const deleteHandler = () => dispatch(deleteEntry({ index }))
   return (
     <li className="DataItem">
       <div>
@@ -90,7 +99,7 @@ function DataItem({ index, item, onChange }) {
           type="button"
           className="excalidraw-button"
           title="Subir"
-          onClick={() => onChange({ action: 'move-up', index })}
+          onClick={moveUpHandler}
         >
           ▲
         </button>
@@ -98,7 +107,7 @@ function DataItem({ index, item, onChange }) {
           type="button"
           className="excalidraw-button"
           title="Bajar"
-          onClick={() => onChange({ action: 'move-down', index })}
+          onClick={moveDownHandler}
         >
           ▼
         </button>
@@ -106,7 +115,7 @@ function DataItem({ index, item, onChange }) {
           type="button"
           className="excalidraw-button"
           title="Insertar dualidad"
-          onClick={() => onChange({ action: 'insert', index })}
+          onClick={insertHandler}
         >
           ✚
         </button>
@@ -114,7 +123,7 @@ function DataItem({ index, item, onChange }) {
           type="button"
           className="excalidraw-button"
           title="Eliminar"
-          onClick={() => onChange({ action: 'delete', index })}
+          onClick={deleteHandler}
         >
           ✖
         </button>
@@ -123,17 +132,13 @@ function DataItem({ index, item, onChange }) {
   )
 }
 
-function Editor({ data, onChange }) {
+function Editor() {
+  const data = useSelector(state => state.dialectics.data)
   return (
     <div className="Editor">
       <ul className="Dualities">
         {data.map((item, index) => (
-          <DataItem
-            key={`DataItem-${index}`}
-            item={item}
-            onChange={onChange}
-            index={index}
-          />
+          <DataItem key={`DataItem-${index}`} item={item} index={index} />
         ))}
       </ul>
       <div className="EditorControls" />

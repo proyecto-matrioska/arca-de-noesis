@@ -1,0 +1,7 @@
+.ArcaDeNoesis {
+  height: 100vh;
+}
+
+.ArcaDeNoesis .sidebar__header button {
+  margin-right: 0.5rem;
+}
