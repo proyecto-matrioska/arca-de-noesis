@@ -60,6 +60,12 @@ function ArcaDeNoesis() {
   const initialElements = convertToExcalidrawElements(initialScreen())
   const elements = initialElements
 
+  const updateScene = elements => {
+    excalidrawAPI.updateScene({
+      elements,
+      scrollToContent: true,
+    })
+  }
   const handleFileUpload = e => {
     const { files } = e.target
     if (files && files.length) {
@@ -80,84 +86,51 @@ function ArcaDeNoesis() {
     dispatch(saveDataFile(input, data))
   }
   const dualidadesOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(dualitySequence(data)),
-      scrollToContent: true,
-    })
+    updateScene(convertToExcalidrawElements(dualitySequence(data)))
     dispatch(setSelectedDiagram('dualidades'))
   }
   const cuadrosOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(squareSequence(data)),
-      scrollToContent: true,
-    })
+    updateScene(convertToExcalidrawElements(squareSequence(data)))
     dispatch(setSelectedDiagram('cuadros'))
   }
   const cuadrosComplejosOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(complexSquareSequence(data)),
-      scrollToContent: true,
-    })
+    updateScene(convertToExcalidrawElements(complexSquareSequence(data)))
     dispatch(setSelectedDiagram('cuadros-complejos'))
   }
   const octagonosOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(complexOctagonSequence(data)),
-      scrollToContent: true,
-    })
+    updateScene(convertToExcalidrawElements(complexOctagonSequence(data)))
     dispatch(setSelectedDiagram('octagonos'))
   }
   const octagonosEmpiricosOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(
-        empiricalComplexOctagonSequence(data)
-      ),
-      scrollToContent: true,
-    })
+    updateScene(
+      convertToExcalidrawElements(empiricalComplexOctagonSequence(data))
+    )
     dispatch(setSelectedDiagram('octagonos-empiricos'))
   }
   const triadasOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(tripletSquareSequence(data)),
-      scrollToContent: true,
-    })
+    updateScene(convertToExcalidrawElements(tripletSquareSequence(data)))
     dispatch(setSelectedDiagram('triadas'))
   }
   const triadasEmpiricasOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(
-        empiricalTripleSquareSequence(data)
-      ),
-      scrollToContent: true,
-    })
+    updateScene(
+      convertToExcalidrawElements(empiricalTripleSquareSequence(data))
+    )
     dispatch(setSelectedDiagram('triadas-empiricas'))
   }
   const dialecticaOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(dialecticSequence(data)),
-      scrollToContent: true,
-    })
+    updateScene(convertToExcalidrawElements(dialecticSequence(data)))
     dispatch(setSelectedDiagram('dialectica'))
   }
   const dialecticaEmpíricaOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(empiricalDialecticSequence(data)),
-      scrollToContent: true,
-    })
+    updateScene(convertToExcalidrawElements(empiricalDialecticSequence(data)))
     dispatch(setSelectedDiagram('dialectica-empirica'))
   }
   const procesualOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(procesualSequence(data)),
-      scrollToContent: true,
-    })
+    updateScene(convertToExcalidrawElements(procesualSequence(data)))
     dispatch(setSelectedDiagram('procesual'))
   }
   const capasDiscursivasOptHandler = () => {
-    excalidrawAPI.updateScene({
-      elements: convertToExcalidrawElements(capasDiscursivasSequence(data)),
-      scrollToContent: true,
-    })
+    updateScene(convertToExcalidrawElements(capasDiscursivasSequence(data)))
     dispatch(setSelectedDiagram('capas-discursivas'))
   }
   const editarOptHandler = () => {
@@ -168,7 +141,7 @@ function ArcaDeNoesis() {
     editarOptHandler()
   }
 
-  const updateScene = () => {
+  const updateDiagram = () => {
     switch (selectedDiagram) {
       case 'dualidades':
         dualidadesOptHandler()
@@ -316,7 +289,7 @@ function ArcaDeNoesis() {
               type="button"
               className={smallButtonClasses}
               disabled={selectedDiagram === null}
-              onClick={updateScene}
+              onClick={updateDiagram}
               title="Actualizar diagrama"
             >
               ⟲
