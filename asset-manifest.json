@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/arca-de-noesis/static/css/main.4e024343.css",
-    "main.js": "/arca-de-noesis/static/js/main.98d4bbd1.js",
+    "main.css": "/arca-de-noesis/static/css/main.d965f675.css",
+    "main.js": "/arca-de-noesis/static/js/main.a2594a37.js",
     "index.html": "/arca-de-noesis/index.html",
-    "main.4e024343.css.map": "/arca-de-noesis/static/css/main.4e024343.css.map",
-    "main.98d4bbd1.js.map": "/arca-de-noesis/static/js/main.98d4bbd1.js.map"
+    "main.d965f675.css.map": "/arca-de-noesis/static/css/main.d965f675.css.map",
+    "main.a2594a37.js.map": "/arca-de-noesis/static/js/main.a2594a37.js.map"
   },
   "entrypoints": [
-    "static/css/main.4e024343.css",
-    "static/js/main.98d4bbd1.js"
+    "static/css/main.d965f675.css",
+    "static/js/main.a2594a37.js"
   ]
 }
