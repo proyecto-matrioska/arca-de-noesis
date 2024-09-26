@@ -32,7 +32,12 @@ const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
 
 function App() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([
+    [
+      ['', '', '', ''],
+      ['', '', '', ''],
+    ],
+  ])
   const [dataFilename, setDataFilename] = useState('')
   const [excalidrawAPI, setExcalidrawAPI] = useState(null)
   const [isSidebarOpen, setSidebarOpen] = useState(false)
@@ -193,17 +198,6 @@ function App() {
     setData(updatedData)
   }
 
-  const dispatchAppend = index => {
-    const updatedData = [
-      ...data,
-      [
-        ['', '', '', ''],
-        ['', '', '', ''],
-      ],
-    ]
-    setData(updatedData)
-  }
-
   const dispatchInsert = index => {
     if (data.length <= 0) {
       setData([
@@ -227,7 +221,12 @@ function App() {
 
   const dispatchDelete = index => {
     if (data.length <= 1) {
-      setData([])
+      setData([
+        [
+          ['', '', '', ''],
+          ['', '', '', ''],
+        ],
+      ])
       return
     }
     const updatedData =
@@ -247,9 +246,6 @@ function App() {
         break
       case 'move-down':
         dispatchMoveDown(index)
-        break
-      case 'append':
-        dispatchAppend(index)
         break
       case 'insert':
         dispatchInsert(index)
@@ -357,10 +353,12 @@ function App() {
               Rosalind Krauss - Espacio y arquitectura
             </MainMenu.Item>
           </MainMenu.Group>
+          <MainMenu.Separator />
           <MainMenu.Group title="Diagrama actual">
             <MainMenu.DefaultItems.Export />
             <MainMenu.DefaultItems.SaveAsImage />
           </MainMenu.Group>
+          <MainMenu.Separator />
           <MainMenu.Group title="Galería de esquemas">
             <MainMenu.Item onSelect={dualidadesOptHandler}>
               Dualidades

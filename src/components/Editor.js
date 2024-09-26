@@ -1,8 +1,5 @@
 import './Editor.css'
 
-const smallButtonClasses =
-  'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
-
 function Duality({ duality, onChange, intentional = true }) {
   const [a, b, c, d] = duality
   const changeHandler = index => e => {
@@ -91,7 +88,7 @@ function DataItem({ index, item, onChange }) {
       <div className="ItemControls">
         <button
           type="button"
-          className={`${smallButtonClasses}`}
+          className="excalidraw-button"
           title="Subir"
           onClick={() => onChange({ action: 'move-up', index })}
         >
@@ -99,7 +96,7 @@ function DataItem({ index, item, onChange }) {
         </button>
         <button
           type="button"
-          className={`${smallButtonClasses}`}
+          className="excalidraw-button"
           title="Bajar"
           onClick={() => onChange({ action: 'move-down', index })}
         >
@@ -107,7 +104,7 @@ function DataItem({ index, item, onChange }) {
         </button>
         <button
           type="button"
-          className={`${smallButtonClasses}`}
+          className="excalidraw-button"
           title="Insertar dualidad"
           onClick={() => onChange({ action: 'insert', index })}
         >
@@ -115,7 +112,7 @@ function DataItem({ index, item, onChange }) {
         </button>
         <button
           type="button"
-          className={`${smallButtonClasses}`}
+          className="excalidraw-button"
           title="Eliminar"
           onClick={() => onChange({ action: 'delete', index })}
         >
@@ -127,7 +124,6 @@ function DataItem({ index, item, onChange }) {
 }
 
 function Editor({ data, onChange }) {
-  const appendHandler = () => onChange({ action: 'append' })
   return (
     <div className="Editor">
       <ul className="Dualities">
@@ -140,16 +136,7 @@ function Editor({ data, onChange }) {
           />
         ))}
       </ul>
-      <div className="EditorControls">
-        <button
-          type="button"
-          className={`${smallButtonClasses}`}
-          title="Nueva dualidad"
-          onClick={appendHandler}
-        >
-          ✚
-        </button>
-      </div>
+      <div className="EditorControls" />
     </div>
   )
 }
