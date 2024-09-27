@@ -136,12 +136,14 @@ function Editor() {
   const data = useSelector(state => state.dialectics.data)
   return (
     <div className="Editor">
-      <ul className="Dualities">
-        {data.map((item, index) => (
-          <DataItem key={`DataItem-${index}`} item={item} index={index} />
-        ))}
-      </ul>
-      <div className="EditorControls" />
+      <div className='EditorContents'>
+        <ul className="Dualities">
+          {data.map((item, index) => (
+            <DataItem key={`DataItem-${index}`} item={item} index={index} />
+          ))}
+        </ul>
+        <div className="EditorControls" />
+      </div>
     </div>
   )
 }

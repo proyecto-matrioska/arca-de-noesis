@@ -1,5 +1,14 @@
 .Editor {
+  display: flex;
+  flex: 1 1 auto;
+  height: 1px;
   font-size: 0.7rem;
+}
+
+.Editor .EditorContents {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   overflow: auto;
 }
 

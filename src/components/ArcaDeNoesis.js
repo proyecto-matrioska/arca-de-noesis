@@ -134,7 +134,8 @@ function ArcaDeNoesis() {
     dispatch(setSelectedDiagram('capas-discursivas'))
   }
   const editarOptHandler = () => {
-    if (!isSidebarOpen) excalidrawAPI.toggleSidebar({ name: 'edit-sidebar' })
+    if (!isSidebarOpen)
+      excalidrawAPI.toggleSidebar({ name: 'edit-sidebar', tab: 'dataEditor' })
   }
   const loadExample = (filename, exampleData) => () => {
     dispatch(setDialecticsData({ filename, data: exampleData }))
@@ -314,7 +315,18 @@ function ArcaDeNoesis() {
             </button> */}
             <b>{dataFilename}</b>
           </Sidebar.Header>
-          <Editor />
+          <Sidebar.Tabs>
+            <Sidebar.Tab tab="dataEditor">
+              <Editor />
+            </Sidebar.Tab>
+            <Sidebar.Tab tab="diagramOptions">...</Sidebar.Tab>
+            <Sidebar.TabTriggers>
+              <Sidebar.TabTrigger tab="dataEditor">Datos</Sidebar.TabTrigger>
+              <Sidebar.TabTrigger tab="diagramOptions">
+                Esquema
+              </Sidebar.TabTrigger>
+            </Sidebar.TabTriggers>
+          </Sidebar.Tabs>
         </Sidebar>
       </Excalidraw>
       <input
