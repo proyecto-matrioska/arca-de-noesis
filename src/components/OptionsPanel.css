@@ -1,0 +1,20 @@
+.OptionsPanel {
+  display: flex;
+  flex: 1 1 auto;
+  height: 1px;
+  font-size: 0.7rem;
+}
+
+.OptionsPanel .OptionsPanelContents {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.OptionsPanel .OptionsPanelContents > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+}
