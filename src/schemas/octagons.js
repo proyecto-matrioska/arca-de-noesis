@@ -277,4 +277,4 @@ export const complexOctagonSequence = (dualities, schemaOptions) => {
   ) */
 
 export const empiricalComplexOctagonSequence = (dualities, schemaOptions) =>
-  complexOctagonSequence(dualities.map(swapTetrads))
+  complexOctagonSequence(dualities.map(swapTetrads), schemaOptions)
