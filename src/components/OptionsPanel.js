@@ -88,7 +88,7 @@ const OptionsPanel = () => {
       <div className="OptionsPanelContents">
         {Object.keys(diagramOptions).map((k, i) => (
           <SchemaOption
-            key={`option-${k}-$[i]`}
+            key={`${selectedDiagram}-option-${k}-${i}`}
             optionId={k}
             optionData={diagramOptions[k]}
           />
