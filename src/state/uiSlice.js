@@ -38,25 +38,35 @@ const schemaOptions = {
       options: [
         { value: 'lista', name: 'lista consecutiva' },
         { value: 'triadas', name: 'agrupar por triadas' },
-        { value: 'cuadros', name: 'agrupar por cuadros' },
+        { value: 'tetradas', name: 'agrupar por tétradas' },
       ],
       longDescription: 'Agrupar y acomodar cuadros',
     },
   },
   octagonos: {
-    elementDescriptions: {
-      type: 'bool',
-      name: 'Descripciones de elementos principales',
-      value: false,
-      longDescription: 'Descripciones de los elementos principales',
+    arrangement: {
+      type: 'select',
+      name: 'Agrupar',
+      value: 'lista',
+      options: [
+        { value: 'lista', name: 'lista consecutiva' },
+        { value: 'triadas', name: 'agrupar por triadas' },
+        { value: 'tetradas', name: 'agrupar por tétradas' },
+      ],
+      longDescription: 'Agrupar y acomodar cuadros',
     },
   },
   'octagonos-empiricos': {
-    elementDescriptions: {
-      type: 'bool',
-      name: 'Descripciones de elementos principales',
-      value: false,
-      longDescription: 'Descripciones de los elementos principales',
+    arrangement: {
+      type: 'select',
+      name: 'Agrupar',
+      value: 'lista',
+      options: [
+        { value: 'lista', name: 'lista consecutiva' },
+        { value: 'triadas', name: 'agrupar por triadas' },
+        { value: 'tetradas', name: 'agrupar por tétradas' },
+      ],
+      longDescription: 'Agrupar y acomodar cuadros',
     },
   },
   triadas: {

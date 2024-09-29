@@ -1,3 +1,5 @@
+import { groupByTetrads } from './groupByTetrads'
+import { groupByTriads } from './groupByTriads'
 import { palette } from './palette'
 import { translateElements } from './translateElements'
 
@@ -74,67 +76,73 @@ export const square = ([a, b, c, d]) => [
   },
 ]
 
-export const complexSquare = (s1, [a, b, c, d]) =>
-  square(s1).concat([
-    {
-      type: 'text',
-      x: 100,
-      y: 85,
-      textAlign: 'center',
-      fontSize: 20,
-      text: a,
-      strokeColor: palette.BLUE,
-      angle: 0.7854,
-    },
-    {
-      type: 'text',
-      x: 75,
-      y: 110,
-      textAlign: 'center',
-      fontSize: 20,
-      text: b,
-      strokeColor: palette.RED,
-      angle: 0.7854,
-    },
-    {
-      type: 'text',
-      x: 70,
-      y: 210,
-      textAlign: 'center',
-      fontSize: 20,
-      text: c,
-      strokeColor: palette.BLUE,
-      angle: -0.7854,
-    },
-    {
-      type: 'text',
-      x: 95,
-      y: 230,
-      textAlign: 'center',
-      fontSize: 20,
-      text: d,
-      strokeColor: palette.RED,
-      angle: -0.7854,
-    },
-    {
-      type: 'line',
-      x: 20,
-      y: 50,
-      width: 260,
-      height: 240,
-      strokeStyle: 'dotted',
-      strokeColor: palette.CYAN,
-    },
-    {
-      type: 'line',
-      x: 280,
-      y: 50,
-      width: -260,
-      height: 240,
-      strokeStyle: 'dotted',
-      strokeColor: palette.CYAN,
-    },
-  ])
+export const complexSquare = (s1, [a, b, c, d], schemaOptions) =>
+  square(s1)
+    .concat([
+      {
+        type: 'text',
+        x: 100,
+        y: 85,
+        textAlign: 'center',
+        fontSize: 20,
+        text: a,
+        strokeColor: palette.BLUE,
+        angle: 0.7854,
+      },
+      {
+        type: 'text',
+        x: 75,
+        y: 110,
+        textAlign: 'center',
+        fontSize: 20,
+        text: b,
+        strokeColor: palette.RED,
+        angle: 0.7854,
+      },
+      {
+        type: 'text',
+        x: 70,
+        y: 210,
+        textAlign: 'center',
+        fontSize: 20,
+        text: c,
+        strokeColor: palette.BLUE,
+        angle: -0.7854,
+      },
+      {
+        type: 'text',
+        x: 95,
+        y: 230,
+        textAlign: 'center',
+        fontSize: 20,
+        text: d,
+        strokeColor: palette.RED,
+        angle: -0.7854,
+      },
+      {
+        type: 'line',
+        x: 20,
+        y: 50,
+        width: 260,
+        height: 240,
+        strokeStyle: 'dotted',
+        strokeColor: palette.CYAN,
+      },
+      {
+        type: 'line',
+        x: 280,
+        y: 50,
+        width: -260,
+        height: 240,
+        strokeStyle: 'dotted',
+        strokeColor: palette.CYAN,
+      },
+    ])
+    .concat(
+      schemaOptions.elementDescriptions.value
+        ? complexSquareElementDescriptions()
+        : []
+    )
 
 const squareElementDescriptions = () => [
   {
@@ -283,15 +291,48 @@ export const squareSequence = (dualities, schemaOptions) =>
     )
   )
 
-export const complexSquareSequence = (dualities, schemaOptions) =>
-  dualities.flatMap(([x, y], i) =>
+export const complexSquareSequence = (dualities, schemaOptions) => {
+  if (schemaOptions.arrangement.value === 'triadas')
+    return groupByTriads(dualities).flatMap(([x, y, z], i) =>
+      translateElements(
+        0,
+        1400 * i,
+        translateElements(0, 500, complexSquare(x[0], x[1], schemaOptions))
+          .concat(
+            translateElements(
+              800,
+              500,
+              complexSquare(y[0], y[1], schemaOptions)
+            )
+          )
+          .concat(
+            translateElements(400, 0, complexSquare(z[0], z[1], schemaOptions))
+          )
+      )
+    )
+  if (schemaOptions.arrangement.value === 'tetradas')
+    return groupByTetrads(dualities).flatMap(([w, x, y, z], i) =>
+      translateElements(
+        0,
+        1400 * i,
+        translateElements(800, 500, complexSquare(w[0], w[1], schemaOptions))
+          .concat(
+            translateElements(0, 500, complexSquare(x[0], x[1], schemaOptions))
+          )
+          .concat(
+            translateElements(0, 0, complexSquare(y[0], y[1], schemaOptions))
+          )
+          .concat(
+            translateElements(800, 0, complexSquare(z[0], z[1], schemaOptions))
+          )
+      )
+    )
+  // default list
+  return dualities.flatMap(([x, y], i) =>
     translateElements(
       0,
       700 * i + ((i + 1) % 2) * 50,
-      complexSquare(x, y).concat(
-        schemaOptions.elementDescriptions.value
-          ? complexSquareElementDescriptions()
-          : []
-      )
+      complexSquare(x, y, schemaOptions)
     )
   )
+}
