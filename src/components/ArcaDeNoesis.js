@@ -48,9 +48,7 @@ function ArcaDeNoesis() {
   const [excalidrawAPI, setExcalidrawAPI] = useState(null)
   const isSidebarOpen = useSelector(state => state.ui.isSidebarOpen)
   const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
-  const schemaOptions = useSelector(
-    state => state.ui.schemaOptions[selectedDiagram]
-  )
+  const schemaOptions = useSelector(state => state.ui.schemaOptions)
   const inputFile = useRef(null)
   const defaultDarkMode = useMediaQuery(
     {
@@ -143,7 +141,7 @@ function ArcaDeNoesis() {
         break
     }
     const elements = convertToExcalidrawElements(
-      makeElements(data, schemaOptions)
+      makeElements(data, schemaOptions[schema])
     )
     updateScene(elements)
     dispatch(setSelectedDiagram(schema))
