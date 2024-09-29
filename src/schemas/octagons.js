@@ -1,5 +1,7 @@
 import { palette } from './palette'
+import { swapTetrads } from './swapTetrads'
 import { complexSquare } from './squares'
+import { translateElements } from './translateElements'
 
 export const complexOctagon = (s1, s2, [a, b, c, d]) =>
   complexSquare(s1, s2).concat([
@@ -112,3 +114,17 @@ export const complexOctagon = (s1, s2, [a, b, c, d]) =>
       strokeColor: palette.RED,
     },
   ])
+
+export const complexOctagonSequence = dualities =>
+  dualities.flatMap(([x, y], i) =>
+    translateElements(
+      0,
+      800 * i + ((i + 1) % 2) * 100,
+      dualities[i + 1]
+        ? complexOctagon(x, y, dualities[i + 1][0])
+        : complexSquare(x, y)
+    )
+  )
+
+export const empiricalComplexOctagonSequence = dualities =>
+  complexOctagonSequence(dualities.map(swapTetrads))

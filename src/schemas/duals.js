@@ -55,3 +55,8 @@ export const duality = ([a, b, c, d]) =>
       dual(c, d, { color3: palette.RED, color4: palette.BLUE })
     )
   )
+export const dualitySequence = dualities => dualities.flatMap(([x, y], i) => translateElements(0, 300 * i + ((i + 1) % 2) * 30, duality(x)).concat(
+  translateElements(900, 300 * i + ((i + 1) % 2) * 30, duality(y))
+)
+)
+

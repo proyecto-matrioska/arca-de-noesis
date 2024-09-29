@@ -1,5 +1,6 @@
 import { translateElements } from './translateElements'
 import { palette } from './palette'
+import { swapTetrads } from "./swapTetrads"
 
 export const toTriples = (x, y) => [
   [y[0], x[2], x[1]],
@@ -211,3 +212,23 @@ export const empiricalTripleSquare = (a, b, c, d) =>
       )
     )
     .concat(squareLines())
+export const tripleSquareSequence = dualities => dualities.flatMap(([a, b], i) => translateElements(
+  0,
+  1000 * i,
+  tripleSquare(
+    ...toTriples(
+      a,
+      dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
+    )
+  ).concat(
+    translateElements(
+      1200,
+      0,
+      empiricalTripleSquare(...toEmpiricalTriples(a, b))
+    )
+  )
+)
+)
+
+export const empiricalTripleSquareSequence = dualities => tripleSquareSequence(dualities.map(swapTetrads))
+

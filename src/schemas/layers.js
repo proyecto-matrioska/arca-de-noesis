@@ -1,4 +1,5 @@
 import { palette } from './palette'
+import { translateElements } from './translateElements'
 
 export const dialecticLayers = (x, y, z) => [
   {
@@ -300,3 +301,35 @@ export const dialecticLayers = (x, y, z) => [
     ],
   },
 ]
+export const capasDiscursivasSequence = dualities => dualities.flatMap(([x, a], i) => {
+  const y = dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
+  const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']
+  const b = dualities[i + 1] ? dualities[i + 1][1] : ['', '', '', '']
+  const c = dualities[i + 2] ? dualities[i + 2][1] : ['', '', '', '']
+  return translateElements(
+    0,
+    600 * i,
+    dialecticLayers([x[0], x[1]], [y[2], y[3]], [z[0], z[1]])
+      .concat(
+        translateElements(
+          1000,
+          0,
+          dialecticLayers([x[2], x[3]], [y[0], y[1]], [z[2], z[3]])
+        )
+      )
+      .concat(
+        translateElements(
+          2000,
+          0,
+          dialecticLayers([a[0], a[1]], [b[2], b[3]], [c[0], c[1]])
+        )
+      )
+      .concat(
+        translateElements(
+          3000,
+          0,
+          dialecticLayers([a[2], a[3]], [b[0], b[1]], [c[2], c[3]])
+        )
+      )
+  )
+})

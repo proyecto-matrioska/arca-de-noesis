@@ -1,4 +1,5 @@
 import { palette } from './palette'
+import { translateElements } from './translateElements'
 
 export const square = ([a, b, c, d]) => [
   {
@@ -134,3 +135,15 @@ export const complexSquare = (s1, [a, b, c, d]) =>
       strokeColor: palette.CYAN,
     },
   ])
+
+export const squareSequence = dualities =>
+  dualities.flatMap(([x, y], i) =>
+    translateElements(0, 500 * i + ((i + 1) % 2) * 50, square(x)).concat(
+      translateElements(600, 500 * i + ((i + 1) % 2) * 50, square(y))
+    )
+  )
+
+export const complexSquareSequence = dualities =>
+  dualities.flatMap(([x, y], i) =>
+    translateElements(0, 500 * i + ((i + 1) % 2) * 50, complexSquare(x, y))
+  )

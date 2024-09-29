@@ -1,4 +1,5 @@
 import { palette } from './palette'
+import { translateElements } from './translateElements'
 
 export const procesual = (a, b, c) => [
   {
@@ -217,3 +218,21 @@ export const procesual = (a, b, c) => [
     strokeColor: palette.BLUE,
   },
 ]
+export const procesualSequence = dualities => dualities.flatMap(([x, a], i) => {
+  const y = dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
+  const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']
+  const b = dualities[i + 1] ? dualities[i + 1][1] : ['', '', '', '']
+  const c = dualities[i + 2] ? dualities[i + 2][1] : ['', '', '', '']
+  return translateElements(
+    0,
+    400 * i,
+    procesual(x[0], y[3], z[0])
+      .concat(translateElements(800, 0, procesual(x[1], y[2], z[1])))
+      .concat(translateElements(1600, 0, procesual(x[2], y[1], z[2])))
+      .concat(translateElements(2400, 0, procesual(x[3], y[0], z[3])))
+      .concat(translateElements(3200, 0, procesual(a[0], b[3], c[0])))
+      .concat(translateElements(4000, 0, procesual(a[1], b[2], c[1])))
+      .concat(translateElements(4800, 0, procesual(a[2], b[1], c[2])))
+      .concat(translateElements(5600, 0, procesual(a[3], b[0], c[3])))
+  )
+})

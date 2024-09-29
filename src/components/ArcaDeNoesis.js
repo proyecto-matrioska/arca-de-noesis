@@ -16,20 +16,23 @@ import {
   setDialecticsData,
 } from '../state/dialecticsSlice'
 import { setSelectedDiagram, setSidebarOpen } from '../state/uiSlice'
+import { initialScreen } from '../schemas/initialScreen'
+import { dualitySequence } from '../schemas/duals'
+import { squareSequence, complexSquareSequence } from '../schemas/squares'
 import {
-  capasDiscursivasSequence,
   complexOctagonSequence,
-  complexSquareSequence,
-  dialecticSequence,
-  dualitySequence,
   empiricalComplexOctagonSequence,
-  empiricalDialecticSequence,
+} from '../schemas/octagons'
+import {
+  tripleSquareSequence,
   empiricalTripleSquareSequence,
-  initialScreen,
-  procesualSequence,
-  squareSequence,
-  tripletSquareSequence,
-} from '../schemas/schemas'
+} from '../schemas/triples'
+import {
+  dialecticSequence,
+  empiricalDialecticSequence,
+} from '../schemas/dialectics'
+import { procesualSequence } from '../schemas/procesual'
+import { capasDiscursivasSequence } from '../schemas/layers'
 
 import metafisicaData from '../examples/Metafísica de la información'
 import intencionalidadData from '../examples/Intencionalidad.json'
@@ -119,7 +122,7 @@ function ArcaDeNoesis() {
         makeElements = empiricalComplexOctagonSequence
         break
       case 'triadas':
-        makeElements = tripletSquareSequence
+        makeElements = tripleSquareSequence
         break
       case 'triadas-empiricas':
         makeElements = empiricalTripleSquareSequence
