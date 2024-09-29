@@ -1,1 +1,1 @@
-export const swapTetrads = ([x, y]) => [y, x];
+export const swapTetrads = ([x, y]) => [y, x]

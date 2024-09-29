@@ -55,8 +55,119 @@ export const duality = ([a, b, c, d]) =>
       dual(c, d, { color3: palette.RED, color4: palette.BLUE })
     )
   )
-export const dualitySequence = dualities => dualities.flatMap(([x, y], i) => translateElements(0, 300 * i + ((i + 1) % 2) * 30, duality(x)).concat(
-  translateElements(900, 300 * i + ((i + 1) % 2) * 30, duality(y))
-)
-)
 
+const elementDescriptions = () => [
+  {
+    type: 'text',
+    x: 250,
+    y: -80,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'dualidad intensional/compleja',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 1150,
+    y: -80,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'dualidad empírica/simple',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 100,
+    y: -40,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'dual intensional/complejo',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 400,
+    y: -40,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'dual empírico/simple',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 1000,
+    y: -40,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'dual intensional/complejo',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 1300,
+    y: -40,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'dual empírico/simple',
+    strokeColor: palette.ORANGE,
+  },
+]
+
+const intensionFormContext = isEven => [
+  {
+    type: 'text',
+    x: -20,
+    y: 30,
+    textAlign: 'right',
+    fontSize: 20,
+    text: isEven ? 'intensión' : 'contexto',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: -20,
+    y: 120,
+    textAlign: 'right',
+    fontSize: 20,
+    text: isEven ? 'extensión' : 'sentido',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 540,
+    y: 30,
+    textAlign: 'left',
+    fontSize: 20,
+    text: isEven ? 'esencia' : 'informa',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 540,
+    y: 120,
+    textAlign: 'left',
+    fontSize: 20,
+    text: isEven ? 'sustancia' : 'forma',
+    strokeColor: palette.ORANGE,
+  },
+]
+
+export const dualitySequence = (dualities, schemaOptions) =>
+  dualities.flatMap(([x, y], i) =>
+    translateElements(
+      0,
+      400 * i + ((i + 1) % 2) * 30,
+      duality(x)
+        .concat(translateElements(900, 0, duality(y)))
+        .concat(
+          schemaOptions.elementDescriptions.value ? elementDescriptions() : []
+        )
+        .concat(
+          schemaOptions.intensionFormContext.value
+            ? intensionFormContext(i % 2 === 0).concat(
+                translateElements(900, 0, intensionFormContext(i % 2 === 0))
+              )
+            : []
+        )
+    )
+  )
