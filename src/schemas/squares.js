@@ -136,14 +136,162 @@ export const complexSquare = (s1, [a, b, c, d]) =>
     },
   ])
 
-export const squareSequence = dualities =>
+const squareElementDescriptions = () => [
+  {
+    type: 'text',
+    x: 150,
+    y: -100,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'dualidad intensional/compleja',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 950,
+    y: -100,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'dualidad empírica/simple',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 150,
+    y: 340,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'eje intensional/complejo',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 150,
+    y: -30,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'eje empírico/simple',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 950,
+    y: 340,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'eje intensional/complejo',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 950,
+    y: -30,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'eje empírico/simple',
+    strokeColor: palette.ORANGE,
+  },
+]
+
+const complexSquareElementDescriptions = () => [
+  {
+    type: 'text',
+    x: 150,
+    y: 340,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'eje intensional/complejo',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 150,
+    y: -30,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'eje empírico/simple',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: 470,
+    y: 160,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'abstracción empírica',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'line',
+    x: 170,
+    y: 170,
+    width: 180,
+    height: 1,
+    strokeStyle: 'dashed',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: -200,
+    y: 60,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'eje intensional/complejo',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'line',
+    x: -70,
+    y: 75,
+    width: 110,
+    height: 1,
+    strokeStyle: 'dashed',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'text',
+    x: -200,
+    y: 260,
+    textAlign: 'center',
+    fontSize: 20,
+    text: 'eje empírico/simple',
+    strokeColor: palette.ORANGE,
+  },
+  {
+    type: 'line',
+    x: -90,
+    y: 275,
+    width: 110,
+    height: 1,
+    strokeStyle: 'dashed',
+    strokeColor: palette.ORANGE,
+  },
+]
+
+export const squareSequence = (dualities, schemaOptions) =>
   dualities.flatMap(([x, y], i) =>
-    translateElements(0, 500 * i + ((i + 1) % 2) * 50, square(x)).concat(
-      translateElements(600, 500 * i + ((i + 1) % 2) * 50, square(y))
+    translateElements(
+      0,
+      700 * i + ((i + 1) % 2) * 50,
+      square(x)
+        .concat(translateElements(800, 0, square(y)))
+        .concat(
+          schemaOptions.elementDescriptions.value
+            ? squareElementDescriptions()
+            : []
+        )
     )
   )
 
-export const complexSquareSequence = dualities =>
+export const complexSquareSequence = (dualities, schemaOptions) =>
   dualities.flatMap(([x, y], i) =>
-    translateElements(0, 500 * i + ((i + 1) % 2) * 50, complexSquare(x, y))
+    translateElements(
+      0,
+      700 * i + ((i + 1) % 2) * 50,
+      complexSquare(x, y).concat(
+        schemaOptions.elementDescriptions.value
+          ? complexSquareElementDescriptions()
+          : []
+      )
+    )
   )
