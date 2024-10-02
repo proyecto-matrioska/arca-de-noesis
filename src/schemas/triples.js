@@ -1,6 +1,6 @@
 import { translateElements } from './translateElements'
 import { palette } from './palette'
-import { swapTetrads } from "./swapTetrads"
+import { swapTetrads } from './swapTetrads'
 
 export const toTriples = (x, y) => [
   [y[0], x[2], x[1]],
@@ -121,6 +121,8 @@ export const triple = (
 
 export const tripleSquare = (a, b, c, d) =>
   triple(...c, {
+    color2: palette.BLUE,
+    color3: palette.RED,
     color4: palette.BLUE,
     color5: palette.RED,
     color6: palette.BLUE,
@@ -130,6 +132,8 @@ export const tripleSquare = (a, b, c, d) =>
         450,
         0,
         triple(...d, {
+          color2: palette.BLUE,
+          color3: palette.RED,
           color4: palette.RED,
           color5: palette.BLUE,
           color6: palette.RED,
@@ -141,6 +145,8 @@ export const tripleSquare = (a, b, c, d) =>
         450,
         450,
         triple(...a, {
+          color2: palette.BLUE,
+          color3: palette.RED,
           color4: palette.BLUE,
           color5: palette.RED,
           color6: palette.BLUE,
@@ -152,6 +158,8 @@ export const tripleSquare = (a, b, c, d) =>
         0,
         450,
         triple(...b, {
+          color2: palette.BLUE,
+          color3: palette.RED,
           color4: palette.RED,
           color5: palette.BLUE,
           color6: palette.RED,
@@ -212,23 +220,34 @@ export const empiricalTripleSquare = (a, b, c, d) =>
       )
     )
     .concat(squareLines())
-export const tripleSquareSequence = dualities => dualities.flatMap(([a, b], i) => translateElements(
-  0,
-  1000 * i,
-  tripleSquare(
-    ...toTriples(
-      a,
-      dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
-    )
-  ).concat(
+
+export const tripleSquareSequence = dualities =>
+  [
+    [
+      ['', '', '', ''],
+      ['', '', '', ''],
+    ],
+    ...dualities,
+  ].flatMap(([a, b], i, mapArray) =>
     translateElements(
-      1200,
       0,
-      empiricalTripleSquare(...toEmpiricalTriples(a, b))
+      1000 * i,
+      tripleSquare(
+        ...toTriples(a, mapArray[i + 1] ? mapArray[i + 1][0] : ['', '', '', ''])
+      ).concat(
+        translateElements(
+          1200,
+          0,
+          empiricalTripleSquare(
+            ...toEmpiricalTriples(
+              mapArray[i + 1] ? mapArray[i + 1][0] : a,
+              mapArray[i + 1] ? mapArray[i + 1][1] : ['', '', '', '']
+            )
+          )
+        )
+      )
     )
   )
-)
-)
 
-export const empiricalTripleSquareSequence = dualities => tripleSquareSequence(dualities.map(swapTetrads))
-
+export const empiricalTripleSquareSequence = dualities =>
+  tripleSquareSequence(dualities.map(swapTetrads))
