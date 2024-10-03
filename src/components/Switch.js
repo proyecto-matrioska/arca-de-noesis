@@ -6,6 +6,7 @@ const Switch = ({
   defaultValue = false,
   onChange = null,
   title = null,
+  disabled = false,
 }) => {
   const [isChecked, setChecked] = useState(defaultValue)
   const changeHandler = e => {
@@ -13,7 +14,11 @@ const Switch = ({
     if (onChange) onChange(e.target.checked)
   }
   return (
-    <div className={`Switch ${isChecked ? 'toggled' : ''}`}>
+    <div
+      className={`Switch ${isChecked ? 'toggled' : ''} ${
+        disabled ? 'disabled' : ''
+      }`}
+    >
       <input
         type="checkbox"
         id={id}
@@ -21,6 +26,7 @@ const Switch = ({
         checked={isChecked}
         onChange={changeHandler}
         title={title}
+        disabled={disabled}
       />
     </div>
   )

@@ -18,3 +18,13 @@
   justify-content: space-between;
   padding: 1rem;
 }
+
+.excalidraw .OptionsPanel .SelectOption select:disabled,
+.excalidraw .OptionsPanel .BooleanOption .Switch.disabled {
+  color: #ccc;
+}
+
+.excalidraw.theme--dark .OptionsPanel .BooleanOption .Switch.disabled,
+.excalidraw.theme--dark .OptionsPanel .SelectOption select:disabled {
+  color: #555;
+}

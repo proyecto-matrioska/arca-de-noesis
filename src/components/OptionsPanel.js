@@ -3,7 +3,13 @@ import './OptionsPanel.css'
 import Switch from './Switch'
 import { setDiagramOption } from '../state/uiSlice'
 
-const BooleanOption = ({ optionId, name, longDescription, value }) => {
+const BooleanOption = ({
+  optionId,
+  name,
+  longDescription,
+  value,
+  disabled = false,
+}) => {
   const dispatch = useDispatch()
   const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
   return (
@@ -24,13 +30,21 @@ const BooleanOption = ({ optionId, name, longDescription, value }) => {
             )
           }
           title={longDescription}
+          disabled={disabled}
         />
       </div>
     </div>
   )
 }
 
-const SelectOption = ({ optionId, name, longDescription, value, options }) => {
+const SelectOption = ({
+  optionId,
+  name,
+  longDescription,
+  value,
+  options,
+  disabled = false,
+}) => {
   const dispatch = useDispatch()
   const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
   return (
@@ -52,6 +66,7 @@ const SelectOption = ({ optionId, name, longDescription, value, options }) => {
             )
           }
           title={longDescription}
+          disabled={disabled}
         >
           {options.map(opt => (
             <option value={opt.value}>{opt.name}</option>
@@ -62,7 +77,7 @@ const SelectOption = ({ optionId, name, longDescription, value, options }) => {
   )
 }
 
-const SchemaOption = ({ optionId, optionData }) => {
+const SchemaOption = ({ optionId, optionData, disabled }) => {
   const { type } = optionData
   let OptionComponent = <div />
   switch (type) {
@@ -76,7 +91,9 @@ const SchemaOption = ({ optionId, optionData }) => {
       OptionComponent = <div />
       break
   }
-  return <OptionComponent optionId={optionId} {...optionData} />
+  return (
+    <OptionComponent optionId={optionId} {...optionData} disabled={disabled} />
+  )
 }
 
 const OptionsPanel = () => {
@@ -91,6 +108,11 @@ const OptionsPanel = () => {
             key={`${selectedDiagram}-option-${k}-${i}`}
             optionId={k}
             optionData={diagramOptions[k]}
+            disabled={
+              diagramOptions[k].depends &&
+              diagramOptions[diagramOptions[k].depends.element].value !==
+                diagramOptions[k].depends.value
+            }
           />
         ))}
       </div>
