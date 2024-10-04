@@ -187,6 +187,13 @@ const schemaOptions = {
       value: false,
       longDescription: 'Descripciones de los elementos principales',
     },
+    intensionFormContext: {
+      type: 'bool',
+      name: 'Intensión, forma, contexto',
+      value: false,
+      longDescription:
+        'Anotaciones Intensión,Extensión, Contexto, Forma, Contenido',
+    },
   },
   'triadas-empiricas': {
     elementDescriptions: {
@@ -194,6 +201,13 @@ const schemaOptions = {
       name: 'Descripciones de elementos principales',
       value: false,
       longDescription: 'Descripciones de los elementos principales',
+    },
+    intensionFormContext: {
+      type: 'bool',
+      name: 'Intensión, forma, contexto',
+      value: false,
+      longDescription:
+        'Anotaciones Intensión,Extensión, Contexto, Forma, Contenido',
     },
   },
   dialectica: {
