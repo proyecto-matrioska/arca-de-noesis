@@ -144,62 +144,70 @@ export const complexSquare = (s1, [a, b, c, d], schemaOptions) =>
         : []
     )
 
-const squareElementDescriptions = () => [
-  {
-    type: 'text',
-    x: 150,
-    y: -100,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'dualidad intensional/compleja',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: 950,
-    y: -100,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'dualidad empírica/simple',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: 150,
-    y: 340,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'eje intensional/complejo',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: 150,
-    y: -30,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'eje empírico/simple',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: 950,
-    y: 340,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'eje intensional/complejo',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: 950,
-    y: -30,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'eje empírico/simple',
-    strokeColor: palette.ORANGE,
-  },
-]
+const squareElementDescriptions = (intentional, schemaOptions) =>
+  schemaOptions.elementDescriptions.value
+    ? [
+        {
+          type: 'text',
+          x: 150,
+          y: -100,
+          textAlign: 'center',
+          fontSize: 20,
+          text:
+            intentional === 1
+              ? 'dualidad intensional/compleja'
+              : intentional === 2
+              ? 'dualidad empírica/simple'
+              : '',
+          strokeColor: palette.ORANGE,
+        },
+        /* {
+          type: 'text',
+          x: 950,
+          y: -100,
+          textAlign: 'center',
+          fontSize: 20,
+          text: 'dualidad empírica/simple',
+          strokeColor: palette.ORANGE,
+        }, */
+        {
+          type: 'text',
+          x: 150,
+          y: 340,
+          textAlign: 'center',
+          fontSize: 20,
+          text: 'eje intensional/complejo',
+          strokeColor: palette.ORANGE,
+        },
+        {
+          type: 'text',
+          x: 150,
+          y: -30,
+          textAlign: 'center',
+          fontSize: 20,
+          text: 'eje empírico/simple',
+          strokeColor: palette.ORANGE,
+        },
+        /* {
+          type: 'text',
+          x: 950,
+          y: 340,
+          textAlign: 'center',
+          fontSize: 20,
+          text: 'eje intensional/complejo',
+          strokeColor: palette.ORANGE,
+        },
+        {
+          type: 'text',
+          x: 950,
+          y: -30,
+          textAlign: 'center',
+          fontSize: 20,
+          text: 'eje empírico/simple',
+          strokeColor: palette.ORANGE,
+        }, */
+      ]
+    : []
 
 const complexSquareElementDescriptions = () => [
   {
@@ -408,33 +416,191 @@ const rectagularAnnotationParams = name => {
       return [3, 3, 0, 0]
     case 'rectangular-10':
       return [2, 2, 1, 1]
-      case 'trapecial-1':
-        return [1,0,1,0]
-      case 'trapecial-2':
-        return [2,3,2,3]
-      case 'trapecial-3':
-        return [0,1,0,1]
-      case 'trapecial-4':
-        return [3,2,3,2]
-      case 'trapecial-5':
-        return [0,3,0,3]
-      case 'trapecial-6':
-        return [1,2,1,2]
-      case 'trapecial-7':
-        return [3,0,3,0]
-      case 'trapecial-8':
-        return [2,1,2,1]
-      case 'trapecial-9':
-        return [1,3,0,2]
-      case 'trapecial-10':
-        return [2,0,3,1]
+    case 'trapecial-1':
+      return [1, 0, 1, 0]
+    case 'trapecial-2':
+      return [2, 3, 2, 3]
+    case 'trapecial-3':
+      return [0, 1, 0, 1]
+    case 'trapecial-4':
+      return [3, 2, 3, 2]
+    case 'trapecial-5':
+      return [0, 3, 0, 3]
+    case 'trapecial-6':
+      return [1, 2, 1, 2]
+    case 'trapecial-7':
+      return [3, 0, 3, 0]
+    case 'trapecial-8':
+      return [2, 1, 2, 1]
+    case 'trapecial-9':
+      return [1, 3, 0, 2]
+    case 'trapecial-10':
+      return [2, 0, 3, 1]
     default:
       return [0, 0, 0, 0]
   }
 }
 
-export const squareSequence = (dualities, schemaOptions) =>
-  dualities.flatMap(([x, y], i) =>
+export const squareSequence = (dualities, schemaOptions) => {
+  if (schemaOptions.arrangement.value === 'triadas')
+    return groupByTriads(dualities).flatMap(([x, y, z], i) =>
+      translateElements(
+        0,
+        1400 * i,
+        translateElements(
+          0,
+          500,
+          square(x[0])
+            .concat(squareElementDescriptions(3, schemaOptions))
+            .concat(
+              translateElements(
+                2000,
+                0,
+                square(x[1]).concat(squareElementDescriptions(3, schemaOptions))
+              )
+            )
+        )
+          .concat(
+            translateElements(
+              800,
+              500,
+              square(y[0])
+                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  translateElements(
+                    2000,
+                    0,
+                    square(y[1]).concat(
+                      squareElementDescriptions(3, schemaOptions)
+                    )
+                  )
+                )
+            )
+          )
+          .concat(
+            translateElements(
+              400,
+              0,
+              square(z[0])
+                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  translateElements(
+                    2000,
+                    0,
+                    square(z[1]).concat(
+                      squareElementDescriptions(3, schemaOptions)
+                    )
+                  )
+                )
+            )
+          )
+      )
+    )
+  if (schemaOptions.arrangement.value === 'tetradas')
+    return groupByTetrads(dualities).flatMap(([w, x, y, z], i) =>
+      translateElements(
+        0,
+        1400 * i,
+        translateElements(
+          800,
+          500,
+          square(w[0])
+            .concat(squareElementDescriptions(3, schemaOptions))
+            .concat(
+              translateElements(
+                2000,
+                0,
+                square(w[1]).concat(squareElementDescriptions(3, schemaOptions))
+              )
+            )
+        )
+          .concat(
+            translateElements(
+              0,
+              500,
+              square(x[0])
+                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  translateElements(
+                    2000,
+                    0,
+                    square(x[1]).concat(
+                      squareElementDescriptions(3, schemaOptions)
+                    )
+                  )
+                )
+            )
+          )
+          .concat(
+            translateElements(
+              0,
+              0,
+              square(y[0])
+                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  translateElements(
+                    2000,
+                    0,
+                    square(y[1]).concat(
+                      squareElementDescriptions(3, schemaOptions)
+                    )
+                  )
+                )
+            )
+          )
+          .concat(
+            translateElements(
+              800,
+              0,
+              square(z[0])
+                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  translateElements(
+                    2000,
+                    0,
+                    square(z[1]).concat(
+                      squareElementDescriptions(3, schemaOptions)
+                    )
+                  )
+                )
+            )
+          )
+          .concat(
+            schemaOptions.showRectangularFactorizations.value !== 'ninguna'
+              ? rectagularAnnotation(
+                  ...rectagularAnnotationParams(
+                    schemaOptions.showRectangularFactorizations.value
+                  )
+                ).concat(
+                  translateElements(
+                    2000,
+                    0,
+                    rectagularAnnotation(
+                      ...rectagularAnnotationParams(
+                        schemaOptions.showRectangularFactorizations.value
+                      )
+                    )
+                  )
+                )
+              : []
+          )
+      )
+    )
+  // default list
+  return dualities.flatMap(([x, y], i) =>
+    translateElements(
+      0,
+      700 * i + ((i + 1) % 2) * 50,
+      square(x)
+        .concat(translateElements(800, 0, square(y)))
+        .concat(squareElementDescriptions(1, schemaOptions))
+        .concat(
+          translateElements(800, 0, squareElementDescriptions(2, schemaOptions))
+        )
+    )
+  )
+}
+/* dualities.flatMap(([x, y], i) =>
     translateElements(
       0,
       700 * i + ((i + 1) % 2) * 50,
@@ -446,7 +612,7 @@ export const squareSequence = (dualities, schemaOptions) =>
             : []
         )
     )
-  )
+  ) */
 
 export const complexSquareSequence = (dualities, schemaOptions) => {
   if (schemaOptions.arrangement.value === 'triadas')
