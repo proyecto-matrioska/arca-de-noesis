@@ -276,6 +276,163 @@ const complexSquareElementDescriptions = () => [
   },
 ]
 
+const rectagularAnnotation = (a, b, c, d) => [
+  {
+    type: 'ellipse',
+    strokeWidth: 2,
+    strokeStyle: 'dashed',
+    x: a === 0 || a === 3 ? -80 : 220,
+    y: a > 1 ? 260 : -40,
+    strokeColor: palette.ORANGE,
+    backgroundColor: 'transparent',
+    width: 160,
+    height: 120,
+  },
+  {
+    type: 'ellipse',
+    strokeWidth: 2,
+    strokeStyle: 'dashed',
+    x: b === 0 || b === 3 ? 720 : 1020,
+    y: b > 1 ? 260 : -40,
+    strokeColor: palette.ORANGE,
+    backgroundColor: 'transparent',
+    width: 160,
+    height: 120,
+  },
+  {
+    type: 'ellipse',
+    strokeWidth: 2,
+    strokeStyle: 'dashed',
+    x: c === 0 || c === 3 ? 720 : 1020,
+    y: c > 1 ? 760 : 460,
+    strokeColor: palette.ORANGE,
+    backgroundColor: 'transparent',
+    width: 160,
+    height: 120,
+  },
+  {
+    type: 'ellipse',
+    strokeWidth: 2,
+    strokeStyle: 'dashed',
+    x: d === 0 || d === 3 ? -80 : 220,
+    y: d > 1 ? 760 : 460,
+    strokeColor: palette.ORANGE,
+    backgroundColor: 'transparent',
+    width: 160,
+    height: 120,
+  },
+  {
+    type: 'line',
+    strokeWidth: 2,
+    strokeStyle: 'dashed',
+    x: a === 0 || a === 3 ? 80 : 380,
+    y: a > 1 ? 320 : 20,
+    strokeColor: palette.ORANGE,
+    backgroundColor: 'transparent',
+    width:
+      340 + ([1, 2].includes(a) ? 0 : 300) + ([1, 2].includes(b) ? 300 : 0),
+    height: a <= 1 && b >= 2 ? 300 : a > 1 && b < 2 ? -300 : 0,
+  },
+  {
+    type: 'line',
+    strokeWidth: 2,
+    strokeStyle: 'dashed',
+    x: d === 0 || d === 3 ? 80 : 380,
+    y: d > 1 ? 820 : 520,
+    strokeColor: palette.ORANGE,
+    width:
+      340 + ([1, 2].includes(d) ? 0 : 300) + ([1, 2].includes(c) ? 300 : 0),
+    height: d <= 1 && c >= 2 ? 300 : d > 1 && c < 2 ? -300 : 0,
+  },
+  {
+    type: 'line',
+    strokeWidth: 2,
+    strokeStyle: 'dashed',
+    x: b === 0 || b === 3 ? 800 : 1100,
+    y: b > 1 ? 380 : 80,
+    strokeColor: palette.ORANGE,
+    width:
+      [0, 3].includes(b) && [1, 2].includes(c)
+        ? 300
+        : [1, 2].includes(b) && [0, 3].includes(c)
+        ? -300
+        : 1,
+    height:
+      [2, 3].includes(b) && [0, 1].includes(c)
+        ? 80
+        : [0, 1].includes(b) && [2, 3].includes(c)
+        ? 680
+        : 380,
+  },
+  {
+    type: 'line',
+    strokeWidth: 2,
+    strokeStyle: 'dashed',
+    x: a === 0 || a === 3 ? 0 : 300,
+    y: a > 1 ? 380 : 80,
+    strokeColor: palette.ORANGE,
+    width:
+      [0, 3].includes(a) && [1, 2].includes(d)
+        ? 300
+        : [1, 2].includes(a) && [0, 3].includes(d)
+        ? -300
+        : 1,
+    height:
+      [2, 3].includes(a) && [0, 1].includes(d)
+        ? 80
+        : [0, 1].includes(a) && [2, 3].includes(d)
+        ? 680
+        : 380,
+  },
+]
+
+const rectagularAnnotationParams = name => {
+  switch (name) {
+    case 'rectangular-1':
+      return [0, 0, 0, 0]
+    case 'rectangular-2':
+      return [1, 1, 1, 1]
+    case 'rectangular-3':
+      return [2, 2, 2, 2]
+    case 'rectangular-4':
+      return [3, 3, 3, 3]
+    case 'rectangular-5':
+      return [1, 0, 0, 1]
+    case 'rectangular-6':
+      return [2, 3, 3, 2]
+    case 'rectangular-7':
+      return [0, 1, 2, 3]
+    case 'rectangular-8':
+      return [2, 3, 0, 1]
+    case 'rectangular-9':
+      return [3, 3, 0, 0]
+    case 'rectangular-10':
+      return [2, 2, 1, 1]
+      case 'trapecial-1':
+        return [1,0,1,0]
+      case 'trapecial-2':
+        return [2,3,2,3]
+      case 'trapecial-3':
+        return [0,1,0,1]
+      case 'trapecial-4':
+        return [3,2,3,2]
+      case 'trapecial-5':
+        return [0,3,0,3]
+      case 'trapecial-6':
+        return [1,2,1,2]
+      case 'trapecial-7':
+        return [3,0,3,0]
+      case 'trapecial-8':
+        return [2,1,2,1]
+      case 'trapecial-9':
+        return [1,3,0,2]
+      case 'trapecial-10':
+        return [2,0,3,1]
+    default:
+      return [0, 0, 0, 0]
+  }
+}
+
 export const squareSequence = (dualities, schemaOptions) =>
   dualities.flatMap(([x, y], i) =>
     translateElements(
@@ -324,6 +481,15 @@ export const complexSquareSequence = (dualities, schemaOptions) => {
           )
           .concat(
             translateElements(800, 0, complexSquare(z[0], z[1], schemaOptions))
+          )
+          .concat(
+            schemaOptions.showRectangularFactorizations.value !== 'ninguna'
+              ? rectagularAnnotation(
+                  ...rectagularAnnotationParams(
+                    schemaOptions.showRectangularFactorizations.value
+                  )
+                )
+              : []
           )
       )
     )
