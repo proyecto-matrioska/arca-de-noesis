@@ -1,13 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux'
 import './OptionsPanel.css'
 import Switch from './Switch'
-import { setDiagramOption } from '../state/uiSlice'
+import { setDiagramOption, setGeneralDiagramOption } from '../state/uiSlice'
 
 const BooleanOption = ({
   optionId,
   name,
   longDescription,
   value,
+  globalOption,
   disabled = false,
 }) => {
   const dispatch = useDispatch()
@@ -22,7 +23,7 @@ const BooleanOption = ({
           defaultValue={value}
           onChange={b =>
             dispatch(
-              setDiagramOption({
+              (globalOption ? setGeneralDiagramOption : setDiagramOption)({
                 diagramName: selectedDiagram,
                 optionId,
                 value: b,
@@ -43,6 +44,7 @@ const SelectOption = ({
   longDescription,
   value,
   options,
+  globalOption,
   disabled = false,
 }) => {
   const dispatch = useDispatch()
@@ -52,13 +54,15 @@ const SelectOption = ({
       <div>{name}:</div>
       <div>
         <select
-          id={`${selectedDiagram}-select-${optionId}`}
-          name={`${selectedDiagram}-select-${optionId}`}
+          id={`${globalOption ? 'global' : selectedDiagram}-select-${optionId}`}
+          name={`${
+            globalOption ? 'global' : selectedDiagram
+          }-select-${optionId}`}
           className="dropdown-select"
           defaultValue={value}
           onChange={e =>
             dispatch(
-              setDiagramOption({
+              (globalOption ? setGeneralDiagramOption : setDiagramOption)({
                 diagramName: selectedDiagram,
                 optionId,
                 value: e.target.value,
@@ -69,7 +73,14 @@ const SelectOption = ({
           disabled={disabled}
         >
           {options.map(opt => (
-            <option value={opt.value}>{opt.name}</option>
+            <option
+              key={`${
+                globalOption ? 'global' : selectedDiagram
+              }-select-${optionId}-${opt.value}`}
+              value={opt.value}
+            >
+              {opt.name}
+            </option>
           ))}
         </select>
       </div>
@@ -77,7 +88,12 @@ const SelectOption = ({
   )
 }
 
-const SchemaOption = ({ optionId, optionData, disabled }) => {
+const SchemaOption = ({
+  optionId,
+  optionData,
+  disabled,
+  globalOption = false,
+}) => {
   const { type } = optionData
   let OptionComponent = <div />
   switch (type) {
@@ -92,17 +108,44 @@ const SchemaOption = ({ optionId, optionData, disabled }) => {
       break
   }
   return (
-    <OptionComponent optionId={optionId} {...optionData} disabled={disabled} />
+    <OptionComponent
+      optionId={optionId}
+      {...optionData}
+      disabled={disabled}
+      globalOption={globalOption}
+    />
   )
 }
 
 const OptionsPanel = () => {
   const schemaOptions = useSelector(state => state.ui.schemaOptions)
+  const generalSchemaOptions = useSelector(
+    state => state.ui.generalSchemaOptions
+  )
   const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
   const diagramOptions = schemaOptions[selectedDiagram] ?? {}
   return (
     <div className="OptionsPanel">
       <div className="OptionsPanelContents">
+        <div>
+          <b>General:</b>
+        </div>
+        {Object.keys(generalSchemaOptions).map((k, i) => (
+          <SchemaOption
+            key={`generalSchemaOptions-option-${k}-${i}`}
+            optionId={k}
+            optionData={generalSchemaOptions[k]}
+            globalOption={true}
+            disabled={
+              generalSchemaOptions[k].depends &&
+              generalSchemaOptions[generalSchemaOptions[k].depends.element]
+                .value !== generalSchemaOptions[k].depends.value
+            }
+          />
+        ))}
+        <div>
+          <b>Esquema actual:</b>
+        </div>
         {Object.keys(diagramOptions).map((k, i) => (
           <SchemaOption
             key={`${selectedDiagram}-option-${k}-${i}`}

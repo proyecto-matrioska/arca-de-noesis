@@ -16,6 +16,7 @@ import {
   setDialecticsData,
 } from '../state/dialecticsSlice'
 import { setSelectedDiagram, setSidebarOpen } from '../state/uiSlice'
+import { factorData } from '../schemas/factorization'
 import { initialScreen } from '../schemas/initialScreen'
 import { dualitySequence } from '../schemas/duals'
 import { squareSequence, complexSquareSequence } from '../schemas/squares'
@@ -49,6 +50,9 @@ function ArcaDeNoesis() {
   const isSidebarOpen = useSelector(state => state.ui.isSidebarOpen)
   const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
   const schemaOptions = useSelector(state => state.ui.schemaOptions)
+  const generalSchemaOptions = useSelector(
+    state => state.ui.generalSchemaOptions
+  )
   const inputFile = useRef(null)
   const defaultDarkMode = useMediaQuery(
     {
@@ -102,6 +106,7 @@ function ArcaDeNoesis() {
     dispatch(saveDataFile(input, data))
   }
   const selectDiagramHandler = schema => () => {
+    const factorizationId = generalSchemaOptions.factorizations.value
     let makeElements = null
     switch (schema) {
       case 'dualidades':
@@ -141,7 +146,7 @@ function ArcaDeNoesis() {
         break
     }
     const elements = convertToExcalidrawElements(
-      makeElements(data, schemaOptions[schema])
+      makeElements(factorData(factorizationId, data), schemaOptions[schema])
     )
     updateScene(elements)
     dispatch(setSelectedDiagram(schema))

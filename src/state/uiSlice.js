@@ -1,5 +1,37 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const generalSchemaOptions = {
+  factorizations: {
+    type: 'select',
+    name: 'Factorizar',
+    value: 'ninguna',
+    options: [
+      { value: 'ninguna', name: 'ninguna' },
+      { value: 'rectangular-1', name: 'rectangular 1' },
+      { value: 'rectangular-2', name: 'rectangular 2' },
+      { value: 'rectangular-3', name: 'rectangular 3' },
+      { value: 'rectangular-4', name: 'rectangular 4' },
+      { value: 'rectangular-5', name: 'rectangular 5' },
+      { value: 'rectangular-6', name: 'rectangular 6' },
+      { value: 'rectangular-7', name: 'rectangular 7' },
+      { value: 'rectangular-8', name: 'rectangular 8' },
+      { value: 'rectangular-9', name: 'rectangular 9' },
+      { value: 'rectangular-10', name: 'rectangular 10' },
+      { value: 'trapecial-1', name: 'trapecial 1' },
+      { value: 'trapecial-2', name: 'trapecial 2' },
+      { value: 'trapecial-3', name: 'trapecial 3' },
+      { value: 'trapecial-4', name: 'trapecial 4' },
+      { value: 'trapecial-5', name: 'trapecial 5' },
+      { value: 'trapecial-6', name: 'trapecial 6' },
+      { value: 'trapecial-7', name: 'trapecial 7' },
+      { value: 'trapecial-8', name: 'trapecial 8' },
+      { value: 'trapecial-9', name: 'trapecial 9' },
+      { value: 'trapecial-10', name: 'trapecial 10' },
+    ],
+    longDescription: 'Factorizaciones rectangulares y trapeciales',
+  },
+}
+
 const schemaOptions = {
   dualidades: {
     elementDescriptions: {
@@ -203,6 +235,7 @@ export const uiSlice = createSlice({
   initialState: {
     isSidebarOpen: false,
     selectedDiagram: null,
+    generalSchemaOptions,
     schemaOptions,
   },
   reducers: {
@@ -218,6 +251,9 @@ export const uiSlice = createSlice({
     ) => {
       state.schemaOptions[diagramName][optionId].value = value
     },
+    setGeneralDiagramOption: (state, { payload: { optionId, value } }) => {
+      state.generalSchemaOptions[optionId].value = value
+    },
   },
 })
 
@@ -226,6 +262,7 @@ export const {
   setSidebarOpen,
   setSelectedDiagram,
   setDiagramOption,
+  setGeneralDiagramOption,
 } = uiSlice.actions
 
 export default uiSlice.reducer

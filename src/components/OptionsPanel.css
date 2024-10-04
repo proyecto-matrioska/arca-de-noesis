@@ -1,6 +1,7 @@
 .OptionsPanel {
   display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
   height: 1px;
   font-size: 0.7rem;
 }
@@ -19,12 +20,26 @@
   padding: 1rem;
 }
 
-.excalidraw .OptionsPanel .SelectOption select:disabled,
-.excalidraw .OptionsPanel .BooleanOption .Switch.disabled {
+.OptionsPanel .OptionsPanelContents > .GeneralOptions {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.OptionsPanel .OptionsPanelContents > .GeneralOptions > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.excalidraw .SelectOption select:disabled,
+.excalidraw .Switch.disabled {
   color: #ccc;
 }
 
-.excalidraw.theme--dark .OptionsPanel .BooleanOption .Switch.disabled,
-.excalidraw.theme--dark .OptionsPanel .SelectOption select:disabled {
+.excalidraw.theme--dark .BooleanOption .Switch.disabled,
+.excalidraw.theme--dark select:disabled {
   color: #555;
 }
