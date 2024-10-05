@@ -1,5 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const schemaNames = {
+  dualidades: 'Dualidades',
+  cuadros: 'Cuadros',
+  'cuadros-complejos': 'Cuadros complejos',
+  octagonos: 'Octágonos',
+  'octagonos-empiricos': 'Octágonos empíricos',
+  triadas: 'Triadas',
+  'triadas-empiricas': 'Triadas empíricas',
+  dialectica: 'Dialéctica',
+  'dialectica-empirica': 'Dialéctica empírica',
+  procesual: 'Procesual',
+  'capas-discursivas': 'Capas discursivas',
+}
+
 const generalSchemaOptions = {
   factorizations: {
     type: 'select',
@@ -249,6 +263,7 @@ export const uiSlice = createSlice({
   initialState: {
     isSidebarOpen: false,
     selectedDiagram: null,
+    selectedDiagramName: null,
     generalSchemaOptions,
     schemaOptions,
   },
@@ -258,6 +273,7 @@ export const uiSlice = createSlice({
     },
     setSelectedDiagram: (state, action) => {
       state.selectedDiagram = action.payload
+      state.selectedDiagramName = schemaNames[action.payload]
     },
     setDiagramOption: (
       state,

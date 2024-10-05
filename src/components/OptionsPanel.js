@@ -118,6 +118,7 @@ const SchemaOption = ({
 }
 
 const OptionsPanel = () => {
+  const schemaName = useSelector(state => state.ui.selectedDiagramName)
   const schemaOptions = useSelector(state => state.ui.schemaOptions)
   const generalSchemaOptions = useSelector(
     state => state.ui.generalSchemaOptions
@@ -144,7 +145,7 @@ const OptionsPanel = () => {
           />
         ))}
         <div>
-          <b>Esquema actual:</b>
+          <b>{schemaName ? `${schemaName}:` : ''}</b>
         </div>
         {Object.keys(diagramOptions).map((k, i) => (
           <SchemaOption
