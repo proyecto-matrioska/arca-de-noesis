@@ -10,6 +10,7 @@ self.addEventListener("install", (event) => {
       .then((assets) => {
         const urlsToCache = [
           "/",
+          "https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/excalidraw-assets-dev/Virgil.woff2",
           assets["files"]["index.html"],
           assets["files"]["main.js"], // Usa el nombre del archivo JS
           assets["files"]["main.css"], // Usa el nombre del archivo CSS
