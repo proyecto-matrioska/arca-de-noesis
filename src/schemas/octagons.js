@@ -179,6 +179,18 @@ export const complexOctagon = (s1, s2, [a, b, c, d], schemaOptions) =>
     },
   ])
 
+const dualityIndex = index => [
+  {
+    type: 'text',
+    x: -100,
+    y: -40,
+    textAlign: 'center',
+    fontSize: 20,
+    text: `${index + 1}:`,
+    strokeColor: palette.ORANGE,
+  },
+]
+
 export const complexOctagonSequence = (dualities, schemaOptions) => {
   if (schemaOptions.arrangement.value === 'triadas') {
     const triads = groupByTriads(dualities)
@@ -189,13 +201,19 @@ export const complexOctagonSequence = (dualities, schemaOptions) => {
         translateElements(
           0,
           500,
-          complexOctagon(x[0], x[1], y[0], schemaOptions)
+          complexOctagon(x[0], x[1], y[0], schemaOptions).concat(
+            schemaOptions.showDualityIndex.value ? dualityIndex(2 * i) : []
+          )
         )
           .concat(
             translateElements(
               800,
               500,
-              complexOctagon(y[0], y[1], z[0], schemaOptions)
+              complexOctagon(y[0], y[1], z[0], schemaOptions).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(2 * i + 1)
+                  : []
+              )
             )
           )
           .concat(
@@ -207,6 +225,10 @@ export const complexOctagonSequence = (dualities, schemaOptions) => {
                 z[1],
                 i + 1 < triads.length ? triads[i + 1][1][0] : ['', '', '', ''],
                 schemaOptions
+              ).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(2 * i + 2)
+                  : []
               )
             )
           )
@@ -222,20 +244,30 @@ export const complexOctagonSequence = (dualities, schemaOptions) => {
         translateElements(
           800,
           700,
-          complexOctagon(w[0], w[1], x[0], schemaOptions)
+          complexOctagon(w[0], w[1], x[0], schemaOptions).concat(
+            schemaOptions.showDualityIndex.value ? dualityIndex(4 * i) : []
+          )
         )
           .concat(
             translateElements(
               0,
               700,
-              complexOctagon(x[0], x[1], y[0], schemaOptions)
+              complexOctagon(x[0], x[1], y[0], schemaOptions).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(4 * i + 1)
+                  : []
+              )
             )
           )
           .concat(
             translateElements(
               0,
               0,
-              complexOctagon(y[0], y[1], z[0], schemaOptions)
+              complexOctagon(y[0], y[1], z[0], schemaOptions).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(4 * i + 2)
+                  : []
+              )
             )
           )
           .concat(
@@ -249,6 +281,10 @@ export const complexOctagonSequence = (dualities, schemaOptions) => {
                   ? tetrads[i + 1][0][0]
                   : ['', '', '', ''],
                 schemaOptions
+              ).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(4 * i + 3)
+                  : []
               )
             )
           )
@@ -261,8 +297,12 @@ export const complexOctagonSequence = (dualities, schemaOptions) => {
       0,
       800 * i + ((i + 1) % 2) * 100,
       dualities[i + 1]
-        ? complexOctagon(x, y, dualities[i + 1][0], schemaOptions)
-        : complexSquare(x, y)
+        ? complexOctagon(x, y, dualities[i + 1][0], schemaOptions).concat(
+            schemaOptions.showDualityIndex.value ? dualityIndex(i) : []
+          )
+        : complexSquare(x, y).concat(
+            schemaOptions.showDualityIndex.value ? dualityIndex(i) : []
+          )
     )
   )
 }

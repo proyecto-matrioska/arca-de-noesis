@@ -56,6 +56,18 @@ export const duality = ([a, b, c, d]) =>
     )
   )
 
+const dualityIndex = index => [
+  {
+    type: 'text',
+    x: -120,
+    y: -40,
+    textAlign: 'center',
+    fontSize: 20,
+    text: `${index + 1}:`,
+    strokeColor: palette.ORANGE,
+  },
+]
+
 const elementDescriptions = () => [
   {
     type: 'text',
@@ -159,6 +171,7 @@ export const dualitySequence = (dualities, schemaOptions) =>
       400 * i + ((i + 1) % 2) * 30,
       duality(x)
         .concat(translateElements(900, 0, duality(y)))
+        .concat(schemaOptions.showDualityIndex.value ? dualityIndex(i) : [])
         .concat(
           schemaOptions.elementDescriptions.value ? elementDescriptions() : []
         )

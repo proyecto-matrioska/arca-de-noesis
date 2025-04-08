@@ -48,6 +48,12 @@ const generalSchemaOptions = {
 
 const schemaOptions = {
   dualidades: {
+    showDualityIndex: {
+      type: 'bool',
+      name: 'Índice',
+      value: false,
+      longDescription: 'Muestra el índice de cada dualidad',
+    },
     elementDescriptions: {
       type: 'bool',
       name: 'Descripciones de elementos principales',
@@ -63,6 +69,12 @@ const schemaOptions = {
     },
   },
   cuadros: {
+    showDualityIndex: {
+      type: 'bool',
+      name: 'Índice',
+      value: false,
+      longDescription: 'Muestra el índice de cada dualidad',
+    },
     elementDescriptions: {
       type: 'bool',
       name: 'Descripciones de elementos principales',
@@ -116,6 +128,12 @@ const schemaOptions = {
     },
   },
   'cuadros-complejos': {
+    showDualityIndex: {
+      type: 'bool',
+      name: 'Índice',
+      value: false,
+      longDescription: 'Muestra el índice de cada dualidad',
+    },
     elementDescriptions: {
       type: 'bool',
       name: 'Descripciones de elementos principales',
@@ -169,6 +187,12 @@ const schemaOptions = {
     },
   },
   octagonos: {
+    showDualityIndex: {
+      type: 'bool',
+      name: 'Índice',
+      value: false,
+      longDescription: 'Muestra el índice de cada dualidad',
+    },
     arrangement: {
       type: 'select',
       name: 'Agrupar',
@@ -182,6 +206,12 @@ const schemaOptions = {
     },
   },
   'octagonos-empiricos': {
+    showDualityIndex: {
+      type: 'bool',
+      name: 'Índice',
+      value: false,
+      longDescription: 'Muestra el índice de cada dualidad',
+    },
     arrangement: {
       type: 'select',
       name: 'Agrupar',
@@ -195,6 +225,12 @@ const schemaOptions = {
     },
   },
   triadas: {
+    showDualityIndex: {
+      type: 'bool',
+      name: 'Índice',
+      value: false,
+      longDescription: 'Muestra el índice de cada dualidad',
+    },
     elementDescriptions: {
       type: 'bool',
       name: 'Descripciones de elementos principales',
@@ -210,6 +246,12 @@ const schemaOptions = {
     },
   },
   'triadas-empiricas': {
+    showDualityIndex: {
+      type: 'bool',
+      name: 'Índice',
+      value: false,
+      longDescription: 'Muestra el índice de cada dualidad',
+    },
     elementDescriptions: {
       type: 'bool',
       name: 'Descripciones de elementos principales',

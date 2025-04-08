@@ -221,6 +221,18 @@ export const empiricalTripleSquare = (a, b, c, d) =>
     )
     .concat(squareLines())
 
+const dualityIndex = index => [
+  {
+    type: 'text',
+    x: -100,
+    y: -100,
+    textAlign: 'center',
+    fontSize: 20,
+    text: `${index + 1}:`,
+    strokeColor: palette.ORANGE,
+  },
+]
+
 const squareElementDescriptions = (intentional, schemaOptions) =>
   schemaOptions.elementDescriptions.value
     ? [
@@ -372,6 +384,7 @@ export const tripleSquareSequence = (dualities, schemaOptions) =>
       tripleSquare(
         ...toTriples(a, mapArray[i + 1] ? mapArray[i + 1][0] : ['', '', '', ''])
       )
+        .concat(schemaOptions.showDualityIndex.value ? dualityIndex(i) : [])
         .concat(
           schemaOptions.elementDescriptions.value
             ? squareElementDescriptions(1, schemaOptions)

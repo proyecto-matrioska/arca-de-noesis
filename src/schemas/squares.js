@@ -144,6 +144,18 @@ export const complexSquare = (s1, [a, b, c, d], schemaOptions) =>
         : []
     )
 
+const dualityIndex = index => [
+  {
+    type: 'text',
+    x: -100,
+    y: -40,
+    textAlign: 'center',
+    fontSize: 20,
+    text: `${index + 1}:`,
+    strokeColor: palette.ORANGE,
+  },
+]
+
 const squareElementDescriptions = (intentional, schemaOptions) =>
   schemaOptions.elementDescriptions.value
     ? [
@@ -451,12 +463,21 @@ export const squareSequence = (dualities, schemaOptions) => {
           0,
           500,
           square(x[0])
+            .concat(
+              schemaOptions.showDualityIndex.value ? dualityIndex(2 * i) : []
+            )
             .concat(squareElementDescriptions(3, schemaOptions))
             .concat(
               translateElements(
                 2000,
                 0,
-                square(x[1]).concat(squareElementDescriptions(3, schemaOptions))
+                square(x[1])
+                  .concat(
+                    schemaOptions.showDualityIndex.value
+                      ? dualityIndex(2 * i)
+                      : []
+                  )
+                  .concat(squareElementDescriptions(3, schemaOptions))
               )
             )
         )
@@ -465,14 +486,23 @@ export const squareSequence = (dualities, schemaOptions) => {
               800,
               500,
               square(y[0])
+                .concat(
+                  schemaOptions.showDualityIndex.value
+                    ? dualityIndex(2 * i + 1)
+                    : []
+                )
                 .concat(squareElementDescriptions(3, schemaOptions))
                 .concat(
                   translateElements(
                     2000,
                     0,
-                    square(y[1]).concat(
-                      squareElementDescriptions(3, schemaOptions)
-                    )
+                    square(y[1])
+                      .concat(
+                        schemaOptions.showDualityIndex.value
+                          ? dualityIndex(2 * i + 1)
+                          : []
+                      )
+                      .concat(squareElementDescriptions(3, schemaOptions))
                   )
                 )
             )
@@ -482,14 +512,23 @@ export const squareSequence = (dualities, schemaOptions) => {
               400,
               0,
               square(z[0])
+                .concat(
+                  schemaOptions.showDualityIndex.value
+                    ? dualityIndex(2 * i + 2)
+                    : []
+                )
                 .concat(squareElementDescriptions(3, schemaOptions))
                 .concat(
                   translateElements(
                     2000,
                     0,
-                    square(z[1]).concat(
-                      squareElementDescriptions(3, schemaOptions)
-                    )
+                    square(z[1])
+                      .concat(
+                        schemaOptions.showDualityIndex.value
+                          ? dualityIndex(2 * i + 2)
+                          : []
+                      )
+                      .concat(squareElementDescriptions(3, schemaOptions))
                   )
                 )
             )
@@ -505,12 +544,21 @@ export const squareSequence = (dualities, schemaOptions) => {
           800,
           500,
           square(w[0])
+            .concat(
+              schemaOptions.showDualityIndex.value ? dualityIndex(4 * i) : []
+            )
             .concat(squareElementDescriptions(3, schemaOptions))
             .concat(
               translateElements(
                 2000,
                 0,
-                square(w[1]).concat(squareElementDescriptions(3, schemaOptions))
+                square(w[1])
+                  .concat(
+                    schemaOptions.showDualityIndex.value
+                      ? dualityIndex(4 * i)
+                      : []
+                  )
+                  .concat(squareElementDescriptions(3, schemaOptions))
               )
             )
         )
@@ -519,14 +567,23 @@ export const squareSequence = (dualities, schemaOptions) => {
               0,
               500,
               square(x[0])
+                .concat(
+                  schemaOptions.showDualityIndex.value
+                    ? dualityIndex(4 * i + 1)
+                    : []
+                )
                 .concat(squareElementDescriptions(3, schemaOptions))
                 .concat(
                   translateElements(
                     2000,
                     0,
-                    square(x[1]).concat(
-                      squareElementDescriptions(3, schemaOptions)
-                    )
+                    square(x[1])
+                      .concat(
+                        schemaOptions.showDualityIndex.value
+                          ? dualityIndex(4 * i + 1)
+                          : []
+                      )
+                      .concat(squareElementDescriptions(3, schemaOptions))
                   )
                 )
             )
@@ -536,14 +593,23 @@ export const squareSequence = (dualities, schemaOptions) => {
               0,
               0,
               square(y[0])
+                .concat(
+                  schemaOptions.showDualityIndex.value
+                    ? dualityIndex(4 * i + 2)
+                    : []
+                )
                 .concat(squareElementDescriptions(3, schemaOptions))
                 .concat(
                   translateElements(
                     2000,
                     0,
-                    square(y[1]).concat(
-                      squareElementDescriptions(3, schemaOptions)
-                    )
+                    square(y[1])
+                      .concat(
+                        schemaOptions.showDualityIndex.value
+                          ? dualityIndex(4 * i + 2)
+                          : []
+                      )
+                      .concat(squareElementDescriptions(3, schemaOptions))
                   )
                 )
             )
@@ -553,14 +619,23 @@ export const squareSequence = (dualities, schemaOptions) => {
               800,
               0,
               square(z[0])
+                .concat(
+                  schemaOptions.showDualityIndex.value
+                    ? dualityIndex(4 * i + 3)
+                    : []
+                )
                 .concat(squareElementDescriptions(3, schemaOptions))
                 .concat(
                   translateElements(
                     2000,
                     0,
-                    square(z[1]).concat(
-                      squareElementDescriptions(3, schemaOptions)
-                    )
+                    square(z[1])
+                      .concat(
+                        schemaOptions.showDualityIndex.value
+                          ? dualityIndex(4 * i + 3)
+                          : []
+                      )
+                      .concat(squareElementDescriptions(3, schemaOptions))
                   )
                 )
             )
@@ -593,6 +668,7 @@ export const squareSequence = (dualities, schemaOptions) => {
       700 * i + ((i + 1) % 2) * 50,
       square(x)
         .concat(translateElements(800, 0, square(y)))
+        .concat(schemaOptions.showDualityIndex.value ? dualityIndex(i) : [])
         .concat(squareElementDescriptions(1, schemaOptions))
         .concat(
           translateElements(800, 0, squareElementDescriptions(2, schemaOptions))
@@ -620,16 +696,34 @@ export const complexSquareSequence = (dualities, schemaOptions) => {
       translateElements(
         0,
         1400 * i,
-        translateElements(0, 500, complexSquare(x[0], x[1], schemaOptions))
+        translateElements(
+          0,
+          500,
+          complexSquare(x[0], x[1], schemaOptions).concat(
+            schemaOptions.showDualityIndex.value ? dualityIndex(2 * i) : []
+          )
+        )
           .concat(
             translateElements(
               800,
               500,
-              complexSquare(y[0], y[1], schemaOptions)
+              complexSquare(y[0], y[1], schemaOptions).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(2 * i + 1)
+                  : []
+              )
             )
           )
           .concat(
-            translateElements(400, 0, complexSquare(z[0], z[1], schemaOptions))
+            translateElements(
+              400,
+              0,
+              complexSquare(z[0], z[1], schemaOptions).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(2 * i + 2)
+                  : []
+              )
+            )
           )
       )
     )
@@ -638,15 +732,45 @@ export const complexSquareSequence = (dualities, schemaOptions) => {
       translateElements(
         0,
         1400 * i,
-        translateElements(800, 500, complexSquare(w[0], w[1], schemaOptions))
+        translateElements(
+          800,
+          500,
+          complexSquare(w[0], w[1], schemaOptions).concat(
+            schemaOptions.showDualityIndex.value ? dualityIndex(4 * i) : []
+          )
+        )
           .concat(
-            translateElements(0, 500, complexSquare(x[0], x[1], schemaOptions))
+            translateElements(
+              0,
+              500,
+              complexSquare(x[0], x[1], schemaOptions).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(4 * i + 1)
+                  : []
+              )
+            )
           )
           .concat(
-            translateElements(0, 0, complexSquare(y[0], y[1], schemaOptions))
+            translateElements(
+              0,
+              0,
+              complexSquare(y[0], y[1], schemaOptions).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(4 * i + 2)
+                  : []
+              )
+            )
           )
           .concat(
-            translateElements(800, 0, complexSquare(z[0], z[1], schemaOptions))
+            translateElements(
+              800,
+              0,
+              complexSquare(z[0], z[1], schemaOptions).concat(
+                schemaOptions.showDualityIndex.value
+                  ? dualityIndex(4 * i + 3)
+                  : []
+              )
+            )
           )
           .concat(
             schemaOptions.showRectangularFactorizations.value !== 'ninguna'
@@ -664,7 +788,9 @@ export const complexSquareSequence = (dualities, schemaOptions) => {
     translateElements(
       0,
       700 * i + ((i + 1) % 2) * 50,
-      complexSquare(x, y, schemaOptions)
+      complexSquare(x, y, schemaOptions).concat(
+        schemaOptions.showDualityIndex.value ? dualityIndex(i) : []
+      )
     )
   )
 }
