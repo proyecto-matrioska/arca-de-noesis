@@ -2,6 +2,16 @@
   height: 100vh;
 }
 
+.ArcaDeNoesis .unsavedDataMark {
+  color: red;
+  margin-left: 0.2rem;
+}
+
+.ArcaDeNoesis .excalidraw .sidebar__header {
+  padding: 1rem 1rem 0 1rem;
+  align-items: baseline;
+}
+
 .ArcaDeNoesis .sidebar__header button {
   margin-right: 0.5rem;
 }

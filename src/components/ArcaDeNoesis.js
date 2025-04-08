@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -12,8 +12,9 @@ import Editor from './Editor'
 import OptionsPanel from './OptionsPanel'
 import {
   loadDataFile,
+  loadExample,
+  saveAsDataFile,
   saveDataFile,
-  setDialecticsData,
 } from '../state/dialecticsSlice'
 import { setSelectedDiagram, setSidebarOpen } from '../state/uiSlice'
 import { factorData } from '../schemas/factorization'
@@ -35,10 +36,6 @@ import {
 import { procesualSequence } from '../schemas/procesual'
 import { capasDiscursivasSequence } from '../schemas/layers'
 
-import metafisicaData from '../examples/Metafísica de la información'
-import intencionalidadData from '../examples/Intencionalidad.json'
-import rosalindKraussData from '../examples/Rosalind Krauss.json'
-
 const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
 
@@ -46,6 +43,7 @@ function ArcaDeNoesis() {
   const dispatch = useDispatch()
   const data = useSelector(state => state.dialectics.data)
   const dataFilename = useSelector(state => state.dialectics.filename)
+  const isDirty = useSelector(state => state.dialectics.isDirty)
   const [excalidrawAPI, setExcalidrawAPI] = useState(null)
   const isSidebarOpen = useSelector(state => state.ui.isSidebarOpen)
   const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
@@ -53,7 +51,6 @@ function ArcaDeNoesis() {
   const generalSchemaOptions = useSelector(
     state => state.ui.generalSchemaOptions
   )
-  const inputFile = useRef(null)
   const defaultDarkMode = useMediaQuery(
     {
       query: '(prefers-color-scheme: dark)',
@@ -68,6 +65,7 @@ function ArcaDeNoesis() {
   )
   const initialElements = convertToExcalidrawElements(initialScreen())
   const elements = initialElements
+  const hasFileSystemAccessAPI = 'showSaveFilePicker' in window
 
   const openEditorTab = () => {
     if (!isSidebarOpen)
@@ -86,24 +84,17 @@ function ArcaDeNoesis() {
       scrollToContent: true,
     })
   }
-  const handleFileUpload = e => {
-    const { files } = e.target
-    if (files && files.length) {
-      dispatch(loadDataFile(files[0]))
-      editarOptHandler()
-    }
-  }
-  const loadFileOptHandler = () => {
-    //if (window.confirm('Se perderán los cambios no guardados. ¿Continuar?'))
-    inputFile.current.click()
+  const loadFileOptHandler = async () => {
+    if (isDirty && !window.confirm('¿Perder los cambios no guardados?')) return
+
+    dispatch(loadDataFile())
+    editarOptHandler()
   }
   const saveFileOptHandler = () => {
-    const input = window.prompt('Guardar en', dataFilename ?? '')
-    if (input === '') {
-      window.alert('Especifique un nombre de archivo')
-      return
-    }
-    dispatch(saveDataFile(input, data))
+    dispatch(saveDataFile())
+  }
+  const saveAsFileOptHandler = () => {
+    dispatch(saveAsDataFile())
   }
   const selectDiagramHandler = schema => () => {
     const factorizationId = generalSchemaOptions.factorizations.value
@@ -155,14 +146,26 @@ function ArcaDeNoesis() {
   const editarOptHandler = () => {
     openEditorTab()
   }
-  const loadExample = (filename, exampleData) => () => {
-    dispatch(setDialecticsData({ filename, data: exampleData }))
+  const loadExampleHandler = exampleName => () => {
+    if (isDirty && !window.confirm('¿Perder los cambios no guardados?')) return
+    dispatch(loadExample(exampleName))
     editarOptHandler()
   }
 
   const updateDiagram = () => {
     selectDiagramHandler(selectedDiagram)()
   }
+
+  useEffect(() => {
+    const handleBeforeUnload = e => {
+      if (isDirty) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [isDirty])
 
   return (
     <div className="ArcaDeNoesis">
@@ -191,31 +194,22 @@ function ArcaDeNoesis() {
             <MainMenu.Item onSelect={loadFileOptHandler}>
               Cargar...
             </MainMenu.Item>
-            <MainMenu.Item onSelect={saveFileOptHandler}>
-              Guardar...
-            </MainMenu.Item>
+            <MainMenu.Item onSelect={saveFileOptHandler}>Guardar</MainMenu.Item>
+            {hasFileSystemAccessAPI && (
+              <MainMenu.Item onSelect={saveAsFileOptHandler}>
+                Guardar como...
+              </MainMenu.Item>
+            )}
             <MainMenu.Item onSelect={editarOptHandler}>Editar</MainMenu.Item>
           </MainMenu.Group>
           <MainMenu.Group title="Ejemplos">
-            <MainMenu.Item
-              onSelect={loadExample(
-                'Metafísica de la información.json',
-                metafisicaData
-              )}
-            >
+            <MainMenu.Item onSelect={loadExampleHandler('metafisica')}>
               Metafísica de la información
             </MainMenu.Item>
-            <MainMenu.Item
-              onSelect={loadExample(
-                'Intencionalidad.json',
-                intencionalidadData
-              )}
-            >
+            <MainMenu.Item onSelect={loadExampleHandler('intensionalidad')}>
               Intención vs intensión
             </MainMenu.Item>
-            <MainMenu.Item
-              onSelect={loadExample('Rosalind Krauss.json', rosalindKraussData)}
-            >
+            <MainMenu.Item onSelect={loadExampleHandler('rosalindKrauss')}>
               Rosalind Krauss - Espacio y arquitectura
             </MainMenu.Item>
           </MainMenu.Group>
@@ -286,6 +280,7 @@ function ArcaDeNoesis() {
               ⟲
             </button>
             <b>{dataFilename}</b>
+            {isDirty && <span className="unsavedDataMark">🖫</span>}
           </Sidebar.Header>
           <Sidebar.Tabs>
             <Sidebar.Tab tab="dataEditor">
@@ -303,13 +298,6 @@ function ArcaDeNoesis() {
           </Sidebar.Tabs>
         </Sidebar>
       </Excalidraw>
-      <input
-        style={{ display: 'none' }}
-        accept="application/JSON"
-        ref={inputFile}
-        onChange={handleFileUpload}
-        type="file"
-      />
     </div>
   )
 }
