@@ -12,6 +12,7 @@ const schemaNames = {
   'dialectica-empirica': 'Dialéctica empírica',
   procesual: 'Procesual',
   'capas-discursivas': 'Capas discursivas',
+  matrioskas: 'Matrioskas',
 }
 
 const generalSchemaOptions = {
@@ -19,7 +20,8 @@ const generalSchemaOptions = {
     type: 'bool',
     name: 'Actualizar diagrama automáticamente',
     value: true,
-    longDescription: 'Actualizar diagrama automáticamente cuando se realizan cambios',
+    longDescription:
+      'Actualizar diagrama automáticamente cuando se realizan cambios',
   },
   factorizations: {
     type: 'select',

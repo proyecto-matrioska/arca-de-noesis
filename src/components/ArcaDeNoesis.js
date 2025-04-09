@@ -35,6 +35,7 @@ import {
 } from '../schemas/dialectics'
 import { procesualSequence } from '../schemas/procesual'
 import { capasDiscursivasSequence } from '../schemas/layers'
+import { matrioskaSequence } from '../schemas/matrioska'
 
 const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
@@ -135,6 +136,9 @@ function ArcaDeNoesis() {
       case 'capas-discursivas':
         maker = capasDiscursivasSequence
         break
+      case 'matrioskas':
+        maker = matrioskaSequence
+        break;
       default:
         break
     }
@@ -149,7 +153,6 @@ function ArcaDeNoesis() {
     data,
     excalidrawAPI,
     generalSchemaOptions.factorizations.value,
-    isSidebarOpen,
     schemaOptions,
     selectedDiagram,
   ])
@@ -263,6 +266,9 @@ function ArcaDeNoesis() {
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('capas-discursivas')}>
               Capas discursivas
+            </MainMenu.Item>
+            <MainMenu.Item onSelect={selectSchemaHandler('matrioskas')}>
+              Matrioskas
             </MainMenu.Item>
           </MainMenu.Group>
           <MainMenu.Group title="Acerca de">
