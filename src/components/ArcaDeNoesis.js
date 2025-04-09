@@ -48,6 +48,9 @@ function ArcaDeNoesis() {
   const isSidebarOpen = useSelector(state => state.ui.isSidebarOpen)
   const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
   const schemaOptions = useSelector(state => state.ui.schemaOptions)
+  const diagramAutoupdate = useSelector(
+    state => state.ui.generalSchemaOptions.diagramAutoupdate
+  )
   const generalSchemaOptions = useSelector(
     state => state.ui.generalSchemaOptions
   )
@@ -166,6 +169,11 @@ function ArcaDeNoesis() {
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [isDirty])
+
+  useEffect(() => {
+    if (diagramAutoupdate && selectedDiagram) updateDiagram()
+    return () => {}
+  }, [data, diagramAutoupdate, selectedDiagram, updateDiagram])
 
   return (
     <div className="ArcaDeNoesis">

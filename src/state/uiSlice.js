@@ -15,6 +15,12 @@ const schemaNames = {
 }
 
 const generalSchemaOptions = {
+  diagramAutoupdate: {
+    type: 'bool',
+    name: 'Actualizar diagrama automáticamente',
+    value: false,
+    longDescription: 'Actualizar diagrama automáticamente cuando se realizan cambios',
+  },
   factorizations: {
     type: 'select',
     name: 'Factorizar',
