@@ -86,8 +86,9 @@ function ArcaDeNoesis() {
   const saveAsFileOptHandler = () => {
     dispatch(saveAsDataFile())
   }
-  const selectSchemaHandler = schema => () =>
+  const selectSchemaHandler = schema => () => {
     dispatch(setSelectedDiagram(schema))
+  }
   const editarOptHandler = () => {
     openEditorTab()
   }
@@ -144,12 +145,14 @@ function ArcaDeNoesis() {
       elements,
       scrollToContent: true,
     })
-    if (!isSidebarOpen)
-      excalidrawAPI.toggleSidebar({
-        name: 'edit-sidebar',
-        tab: 'diagramOptions',
-      })
-  }, [data, excalidrawAPI, generalSchemaOptions.factorizations.value, isSidebarOpen, schemaOptions, selectedDiagram])
+  }, [
+    data,
+    excalidrawAPI,
+    generalSchemaOptions.factorizations.value,
+    isSidebarOpen,
+    schemaOptions,
+    selectedDiagram,
+  ])
 
   useEffect(() => {
     const handleBeforeUnload = e => {
