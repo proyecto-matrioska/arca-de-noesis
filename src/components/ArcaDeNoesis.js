@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -74,19 +74,6 @@ function ArcaDeNoesis() {
     if (!isSidebarOpen)
       excalidrawAPI.toggleSidebar({ name: 'edit-sidebar', tab: 'dataEditor' })
   }
-  const openOptionsTab = () => {
-    if (!isSidebarOpen)
-      excalidrawAPI.toggleSidebar({
-        name: 'edit-sidebar',
-        tab: 'diagramOptions',
-      })
-  }
-  const updateScene = elements => {
-    excalidrawAPI.updateScene({
-      elements,
-      scrollToContent: true,
-    })
-  }
   const loadFileOptHandler = async () => {
     if (isDirty && !window.confirm('¿Perder los cambios no guardados?')) return
 
@@ -99,53 +86,8 @@ function ArcaDeNoesis() {
   const saveAsFileOptHandler = () => {
     dispatch(saveAsDataFile())
   }
-  const selectDiagramHandler = schema => () => {
-    const factorizationId = generalSchemaOptions.factorizations.value
-    let makeElements = null
-    switch (schema) {
-      case 'dualidades':
-        makeElements = dualitySequence
-        break
-      case 'cuadros':
-        makeElements = squareSequence
-        break
-      case 'cuadros-complejos':
-        makeElements = complexSquareSequence
-        break
-      case 'octagonos':
-        makeElements = complexOctagonSequence
-        break
-      case 'octagonos-empiricos':
-        makeElements = empiricalComplexOctagonSequence
-        break
-      case 'triadas':
-        makeElements = tripleSquareSequence
-        break
-      case 'triadas-empiricas':
-        makeElements = empiricalTripleSquareSequence
-        break
-      case 'dialectica':
-        makeElements = dialecticSequence
-        break
-      case 'dialectica-empirica':
-        makeElements = empiricalDialecticSequence
-        break
-      case 'procesual':
-        makeElements = procesualSequence
-        break
-      case 'capas-discursivas':
-        makeElements = capasDiscursivasSequence
-        break
-      default:
-        break
-    }
-    const elements = convertToExcalidrawElements(
-      makeElements(factorData(factorizationId, data), schemaOptions[schema])
-    )
-    updateScene(elements)
+  const selectSchemaHandler = schema => () =>
     dispatch(setSelectedDiagram(schema))
-    openOptionsTab()
-  }
   const editarOptHandler = () => {
     openEditorTab()
   }
@@ -155,9 +97,59 @@ function ArcaDeNoesis() {
     editarOptHandler()
   }
 
-  const updateDiagram = () => {
-    selectDiagramHandler(selectedDiagram)()
-  }
+  const updateDiagram = useCallback(() => {
+    const factorizationId = generalSchemaOptions.factorizations.value
+    let maker = null
+    switch (selectedDiagram) {
+      case 'dualidades':
+        maker = dualitySequence
+        break
+      case 'cuadros':
+        maker = squareSequence
+        break
+      case 'cuadros-complejos':
+        maker = complexSquareSequence
+        break
+      case 'octagonos':
+        maker = complexOctagonSequence
+        break
+      case 'octagonos-empiricos':
+        maker = empiricalComplexOctagonSequence
+        break
+      case 'triadas':
+        maker = tripleSquareSequence
+        break
+      case 'triadas-empiricas':
+        maker = empiricalTripleSquareSequence
+        break
+      case 'dialectica':
+        maker = dialecticSequence
+        break
+      case 'dialectica-empirica':
+        maker = empiricalDialecticSequence
+        break
+      case 'procesual':
+        maker = procesualSequence
+        break
+      case 'capas-discursivas':
+        maker = capasDiscursivasSequence
+        break
+      default:
+        break
+    }
+    const elements = convertToExcalidrawElements(
+      maker(factorData(factorizationId, data), schemaOptions[selectedDiagram])
+    )
+    excalidrawAPI.updateScene({
+      elements,
+      scrollToContent: true,
+    })
+    if (!isSidebarOpen)
+      excalidrawAPI.toggleSidebar({
+        name: 'edit-sidebar',
+        tab: 'diagramOptions',
+      })
+  }, [data, excalidrawAPI, generalSchemaOptions.factorizations.value, isSidebarOpen, schemaOptions, selectedDiagram])
 
   useEffect(() => {
     const handleBeforeUnload = e => {
@@ -169,6 +161,10 @@ function ArcaDeNoesis() {
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [isDirty])
+
+  useEffect(() => {
+    if (selectedDiagram) updateDiagram()
+  }, [selectedDiagram, updateDiagram])
 
   useEffect(() => {
     if (diagramAutoupdate && selectedDiagram) updateDiagram()
@@ -228,41 +224,41 @@ function ArcaDeNoesis() {
           </MainMenu.Group>
           <MainMenu.Separator />
           <MainMenu.Group title="Galería de esquemas">
-            <MainMenu.Item onSelect={selectDiagramHandler('dualidades')}>
+            <MainMenu.Item onSelect={selectSchemaHandler('dualidades')}>
               Dualidades
             </MainMenu.Item>
-            <MainMenu.Item onSelect={selectDiagramHandler('cuadros')}>
+            <MainMenu.Item onSelect={selectSchemaHandler('cuadros')}>
               Cuadros
             </MainMenu.Item>
-            <MainMenu.Item onSelect={selectDiagramHandler('cuadros-complejos')}>
+            <MainMenu.Item onSelect={selectSchemaHandler('cuadros-complejos')}>
               Cuadros complejos
             </MainMenu.Item>
-            <MainMenu.Item onSelect={selectDiagramHandler('octagonos')}>
+            <MainMenu.Item onSelect={selectSchemaHandler('octagonos')}>
               Octágonos
             </MainMenu.Item>
             <MainMenu.Item
-              onSelect={selectDiagramHandler('octagonos-empiricos')}
+              onSelect={selectSchemaHandler('octagonos-empiricos')}
             >
               Octágonos empíricos
             </MainMenu.Item>
-            <MainMenu.Item onSelect={selectDiagramHandler('triadas')}>
+            <MainMenu.Item onSelect={selectSchemaHandler('triadas')}>
               Triadas
             </MainMenu.Item>
-            <MainMenu.Item onSelect={selectDiagramHandler('triadas-empiricas')}>
+            <MainMenu.Item onSelect={selectSchemaHandler('triadas-empiricas')}>
               Triadas empíricas
             </MainMenu.Item>
-            <MainMenu.Item onSelect={selectDiagramHandler('dialectica')}>
+            <MainMenu.Item onSelect={selectSchemaHandler('dialectica')}>
               Dialéctica
             </MainMenu.Item>
             <MainMenu.Item
-              onSelect={selectDiagramHandler('dialectica-empirica')}
+              onSelect={selectSchemaHandler('dialectica-empirica')}
             >
               Dialéctica empírica
             </MainMenu.Item>
-            <MainMenu.Item onSelect={selectDiagramHandler('procesual')}>
+            <MainMenu.Item onSelect={selectSchemaHandler('procesual')}>
               Procesual
             </MainMenu.Item>
-            <MainMenu.Item onSelect={selectDiagramHandler('capas-discursivas')}>
+            <MainMenu.Item onSelect={selectSchemaHandler('capas-discursivas')}>
               Capas discursivas
             </MainMenu.Item>
           </MainMenu.Group>
