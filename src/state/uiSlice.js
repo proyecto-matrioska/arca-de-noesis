@@ -18,7 +18,7 @@ const generalSchemaOptions = {
   diagramAutoupdate: {
     type: 'bool',
     name: 'Actualizar diagrama automáticamente',
-    value: false,
+    value: true,
     longDescription: 'Actualizar diagrama automáticamente cuando se realizan cambios',
   },
   factorizations: {
