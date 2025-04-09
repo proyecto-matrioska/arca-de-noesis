@@ -4,7 +4,10 @@ import { useSelector } from 'react-redux'
 
 function App() {
   const filename = useSelector(state => state.dialectics.filename)
-  const windowTitle = `Arca de Noesis - ${filename ? filename : 'untitled'}.json`
+  const isDirty = useSelector(state => state.dialectics.isDirty)
+  const windowTitle = `Arca de Noesis - ${
+    filename ? filename : 'untitled'
+  }.json${isDirty ? ' (modificado)' : ''}`
   return (
     <>
       <Helmet>
