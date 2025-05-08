@@ -7,7 +7,7 @@ function App() {
   const isDirty = useSelector(state => state.dialectics.isDirty)
   const windowTitle = `Arca de Noesis - ${
     filename ? filename : 'untitled'
-  }.json${isDirty ? ' (modificado)' : ''}`
+  }.noesis${isDirty ? ' (modificado)' : ''}`
   return (
     <>
       <Helmet>

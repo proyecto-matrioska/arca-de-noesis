@@ -108,8 +108,8 @@ export const loadDataFile = () => async dispatch => {
       const [fileHandle] = await window.showOpenFilePicker({
         types: [
           {
-            description: 'JSON Files',
-            accept: { 'application/json': ['.json'] },
+            description: 'Arca de Noesis Files',
+            accept: { 'application/noesis': ['.noesis'] },
           },
         ],
       })
@@ -124,7 +124,7 @@ export const loadDataFile = () => async dispatch => {
       return new Promise(resolve => {
         const input = document.createElement('input')
         input.type = 'file'
-        input.accept = '.json'
+        input.accept = '.noesis'
 
         input.onchange = async e => {
           file = e.target.files[0]
@@ -163,11 +163,11 @@ export const saveDataFile = () => async (dispatch, getState) => {
 
       if (!targetFileHandle) {
         const options = {
-          suggestedName: filename || 'untitled.json',
+          suggestedName: filename || 'untitled.noesis',
           types: [
             {
-              description: 'JSON Files',
-              accept: { 'application/json': ['.json'] },
+              description: 'Arca de Noesis Files',
+              accept: { 'application/noesis': ['.noesis'] },
             },
           ],
         }
@@ -185,15 +185,15 @@ export const saveDataFile = () => async (dispatch, getState) => {
       return // Usuario canceló
     }
   } else {
-    let name = filename || 'untitled.json'
-    if (!name.endsWith('.json')) name += '.json'
+    let name = filename || 'untitled.noesis'
+    if (!name.endsWith('.noesis')) name += '.noesis'
     const input = window.prompt('Guardar como', name)
     if (input === null) return
     if (input === '') {
       window.alert('Especifique un nombre de archivo')
       return
     }
-    const finalName = input.endsWith('.json') ? input : `${input}.json`
+    const finalName = input.endsWith('.noesis') ? input : `${input}.noesis`
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: 'application/json;charset=utf-8',
     })
@@ -209,11 +209,11 @@ export const saveAsDataFile = () => async (dispatch, getState) => {
 
   try {
     const options = {
-      suggestedName: filename || 'untitled.json',
+      suggestedName: filename || 'untitled.noesis',
       types: [
         {
-          description: 'JSON Files',
-          accept: { 'application/json': ['.json'] },
+          description: 'Arca de Noesis Files',
+          accept: { 'application/noesis': ['.noesis'] },
         },
       ],
     }
