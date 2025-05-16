@@ -24,7 +24,6 @@ self.addEventListener('install', event => {
         })
       })
       .catch(error => console.error(`Error reading asset manifest: ${error}`))
-      .finally(() => console.error('Service Worker failed to install'))
   )
 })
 
