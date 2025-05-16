@@ -7,6 +7,11 @@ export default defineConfig(() => {
     build: {
       outDir: 'build',
       manifest: 'assets-manifest.json',
+      rollupOptions: {
+        output: {
+          chunkFileNames: 'assets/c-[name]-[hash].js',
+        },
+      },
     },
     dev: {
       manifest: 'assets-manifest.json',
