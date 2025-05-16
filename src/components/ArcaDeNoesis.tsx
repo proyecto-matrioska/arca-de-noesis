@@ -48,7 +48,6 @@ import {
 import { procesualSequence } from '../schemas/procesual'
 import { capasDiscursivasSequence } from '../schemas/layers'
 import { matrioskaSequence } from '../schemas/matrioska'
-import { zoomIn } from '@excalidraw/excalidraw/dist/types/excalidraw/components/icons'
 
 const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
