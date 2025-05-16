@@ -17,7 +17,11 @@ self.addEventListener('install', event => {
               .filter(key => assets[key]['file'] !== undefined)
               .map(key => assets[key]['file'])
           )
-          .concat(assets['css'] ? assets['css'] : [])
+          .concat(
+            assets['index.html'] && assets['index.html']['css']
+              ? assets['index.html']['css']
+              : []
+          )
         console.log('urls to cache', urlsToCache)
         return caches.open(CACHE_NAME).then(cache => {
           return cache.addAll(urlsToCache) // Cachea los recursos
