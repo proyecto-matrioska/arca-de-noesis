@@ -4,9 +4,15 @@ import { square } from './squares'
 import { translateElements } from './translateElements'
 import { groupByTetrads } from './groupByTetrads'
 import { groupByTriads } from './groupByTriads'
+import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
+import { DialecticsDataEntry, DualityData } from '../state/dialecticsSlice'
+import { SchemaOption } from '../state/uiSlice'
 
-const complexSquare = (s1, [a, b, c, d]) =>
-  square(s1).concat([
+const complexSquare: (
+  d1: DualityData,
+  d2: DualityData
+) => ExcalidrawElementSkeleton[] = (d1, [a, b, c, d]) =>
+  square(d1).concat([
     {
       type: 'text',
       x: 100,
@@ -67,7 +73,12 @@ const complexSquare = (s1, [a, b, c, d]) =>
     },
   ])
 
-export const complexOctagon = (s1, s2, [a, b, c, d], schemaOptions) =>
+export const complexOctagon: (
+  d1: DualityData,
+  d2: DualityData,
+  d3: DualityData,
+  schemaOptions: { [key: string]: SchemaOption }
+) => ExcalidrawElementSkeleton[] = (s1, s2, [a, b, c, d], schemaOptions) =>
   complexSquare(s1, s2).concat([
     {
       type: 'text',
@@ -179,7 +190,7 @@ export const complexOctagon = (s1, s2, [a, b, c, d], schemaOptions) =>
     },
   ])
 
-const dualityIndex = index => [
+const dualityIndex: (index: number) => ExcalidrawElementSkeleton[] = index => [
   {
     type: 'text',
     x: -100,
@@ -191,7 +202,10 @@ const dualityIndex = index => [
   },
 ]
 
-export const complexOctagonSequence = (dualities, schemaOptions) => {
+export const complexOctagonSequence: (
+  dualities: DialecticsDataEntry[],
+  schemaOptions: { [key: string]: SchemaOption }
+) => ExcalidrawElementSkeleton[] = (dualities, schemaOptions) => {
   if (schemaOptions.arrangement.value === 'triadas') {
     const triads = groupByTriads(dualities)
     return triads.flatMap(([x, y, z], i) =>
@@ -316,5 +330,8 @@ export const complexOctagonSequence = (dualities, schemaOptions) => {
     )
   ) */
 
-export const empiricalComplexOctagonSequence = (dualities, schemaOptions) =>
+export const empiricalComplexOctagonSequence: (
+  dualities: DialecticsDataEntry[],
+  schemaOptions: { [key: string]: SchemaOption }
+) => ExcalidrawElementSkeleton[] = (dualities, schemaOptions) =>
   complexOctagonSequence(dualities.map(swapTetrads), schemaOptions)

@@ -1,6 +1,43 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-const schemaNames = {
+export type SchemaIdentifier =
+  | 'dualidades'
+  | 'cuadros'
+  | 'cuadros-complejos'
+  | 'octagonos'
+  | 'octagonos-empiricos'
+  | 'triadas'
+  | 'triadas-empiricas'
+  | 'dialectica'
+  | 'dialectica-empirica'
+  | 'procesual'
+  | 'capas-discursivas'
+  | 'matrioskas'
+
+export type SchemaOption = {
+  type: string
+  name: string
+  value: any
+  longDescription: string
+  options?: Array<{ value: string; name: string }>
+  depends?: { element: string; value: string }
+}
+
+export type SchemaOptions = {
+  [key in SchemaIdentifier]: {
+    [key: string]: SchemaOption
+  }
+}
+
+type UIState = {
+  isSidebarOpen: boolean
+  selectedDiagram: SchemaIdentifier | null
+  selectedDiagramName: string | null
+  generalSchemaOptions: Record<string, SchemaOption>
+  schemaOptions: SchemaOptions
+}
+
+const schemaNames: Record<SchemaIdentifier, string> = {
   dualidades: 'Dualidades',
   cuadros: 'Cuadros',
   'cuadros-complejos': 'Cuadros complejos',
@@ -15,7 +52,9 @@ const schemaNames = {
   matrioskas: 'Matrioskas',
 }
 
-const generalSchemaOptions = {
+const generalSchemaOptions: {
+  [key: string]: SchemaOption
+} = {
   diagramAutoupdate: {
     type: 'bool',
     name: 'Actualizar diagrama automáticamente',
@@ -54,7 +93,7 @@ const generalSchemaOptions = {
   },
 }
 
-const schemaOptions = {
+const schemaOptions: SchemaOptions = {
   dualidades: {
     showDualityIndex: {
       type: 'bool',
@@ -306,39 +345,55 @@ const schemaOptions = {
       longDescription: 'Descripciones de los elementos principales',
     },
   },
+  matrioskas: {},
+}
+
+const initialState: UIState = {
+  isSidebarOpen: false,
+  selectedDiagram: null,
+  selectedDiagramName: null,
+  generalSchemaOptions,
+  schemaOptions,
 }
 
 export const uiSlice = createSlice({
   name: 'ui',
-  initialState: {
-    isSidebarOpen: false,
-    selectedDiagram: null,
-    selectedDiagramName: null,
-    generalSchemaOptions,
-    schemaOptions,
-  },
+  initialState,
   reducers: {
-    setSidebarOpen: (state, action) => {
+    setSidebarOpen: (state: UIState, action: PayloadAction<boolean>) => {
       state.isSidebarOpen = action.payload
     },
-    setSelectedDiagram: (state, action) => {
+    setSelectedDiagram: (
+      state: UIState,
+      action: PayloadAction<SchemaIdentifier>
+    ) => {
       state.selectedDiagram = action.payload
-      state.selectedDiagramName = schemaNames[action.payload]
+      state.selectedDiagramName =
+        schemaNames[action.payload as SchemaIdentifier]
     },
     setDiagramOption: (
-      state,
-      { payload: { diagramName, optionId, value } }
+      state: UIState,
+      action: PayloadAction<{
+        diagramName: SchemaIdentifier
+        optionId: string
+        value: any
+      }>
     ) => {
-      state.schemaOptions[diagramName][optionId].value = value
+      state.schemaOptions[action.payload.diagramName][
+        action.payload.optionId
+      ].value = action.payload.value
     },
-    setGeneralDiagramOption: (state, { payload: { optionId, value } }) => {
-      state.generalSchemaOptions[optionId].value = value
+    setGeneralDiagramOption: (
+      state: UIState,
+      action: PayloadAction<{ optionId: string; value: any }>
+    ) => {
+      state.generalSchemaOptions[action.payload.optionId].value =
+        action.payload.value
     },
   },
 })
 
 export const {
-  setExcalidrawApi,
   setSidebarOpen,
   setSelectedDiagram,
   setDiagramOption,

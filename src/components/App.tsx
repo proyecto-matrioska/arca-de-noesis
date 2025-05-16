@@ -1,10 +1,10 @@
 import { Helmet } from 'react-helmet'
 import ArcaDeNoesis from './ArcaDeNoesis'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from '../state/store'
 
 function App() {
-  const filename = useSelector(state => state.dialectics.filename)
-  const isDirty = useSelector(state => state.dialectics.isDirty)
+  const filename = useAppSelector(state => state.dialectics.filename)
+  const isDirty = useAppSelector(state => state.dialectics.isDirty)
   const windowTitle = `Arca de Noesis - ${
     filename ? filename : 'untitled'
   }.noesis${isDirty ? ' (modificado)' : ''}`

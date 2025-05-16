@@ -1,5 +1,7 @@
-export const groupByTetrads = dualities => {
-  const r = []
+import { DialecticsDataEntry } from '../state/dialecticsSlice'
+
+export const groupByTetrads = (dualities: DialecticsDataEntry[]) => {
+  const r: DialecticsDataEntry[][] = []
   for (let i = 0; i < dualities.length; i += 4) {
     r.push([
       dualities[i],

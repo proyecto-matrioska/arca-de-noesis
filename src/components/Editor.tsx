@@ -1,20 +1,31 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import './Editor.css'
 import {
   deleteEntry,
+  DialecticsDataEntry,
+  DualityData,
   insertEntry,
   moveDownEntry,
   moveUpEntry,
   updateEntry,
 } from '../state/dialecticsSlice'
+import React from 'react'
+import { useAppSelector } from '../state/store'
 
-function Duality({ duality, onChange, intentional = true }) {
+interface DualityProps {
+  duality: DualityData
+  onChange: (data: DualityData) => void
+  intentional?: boolean
+}
+
+function Duality({ duality, onChange, intentional = true }: DualityProps) {
   const [a, b, c, d] = duality
-  const changeHandler = index => e => {
-    const updatedDuality = [a, b, c, d]
-    updatedDuality[index] = e.target.value
-    onChange(updatedDuality)
-  }
+  const changeHandler =
+    (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const updatedDuality: DualityData = [a, b, c, d]
+      updatedDuality[index] = e.target.value
+      onChange(updatedDuality)
+    }
   return (
     <table className="Duality">
       <thead>
@@ -27,7 +38,7 @@ function Duality({ duality, onChange, intentional = true }) {
       </thead>
       <tbody>
         <tr>
-          <td rowSpan="2">
+          <td rowSpan={2}>
             <b>{intentional ? 'I.' : 'E.'}</b>
           </td>
           <td>
@@ -56,14 +67,20 @@ function Duality({ duality, onChange, intentional = true }) {
   )
 }
 
-function DataItem({ index, item }) {
+interface DataItemProps {
+  index: number
+  item: DialecticsDataEntry
+}
+
+function DataItem({ index, item }: DataItemProps) {
   const dispatch = useDispatch()
-  const [x, y] = item
-  const changeHandler = dualityIndex => updatedDuality => {
-    const update = [x, y]
-    update[dualityIndex] = updatedDuality
-    dispatch(updateEntry({ update, index }))
-  }
+  const [x, y]: DialecticsDataEntry = item
+  const changeHandler =
+    (dualityIndex: number) => (updatedDuality: DualityData) => {
+      const update: DialecticsDataEntry = [x, y]
+      update[dualityIndex] = updatedDuality
+      dispatch(updateEntry({ update, index }))
+    }
   const moveUpHandler = () => dispatch(moveUpEntry({ index }))
   const moveDownHandler = () => dispatch(moveDownEntry({ index }))
   const insertHandler = () => dispatch(insertEntry({ index }))
@@ -133,10 +150,10 @@ function DataItem({ index, item }) {
 }
 
 function Editor() {
-  const data = useSelector(state => state.dialectics.data)
+  const data = useAppSelector(state => state.dialectics.data)
   return (
     <div className="Editor">
-      <div className='EditorContents'>
+      <div className="EditorContents">
         <ul className="Dualities">
           {data.map((item, index) => (
             <DataItem key={`DataItem-${index}`} item={item} index={index} />

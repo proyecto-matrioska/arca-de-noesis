@@ -1,7 +1,13 @@
+import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 import { palette } from './palette'
 import { translateElements } from './translateElements'
+import { DialecticsDataEntry } from '../state/dialecticsSlice'
 
-export const dialecticLayers = (x, y, z) => [
+export const dialecticLayers: (
+  x: [string, string],
+  y: [string, string],
+  z: [string, string]
+) => ExcalidrawElementSkeleton[] = (x, y, z) => [
   {
     type: 'text',
     x: 210,
@@ -78,7 +84,6 @@ export const dialecticLayers = (x, y, z) => [
     type: 'arrow',
     version: 14083,
     versionNonce: 118062832,
-    index: 'a2',
     isDeleted: false,
     id: 'P_oKBQ45AgQnvapOeA44O',
     fillStyle: 'hachure',
@@ -115,7 +120,6 @@ export const dialecticLayers = (x, y, z) => [
     type: 'arrow',
     version: 15098,
     versionNonce: 1499209968,
-    index: 'a4',
     isDeleted: false,
     id: 'r1VRRU6rvkVUbhreLNOwq',
     fillStyle: 'hachure',
@@ -153,7 +157,6 @@ export const dialecticLayers = (x, y, z) => [
     type: 'arrow',
     version: 14338,
     versionNonce: 1292534512,
-    index: 'a6',
     isDeleted: false,
     id: 'xSQQgSCipru3b0HaAjeWM',
     fillStyle: 'hachure',
@@ -190,7 +193,6 @@ export const dialecticLayers = (x, y, z) => [
     type: 'arrow',
     version: 15182,
     versionNonce: 1084007664,
-    index: 'a7',
     isDeleted: false,
     id: 'tZ1oVnuqvAg2RQTM9iS_M',
     fillStyle: 'hachure',
@@ -228,7 +230,6 @@ export const dialecticLayers = (x, y, z) => [
     type: 'arrow',
     version: 13290,
     versionNonce: 867995664,
-    index: 'aA',
     isDeleted: false,
     id: '8GeTrqgcdCZXVNao-_Foa',
     fillStyle: 'hachure',
@@ -266,7 +267,6 @@ export const dialecticLayers = (x, y, z) => [
     type: 'arrow',
     version: 13721,
     versionNonce: 26904304,
-    index: 'aD',
     isDeleted: false,
     id: 'dvvyIHNZBofc31PseO2tQ',
     fillStyle: 'hachure',
@@ -301,35 +301,38 @@ export const dialecticLayers = (x, y, z) => [
     ],
   },
 ]
-export const capasDiscursivasSequence = dualities => dualities.flatMap(([x, a], i) => {
-  const y = dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
-  const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']
-  const b = dualities[i + 1] ? dualities[i + 1][1] : ['', '', '', '']
-  const c = dualities[i + 2] ? dualities[i + 2][1] : ['', '', '', '']
-  return translateElements(
-    0,
-    600 * i,
-    dialecticLayers([x[0], x[1]], [y[2], y[3]], [z[0], z[1]])
-      .concat(
-        translateElements(
-          1000,
-          0,
-          dialecticLayers([x[2], x[3]], [y[0], y[1]], [z[2], z[3]])
+export const capasDiscursivasSequence: (
+  dualities: DialecticsDataEntry[]
+) => ExcalidrawElementSkeleton[] = dualities =>
+  dualities.flatMap(([x, a], i) => {
+    const y = dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
+    const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']
+    const b = dualities[i + 1] ? dualities[i + 1][1] : ['', '', '', '']
+    const c = dualities[i + 2] ? dualities[i + 2][1] : ['', '', '', '']
+    return translateElements(
+      0,
+      600 * i,
+      dialecticLayers([x[0], x[1]], [y[2], y[3]], [z[0], z[1]])
+        .concat(
+          translateElements(
+            1000,
+            0,
+            dialecticLayers([x[2], x[3]], [y[0], y[1]], [z[2], z[3]])
+          )
         )
-      )
-      .concat(
-        translateElements(
-          2000,
-          0,
-          dialecticLayers([a[0], a[1]], [b[2], b[3]], [c[0], c[1]])
+        .concat(
+          translateElements(
+            2000,
+            0,
+            dialecticLayers([a[0], a[1]], [b[2], b[3]], [c[0], c[1]])
+          )
         )
-      )
-      .concat(
-        translateElements(
-          3000,
-          0,
-          dialecticLayers([a[2], a[3]], [b[0], b[1]], [c[2], c[3]])
+        .concat(
+          translateElements(
+            3000,
+            0,
+            dialecticLayers([a[2], a[3]], [b[0], b[1]], [c[2], c[3]])
+          )
         )
-      )
-  )
-})
+    )
+  })

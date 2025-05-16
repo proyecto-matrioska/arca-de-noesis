@@ -1,9 +1,17 @@
+import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
+import { DialecticsDataEntry, DualityData } from '../state/dialecticsSlice'
 import { groupByTetrads } from './groupByTetrads'
 import { groupByTriads } from './groupByTriads'
 import { palette } from './palette'
 import { translateElements } from './translateElements'
+import { SchemaOption } from '../state/uiSlice'
 
-export const square = ([a, b, c, d]) => [
+export const square: (duality: DualityData) => ExcalidrawElementSkeleton[] = ([
+  a,
+  b,
+  c,
+  d,
+]) => [
   {
     type: 'text',
     x: 0,
@@ -76,8 +84,12 @@ export const square = ([a, b, c, d]) => [
   },
 ]
 
-export const complexSquare = (s1, [a, b, c, d], schemaOptions) =>
-  square(s1)
+export const complexSquare: (
+  d1: DualityData,
+  d2: DualityData,
+  schemaOptions: { [key: string]: SchemaOption }
+) => ExcalidrawElementSkeleton[] = (d1, [a, b, c, d], schemaOptions) =>
+  square(d1)
     .concat([
       {
         type: 'text',
@@ -144,7 +156,7 @@ export const complexSquare = (s1, [a, b, c, d], schemaOptions) =>
         : []
     )
 
-const dualityIndex = index => [
+const dualityIndex: (index: number) => ExcalidrawElementSkeleton[] = index => [
   {
     type: 'text',
     x: -100,
@@ -156,7 +168,10 @@ const dualityIndex = index => [
   },
 ]
 
-const squareElementDescriptions = (intentional, schemaOptions) =>
+const squareElementDescriptions: (
+  intentional: number,
+  schemaOptions: { [key: string]: SchemaOption }
+) => ExcalidrawElementSkeleton[] = (intentional, schemaOptions) =>
   schemaOptions.elementDescriptions.value
     ? [
         {
@@ -221,82 +236,88 @@ const squareElementDescriptions = (intentional, schemaOptions) =>
       ]
     : []
 
-const complexSquareElementDescriptions = () => [
-  {
-    type: 'text',
-    x: 150,
-    y: 340,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'eje intensional/complejo',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: 150,
-    y: -30,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'eje empírico/simple',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: 470,
-    y: 160,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'abstracción empírica',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'line',
-    x: 170,
-    y: 170,
-    width: 180,
-    height: 1,
-    strokeStyle: 'dashed',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: -200,
-    y: 60,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'eje intensional/complejo',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'line',
-    x: -70,
-    y: 75,
-    width: 110,
-    height: 1,
-    strokeStyle: 'dashed',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: -200,
-    y: 260,
-    textAlign: 'center',
-    fontSize: 20,
-    text: 'eje empírico/simple',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'line',
-    x: -90,
-    y: 275,
-    width: 110,
-    height: 1,
-    strokeStyle: 'dashed',
-    strokeColor: palette.ORANGE,
-  },
-]
+const complexSquareElementDescriptions: () => ExcalidrawElementSkeleton[] =
+  () => [
+    {
+      type: 'text',
+      x: 150,
+      y: 340,
+      textAlign: 'center',
+      fontSize: 20,
+      text: 'eje intensional/complejo',
+      strokeColor: palette.ORANGE,
+    },
+    {
+      type: 'text',
+      x: 150,
+      y: -30,
+      textAlign: 'center',
+      fontSize: 20,
+      text: 'eje empírico/simple',
+      strokeColor: palette.ORANGE,
+    },
+    {
+      type: 'text',
+      x: 470,
+      y: 160,
+      textAlign: 'center',
+      fontSize: 20,
+      text: 'abstracción empírica',
+      strokeColor: palette.ORANGE,
+    },
+    {
+      type: 'line',
+      x: 170,
+      y: 170,
+      width: 180,
+      height: 1,
+      strokeStyle: 'dashed',
+      strokeColor: palette.ORANGE,
+    },
+    {
+      type: 'text',
+      x: -200,
+      y: 60,
+      textAlign: 'center',
+      fontSize: 20,
+      text: 'eje intensional/complejo',
+      strokeColor: palette.ORANGE,
+    },
+    {
+      type: 'line',
+      x: -70,
+      y: 75,
+      width: 110,
+      height: 1,
+      strokeStyle: 'dashed',
+      strokeColor: palette.ORANGE,
+    },
+    {
+      type: 'text',
+      x: -200,
+      y: 260,
+      textAlign: 'center',
+      fontSize: 20,
+      text: 'eje empírico/simple',
+      strokeColor: palette.ORANGE,
+    },
+    {
+      type: 'line',
+      x: -90,
+      y: 275,
+      width: 110,
+      height: 1,
+      strokeStyle: 'dashed',
+      strokeColor: palette.ORANGE,
+    },
+  ]
 
-const rectagularAnnotation = (a, b, c, d) => [
+const rectagularAnnotation: (
+  a: number,
+  b: number,
+  c: number,
+  d: number
+) => ExcalidrawElementSkeleton[] = (a, b, c, d) => [
   {
     type: 'ellipse',
     strokeWidth: 2,
@@ -406,7 +427,9 @@ const rectagularAnnotation = (a, b, c, d) => [
   },
 ]
 
-const rectagularAnnotationParams = name => {
+const rectagularAnnotationParams: (
+  name: string
+) => [number, number, number, number] = name => {
   switch (name) {
     case 'rectangular-1':
       return [0, 0, 0, 0]
@@ -453,7 +476,10 @@ const rectagularAnnotationParams = name => {
   }
 }
 
-export const squareSequence = (dualities, schemaOptions) => {
+export const squareSequence: (
+  dualities: DialecticsDataEntry[],
+  schemaOptions: { [key: string]: SchemaOption }
+) => ExcalidrawElementSkeleton[] = (dualities, schemaOptions) => {
   if (schemaOptions.arrangement.value === 'triadas')
     return groupByTriads(dualities).flatMap(([x, y, z], i) =>
       translateElements(
@@ -676,21 +702,11 @@ export const squareSequence = (dualities, schemaOptions) => {
     )
   )
 }
-/* dualities.flatMap(([x, y], i) =>
-    translateElements(
-      0,
-      700 * i + ((i + 1) % 2) * 50,
-      square(x)
-        .concat(translateElements(800, 0, square(y)))
-        .concat(
-          schemaOptions.elementDescriptions.value
-            ? squareElementDescriptions()
-            : []
-        )
-    )
-  ) */
 
-export const complexSquareSequence = (dualities, schemaOptions) => {
+export const complexSquareSequence: (
+  dualities: DialecticsDataEntry[],
+  schemaOptions: { [key: string]: SchemaOption }
+) => ExcalidrawElementSkeleton[] = (dualities, schemaOptions) => {
   if (schemaOptions.arrangement.value === 'triadas')
     return groupByTriads(dualities).flatMap(([x, y, z], i) =>
       translateElements(

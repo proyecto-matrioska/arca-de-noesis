@@ -1,4 +1,6 @@
-const rectagularIndexes = name => {
+import { DialecticsDataEntry } from '../state/dialecticsSlice'
+
+const rectagularIndexes = (name: string) => {
   switch (name) {
     case 'rectangular-1':
       return [0, 0, 0, 0]
@@ -45,9 +47,12 @@ const rectagularIndexes = name => {
   }
 }
 
-export const factorData = (factorizationId, data) => {
+export const factorData: (
+  factorizationId: string,
+  data: DialecticsDataEntry[]
+) => DialecticsDataEntry[] = (factorizationId, data) => {
   if ([undefined, null, 'ninguna'].includes(factorizationId)) return data
-  const r = []
+  const r: DialecticsDataEntry[] = []
   const indexes = rectagularIndexes(factorizationId)
   const aIdx = indexes[2] < 2 ? indexes[2] + 2 : indexes[2] - 2
   const bIdx = indexes[3] < 2 ? indexes[3] + 2 : indexes[3] - 2

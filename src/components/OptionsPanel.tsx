@@ -1,7 +1,21 @@
-import { useDispatch, useSelector } from 'react-redux'
-import './OptionsPanel.css'
+import React from 'react'
 import Switch from './Switch'
-import { setDiagramOption, setGeneralDiagramOption } from '../state/uiSlice'
+import { useAppDispatch, useAppSelector } from '../state/store'
+import {
+  SchemaOption,
+  setDiagramOption,
+  setGeneralDiagramOption,
+} from '../state/uiSlice'
+import './OptionsPanel.css'
+
+export interface IBooleanOptionProps {
+  optionId: string
+  name: string
+  longDescription: string
+  value: boolean
+  globalOption: boolean
+  disabled: boolean
+}
 
 const BooleanOption = ({
   optionId,
@@ -10,9 +24,9 @@ const BooleanOption = ({
   value,
   globalOption,
   disabled = false,
-}) => {
-  const dispatch = useDispatch()
-  const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
+}: IBooleanOptionProps) => {
+  const dispatch = useAppDispatch()
+  const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
   return (
     <div className="BooleanOption" title={longDescription}>
       <div>{name}:</div>
@@ -21,21 +35,40 @@ const BooleanOption = ({
           id={`${selectedDiagram}-checkbox-${optionId}`}
           name={`${selectedDiagram}-checkbox-${optionId}`}
           defaultValue={value}
-          onChange={b =>
-            dispatch(
-              (globalOption ? setGeneralDiagramOption : setDiagramOption)({
-                diagramName: selectedDiagram,
-                optionId,
-                value: b,
-              })
-            )
-          }
+          onChange={b => {
+            if (globalOption) {
+              dispatch(
+                setGeneralDiagramOption({
+                  optionId,
+                  value: b,
+                })
+              )
+            } else if (selectedDiagram) {
+              dispatch(
+                setDiagramOption({
+                  diagramName: selectedDiagram,
+                  optionId,
+                  value: b,
+                })
+              )
+            }
+          }}
           title={longDescription}
           disabled={disabled}
         />
       </div>
     </div>
   )
+}
+
+export interface ISelectOptionProps {
+  optionId: string
+  name: string
+  longDescription: string
+  value: string
+  options: { name: string; value: string }[]
+  globalOption: boolean
+  disabled?: boolean
 }
 
 const SelectOption = ({
@@ -46,9 +79,9 @@ const SelectOption = ({
   options,
   globalOption,
   disabled = false,
-}) => {
-  const dispatch = useDispatch()
-  const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
+}: ISelectOptionProps) => {
+  const dispatch = useAppDispatch()
+  const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
   return (
     <div className="SelectOption" title={longDescription}>
       <div>{name}:</div>
@@ -60,15 +93,24 @@ const SelectOption = ({
           }-select-${optionId}`}
           className="dropdown-select"
           defaultValue={value}
-          onChange={e =>
-            dispatch(
-              (globalOption ? setGeneralDiagramOption : setDiagramOption)({
-                diagramName: selectedDiagram,
-                optionId,
-                value: e.target.value,
-              })
-            )
-          }
+          onChange={e => {
+            if (globalOption) {
+              dispatch(
+                setGeneralDiagramOption({
+                  optionId,
+                  value: e.target.value,
+                })
+              )
+            } else if (selectedDiagram) {
+              dispatch(
+                setDiagramOption({
+                  diagramName: selectedDiagram,
+                  optionId,
+                  value: e.target.value,
+                })
+              )
+            }
+          }}
           title={longDescription}
           disabled={disabled}
         >
@@ -88,14 +130,21 @@ const SelectOption = ({
   )
 }
 
-const SchemaOption = ({
+interface IOptionProps {
+  optionId: string
+  optionData: SchemaOption
+  disabled?: boolean
+  globalOption?: boolean
+}
+
+const Option = ({
   optionId,
   optionData,
   disabled,
   globalOption = false,
-}) => {
+}: IOptionProps) => {
   const { type } = optionData
-  let OptionComponent = <div />
+  let OptionComponent: React.ComponentType<any>
   switch (type) {
     case 'bool':
       OptionComponent = BooleanOption
@@ -104,7 +153,7 @@ const SchemaOption = ({
       OptionComponent = SelectOption
       break
     default:
-      OptionComponent = <div />
+      OptionComponent = () => <div />
       break
   }
   return (
@@ -118,13 +167,13 @@ const SchemaOption = ({
 }
 
 const OptionsPanel = () => {
-  const schemaName = useSelector(state => state.ui.selectedDiagramName)
-  const schemaOptions = useSelector(state => state.ui.schemaOptions)
-  const generalSchemaOptions = useSelector(
+  const schemaName = useAppSelector(state => state.ui.selectedDiagramName)
+  const schemaOptions = useAppSelector(state => state.ui.schemaOptions)
+  const generalSchemaOptions = useAppSelector(
     state => state.ui.generalSchemaOptions
   )
-  const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
-  const diagramOptions = schemaOptions[selectedDiagram] ?? {}
+  const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
+  const diagramOptions = selectedDiagram ? schemaOptions[selectedDiagram] : {}
   return (
     <div className="OptionsPanel">
       <div className="OptionsPanelContents">
@@ -132,15 +181,16 @@ const OptionsPanel = () => {
           <b>General:</b>
         </div>
         {Object.keys(generalSchemaOptions).map((k, i) => (
-          <SchemaOption
+          <Option
             key={`generalSchemaOptions-option-${k}-${i}`}
             optionId={k}
             optionData={generalSchemaOptions[k]}
             globalOption={true}
             disabled={
               generalSchemaOptions[k].depends &&
-              generalSchemaOptions[generalSchemaOptions[k].depends.element]
-                .value !== generalSchemaOptions[k].depends.value
+              generalSchemaOptions[
+                generalSchemaOptions[k].depends?.element || ''
+              ].value !== generalSchemaOptions[k].depends?.value
             }
           />
         ))}
@@ -148,14 +198,14 @@ const OptionsPanel = () => {
           <b>{schemaName ? `${schemaName}:` : ''}</b>
         </div>
         {Object.keys(diagramOptions).map((k, i) => (
-          <SchemaOption
+          <Option
             key={`${selectedDiagram}-option-${k}-${i}`}
             optionId={k}
             optionData={diagramOptions[k]}
             disabled={
               diagramOptions[k].depends &&
-              diagramOptions[diagramOptions[k].depends.element].value !==
-                diagramOptions[k].depends.value
+              diagramOptions[diagramOptions[k].depends?.element || ''].value !==
+                diagramOptions[k].depends?.value
             }
           />
         ))}

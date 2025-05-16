@@ -1,14 +1,14 @@
-import React from 'react'
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import './index.css'
 import App from './components/App'
-import createStore from './state/createStore'
+import store from './state/store'
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/arca-de-noesis/serviceWorker.js')
+      .register(new URL('../public/serviceWorker.js', import.meta.url))
       .then(registration => {
         console.log('Service Worker registrado con éxito:', registration)
       })
@@ -18,13 +18,12 @@ if ('serviceWorker' in navigator) {
   })
 }
 
-const store = createStore()
-const root = ReactDOM.createRoot(document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <Provider store={store}>
       <App />
     </Provider>
-  </React.StrictMode>
+  </StrictMode>
 )

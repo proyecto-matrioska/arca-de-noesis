@@ -1,8 +1,14 @@
-import { useCallback, useEffect } from 'react'
+import React, { FC, useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
 
-const Modal = ({ children, title, onClose }) => {
+interface ModalProps {
+  children: React.ReactNode
+  title: string
+  onClose: () => void
+}
+
+const Modal: FC<ModalProps> = ({ children, title, onClose }) => {
   const defaultDarkMode = useMediaQuery({
     query: '(prefers-color-scheme: dark)',
   })
@@ -11,9 +17,9 @@ const Modal = ({ children, title, onClose }) => {
     if (onClose) return onClose()
   }, [onClose])
 
-  const escapeCallback = useCallback(
+  const escapeCallback = useCallback<(e: KeyboardEvent) => void>(
     e => {
-      if (e.keyCode === 27) closeHandler()
+      if (e.key === 'Escape') closeHandler()
     },
     [closeHandler]
   )

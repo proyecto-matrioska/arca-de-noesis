@@ -2,8 +2,25 @@ import { dual } from './duals'
 import { translateElements } from './translateElements'
 import { palette } from './palette'
 import { swapTetrads } from './swapTetrads'
+import { DialecticsDataEntry } from '../state/dialecticsSlice'
+import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 
-export const dialectic = (
+export const dialectic: (
+  a: string,
+  b: string,
+  c: string,
+  d: string,
+  e: string,
+  f: string,
+  colors?: {
+    color1?: string
+    color2?: string
+    color3?: string
+    color4?: string
+    color5?: string
+    color6?: string
+  }
+) => ExcalidrawElementSkeleton[] = (
   a,
   b,
   c,
@@ -79,7 +96,9 @@ export const dialectic = (
       },
     ])
 
-export const dialecticSequence = dualities =>
+export const dialecticSequence: (
+  dualities: DialecticsDataEntry[]
+) => ExcalidrawElementSkeleton[] = dualities =>
   dualities.flatMap(([x, y], i) =>
     translateElements(
       0,
@@ -138,5 +157,7 @@ export const dialecticSequence = dualities =>
     )
   )
 
-export const empiricalDialecticSequence = dualities =>
+export const empiricalDialecticSequence: (
+  dualities: DialecticsDataEntry[]
+) => ExcalidrawElementSkeleton[] = dualities =>
   dialecticSequence(dualities.map(swapTetrads))

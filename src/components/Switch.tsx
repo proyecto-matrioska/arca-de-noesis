@@ -1,15 +1,24 @@
-import { useState } from 'react'
+import React, { FC, useState } from 'react'
 
-const Switch = ({
+interface ISwitchProps {
+  id?: string
+  name?: string
+  defaultValue?: boolean
+  onChange?: (value: boolean) => void
+  title?: string
+  disabled?: boolean
+}
+
+const Switch: FC<ISwitchProps> = ({
   id,
   name,
   defaultValue = false,
-  onChange = null,
-  title = null,
+  onChange,
+  title,
   disabled = false,
 }) => {
-  const [isChecked, setChecked] = useState(defaultValue)
-  const changeHandler = e => {
+  const [isChecked, setChecked] = useState<boolean>(defaultValue)
+  const changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void = e => {
     setChecked(e.target.checked)
     if (onChange) onChange(e.target.checked)
   }

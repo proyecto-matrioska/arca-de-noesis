@@ -3,43 +3,36 @@
   "version": "0.1.0",
   "homepage": "https://proyecto-matrioska.github.io/arca-de-noesis",
   "private": true,
+  "type": "module",
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
   "dependencies": {
-    "@excalidraw/excalidraw": "^0.17.6",
+    "@excalidraw/excalidraw": "^0.18.0",
     "@reduxjs/toolkit": "^2.2.7",
+    "@types/react-helmet": "^6.1.11",
     "file-saver": "^2.0.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-redux": "^9.1.2",
     "react-responsive": "^10.0.0",
-    "react-scripts": "^5.0.1"
-  },
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "typescript": "^4.9.5"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "gh-pages": "^6.1.1"
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^22.15.17",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "@types/wicg-file-system-access": "^2023.10.6",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "@vitejs/plugin-react": "^4.4.1",
+    "gh-pages": "^6.1.1",
+    "vite": "^6.3.5"
   }
 }

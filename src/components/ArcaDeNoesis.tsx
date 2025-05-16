@@ -1,22 +1,31 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { useDispatch, useSelector } from 'react-redux'
 import {
+  convertToExcalidrawElements,
   Excalidraw,
   MainMenu,
   Sidebar,
-  convertToExcalidrawElements,
 } from '@excalidraw/excalidraw'
+import { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/dist/types/excalidraw/types'
+import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
+import '@excalidraw/excalidraw/index.css'
 import './ArcaDeNoesis.css'
 import Editor from './Editor'
 import OptionsPanel from './OptionsPanel'
+import { useAppDispatch, useAppSelector } from '../state/store'
 import {
+  DialecticsDataEntry,
   loadDataFile,
   loadExample,
   saveAsDataFile,
   saveDataFile,
 } from '../state/dialecticsSlice'
-import { setSelectedDiagram, setSidebarOpen } from '../state/uiSlice'
+import {
+  SchemaIdentifier,
+  SchemaOption,
+  setSelectedDiagram,
+  setSidebarOpen,
+} from '../state/uiSlice'
 import { factorData } from '../schemas/factorization'
 import { initialScreen } from '../schemas/initialScreen'
 import { dualitySequence } from '../schemas/duals'
@@ -36,23 +45,24 @@ import {
 import { procesualSequence } from '../schemas/procesual'
 import { capasDiscursivasSequence } from '../schemas/layers'
 import { matrioskaSequence } from '../schemas/matrioska'
+import { zoomIn } from '@excalidraw/excalidraw/dist/types/excalidraw/components/icons'
 
 const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
 
 function ArcaDeNoesis() {
-  const dispatch = useDispatch()
-  const data = useSelector(state => state.dialectics.data)
-  const dataFilename = useSelector(state => state.dialectics.filename)
-  const isDirty = useSelector(state => state.dialectics.isDirty)
-  const [excalidrawAPI, setExcalidrawAPI] = useState(null)
-  const isSidebarOpen = useSelector(state => state.ui.isSidebarOpen)
-  const selectedDiagram = useSelector(state => state.ui.selectedDiagram)
-  const schemaOptions = useSelector(state => state.ui.schemaOptions)
-  const diagramAutoupdate = useSelector(
+  const dispatch = useAppDispatch()
+  const data = useAppSelector(state => state.dialectics.data)
+  const dataFilename = useAppSelector(state => state.dialectics.filename)
+  const isDirty = useAppSelector(state => state.dialectics.isDirty)
+  const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>()
+  const isSidebarOpen = useAppSelector(state => state.ui.isSidebarOpen)
+  const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
+  const schemaOptions = useAppSelector(state => state.ui.schemaOptions)
+  const diagramAutoupdate = useAppSelector(
     state => state.ui.generalSchemaOptions.diagramAutoupdate
   )
-  const generalSchemaOptions = useSelector(
+  const generalSchemaOptions = useAppSelector(
     state => state.ui.generalSchemaOptions
   )
   const defaultDarkMode = useMediaQuery(
@@ -61,7 +71,7 @@ function ArcaDeNoesis() {
     },
     undefined,
     isSystemDark =>
-      excalidrawAPI.updateScene({
+      excalidrawAPI?.updateScene({
         appState: {
           viewBackgroundColor: isSystemDark ? '#e8e8e8' : '#fcf5e4',
         },
@@ -73,7 +83,7 @@ function ArcaDeNoesis() {
 
   const openEditorTab = () => {
     if (!isSidebarOpen)
-      excalidrawAPI.toggleSidebar({ name: 'edit-sidebar', tab: 'dataEditor' })
+      excalidrawAPI?.toggleSidebar({ name: 'edit-sidebar', tab: 'dataEditor' })
   }
   const loadFileOptHandler = async () => {
     if (isDirty && !window.confirm('¿Perder los cambios no guardados?')) return
@@ -87,13 +97,13 @@ function ArcaDeNoesis() {
   const saveAsFileOptHandler = () => {
     dispatch(saveAsDataFile())
   }
-  const selectSchemaHandler = schema => () => {
+  const selectSchemaHandler = (schema: SchemaIdentifier) => () => {
     dispatch(setSelectedDiagram(schema))
   }
   const editarOptHandler = () => {
     openEditorTab()
   }
-  const loadExampleHandler = exampleName => () => {
+  const loadExampleHandler = (exampleName: string) => () => {
     if (isDirty && !window.confirm('¿Perder los cambios no guardados?')) return
     dispatch(loadExample(exampleName))
     editarOptHandler()
@@ -101,7 +111,10 @@ function ArcaDeNoesis() {
 
   const updateDiagram = useCallback(() => {
     const factorizationId = generalSchemaOptions.factorizations.value
-    let maker = null
+    let maker: (
+      dualities: DialecticsDataEntry[],
+      schemaOptions: { [key: string]: SchemaOption }
+    ) => ExcalidrawElementSkeleton[] = () => []
     switch (selectedDiagram) {
       case 'dualidades':
         maker = dualitySequence
@@ -138,16 +151,16 @@ function ArcaDeNoesis() {
         break
       case 'matrioskas':
         maker = matrioskaSequence
-        break;
+        break
       default:
         break
     }
-    const elements = convertToExcalidrawElements(
-      maker(factorData(factorizationId, data), schemaOptions[selectedDiagram])
-    )
-    excalidrawAPI.updateScene({
+    const elementSkeletons = selectedDiagram
+      ? maker(factorData(factorizationId, data), schemaOptions[selectedDiagram])
+      : []
+    const elements = convertToExcalidrawElements(elementSkeletons)
+    excalidrawAPI?.updateScene({
       elements,
-      scrollToContent: true,
     })
   }, [
     data,
@@ -158,7 +171,7 @@ function ArcaDeNoesis() {
   ])
 
   useEffect(() => {
-    const handleBeforeUnload = e => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isDirty) {
         e.preventDefault()
         e.returnValue = ''
@@ -188,7 +201,6 @@ function ArcaDeNoesis() {
           appState: {
             viewBackgroundColor: defaultDarkMode ? '#e8e8e8' : '#fcf5e4',
             viewModeEnabled: true,
-            //zenModeEnabled: true,
             zoom: 0.5,
           },
           scrollToContent: true,
@@ -197,7 +209,7 @@ function ArcaDeNoesis() {
         //viewModeEnabled={true}
         //zenModeEnabled={true}
         theme={defaultDarkMode ? 'dark' : 'light'}
-        excalidrawAPI={api => setExcalidrawAPI(api)}
+        excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
       >
         <MainMenu>
           <MainMenu.Group title="Datos">
@@ -280,7 +292,7 @@ function ArcaDeNoesis() {
         <Sidebar
           name="edit-sidebar"
           docked={true}
-          onStateChange={e => dispatch(setSidebarOpen(e !== null))}
+          onStateChange={(e: any) => dispatch(setSidebarOpen(e !== null))}
         >
           <Sidebar.Header>
             <button

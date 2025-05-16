@@ -1,12 +1,17 @@
+import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
+import { DialecticsDataEntry, DualityData } from '../state/dialecticsSlice'
 import { palette } from './palette'
 import { translateElements } from './translateElements'
 
-export const procesual = (a, b, c) => [
+export const procesual: (
+  a: string,
+  b: string,
+  c: string
+) => ExcalidrawElementSkeleton[] = (a, b, c) => [
   {
     type: 'arrow',
     version: 11183,
     versionNonce: 1592858740,
-    index: 'bSt',
     isDeleted: false,
     id: 'hNQsvZoAhOk0TXfei1PGm',
     fillStyle: 'hachure',
@@ -43,7 +48,6 @@ export const procesual = (a, b, c) => [
     type: 'arrow',
     version: 13552,
     versionNonce: 1289217356,
-    index: 'bSx',
     isDeleted: false,
     id: '2FaWPQjc87A89xBc0bpZK',
     fillStyle: 'hachure',
@@ -80,7 +84,6 @@ export const procesual = (a, b, c) => [
     type: 'arrow',
     version: 12738,
     versionNonce: 2141055476,
-    index: 'bSv',
     isDeleted: false,
     id: 'Bvzm-TlMp3aQ3onR2infA',
     fillStyle: 'hachure',
@@ -119,7 +122,6 @@ export const procesual = (a, b, c) => [
     type: 'arrow',
     version: 12817,
     versionNonce: 836607692,
-    index: 'bSy',
     isDeleted: false,
     id: 'KZLXgpvseles1tIwdW_4s',
     fillStyle: 'hachure',
@@ -218,21 +220,32 @@ export const procesual = (a, b, c) => [
     strokeColor: palette.BLUE,
   },
 ]
-export const procesualSequence = dualities => dualities.flatMap(([x, a], i) => {
-  const y = dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
-  const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']
-  const b = dualities[i + 1] ? dualities[i + 1][1] : ['', '', '', '']
-  const c = dualities[i + 2] ? dualities[i + 2][1] : ['', '', '', '']
-  return translateElements(
-    0,
-    400 * i,
-    procesual(x[0], y[3], z[0])
-      .concat(translateElements(800, 0, procesual(x[1], y[2], z[1])))
-      .concat(translateElements(1600, 0, procesual(x[2], y[1], z[2])))
-      .concat(translateElements(2400, 0, procesual(x[3], y[0], z[3])))
-      .concat(translateElements(3200, 0, procesual(a[0], b[3], c[0])))
-      .concat(translateElements(4000, 0, procesual(a[1], b[2], c[1])))
-      .concat(translateElements(4800, 0, procesual(a[2], b[1], c[2])))
-      .concat(translateElements(5600, 0, procesual(a[3], b[0], c[3])))
-  )
-})
+export const procesualSequence: (
+  dualities: DialecticsDataEntry[]
+) => ExcalidrawElementSkeleton[] = dualities =>
+  dualities.flatMap(([x, a], i) => {
+    const y: DualityData = dualities[i + 1]
+      ? dualities[i + 1][0]
+      : ['', '', '', '']
+    const z: DualityData = dualities[i + 2]
+      ? dualities[i + 2][0]
+      : ['', '', '', '']
+    const b: DualityData = dualities[i + 1]
+      ? dualities[i + 1][1]
+      : ['', '', '', '']
+    const c: DualityData = dualities[i + 2]
+      ? dualities[i + 2][1]
+      : ['', '', '', '']
+    return translateElements(
+      0,
+      400 * i,
+      procesual(x[0], y[3], z[0])
+        .concat(translateElements(800, 0, procesual(x[1], y[2], z[1])))
+        .concat(translateElements(1600, 0, procesual(x[2], y[1], z[2])))
+        .concat(translateElements(2400, 0, procesual(x[3], y[0], z[3])))
+        .concat(translateElements(3200, 0, procesual(a[0], b[3], c[0])))
+        .concat(translateElements(4000, 0, procesual(a[1], b[2], c[1])))
+        .concat(translateElements(4800, 0, procesual(a[2], b[1], c[2])))
+        .concat(translateElements(5600, 0, procesual(a[3], b[0], c[3])))
+    )
+  })
