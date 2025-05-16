@@ -6,7 +6,10 @@ import {
   MainMenu,
   Sidebar,
 } from '@excalidraw/excalidraw'
-import { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/dist/types/excalidraw/types'
+import {
+  ExcalidrawImperativeAPI,
+  NormalizedZoomValue,
+} from '@excalidraw/excalidraw/dist/types/excalidraw/types'
 import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 import '@excalidraw/excalidraw/index.css'
 import './ArcaDeNoesis.css'
@@ -201,7 +204,7 @@ function ArcaDeNoesis() {
           appState: {
             viewBackgroundColor: defaultDarkMode ? '#e8e8e8' : '#fcf5e4',
             viewModeEnabled: true,
-            zoom: 0.5,
+            zoom: { value: 0.5 as NormalizedZoomValue },
           },
           scrollToContent: true,
         }}
