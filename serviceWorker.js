@@ -9,7 +9,7 @@ self.addEventListener('install', event => {
       .then(response => response.json())
       .then(assets => {
         const urlsToCache = [
-          '/',
+          '/arca-de-noesis/',
           'https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/excalidraw-assets-dev/Virgil.woff2',
         ]
           .concat(
