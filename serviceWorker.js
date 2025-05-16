@@ -14,7 +14,7 @@ self.addEventListener('install', event => {
         ]
           .concat(
             Object.keys(assets)
-              .filter(key => assets[key][file] !== undefined)
+              .filter(key => assets[key]['file'] !== undefined)
               .map(key => assets[key]['file'])
           )
           .concat(assets['css'] ? assets['css'] : [])
