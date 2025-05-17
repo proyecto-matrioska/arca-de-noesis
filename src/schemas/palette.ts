@@ -1,4 +1,16 @@
-export const palette = {
+export type ColorName =
+  | 'BLUE'
+  | 'RED'
+  | 'BLACK'
+  | 'DARK_GRAY'
+  | 'LIGHT_BLUE'
+  | 'PURPLE'
+  | 'CYAN'
+  | 'ORANGE'
+
+type ColorValue = `#${string}`
+
+export const palette: Record<ColorName, Readonly<ColorValue>> = {
   BLUE: '#3846C8',
   RED: '#FF2B2B',
   BLACK: '#000000',

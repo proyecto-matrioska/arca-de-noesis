@@ -2,13 +2,13 @@ import { useDispatch } from 'react-redux'
 import './Editor.css'
 import {
   deleteEntry,
-  DialecticsDataEntry,
-  DualityData,
   insertEntry,
   moveDownEntry,
   moveUpEntry,
   updateEntry,
 } from '../state/dialecticsSlice'
+import { DialecticsDataEntry } from '../schemas/schema'
+import { DualityData } from '../schemas/schema'
 import React from 'react'
 import { useAppSelector } from '../state/store'
 

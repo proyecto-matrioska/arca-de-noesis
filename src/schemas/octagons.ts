@@ -4,14 +4,14 @@ import { square } from './squares'
 import { translateElements } from './translateElements'
 import { groupByTetrads } from './groupByTetrads'
 import { groupByTriads } from './groupByTriads'
-import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
-import { DialecticsDataEntry, DualityData } from '../state/dialecticsSlice'
+import { DialecticsSchema, Schema } from './schema'
+import { DualityData } from './schema'
 import { SchemaOption } from '../state/uiSlice'
 
-const complexSquare: (
-  d1: DualityData,
-  d2: DualityData
-) => ExcalidrawElementSkeleton[] = (d1, [a, b, c, d]) =>
+const complexSquare: (d1: DualityData, d2: DualityData) => Schema = (
+  d1,
+  [a, b, c, d]
+) =>
   square(d1).concat([
     {
       type: 'text',
@@ -77,8 +77,8 @@ export const complexOctagon: (
   d1: DualityData,
   d2: DualityData,
   d3: DualityData,
-  schemaOptions: { [key: string]: SchemaOption }
-) => ExcalidrawElementSkeleton[] = (s1, s2, [a, b, c, d], schemaOptions) =>
+  schemaOptions: Record<string, SchemaOption>
+) => Schema = (s1, s2, [a, b, c, d], schemaOptions) =>
   complexSquare(s1, s2).concat([
     {
       type: 'text',
@@ -190,7 +190,7 @@ export const complexOctagon: (
     },
   ])
 
-const dualityIndex: (index: number) => ExcalidrawElementSkeleton[] = index => [
+const dualityIndexAnnotation: (index: number) => Schema = index => [
   {
     type: 'text',
     x: -100,
@@ -202,10 +202,10 @@ const dualityIndex: (index: number) => ExcalidrawElementSkeleton[] = index => [
   },
 ]
 
-export const complexOctagonSequence: (
-  dualities: DialecticsDataEntry[],
-  schemaOptions: { [key: string]: SchemaOption }
-) => ExcalidrawElementSkeleton[] = (dualities, schemaOptions) => {
+export const complexOctagonSequence: DialecticsSchema = (
+  dualities,
+  schemaOptions
+) => {
   if (schemaOptions.arrangement.value === 'triadas') {
     const triads = groupByTriads(dualities)
     return triads.flatMap(([x, y, z], i) =>
@@ -216,7 +216,9 @@ export const complexOctagonSequence: (
           0,
           500,
           complexOctagon(x[0], x[1], y[0], schemaOptions).concat(
-            schemaOptions.showDualityIndex.value ? dualityIndex(2 * i) : []
+            schemaOptions.showDualityIndex.value
+              ? dualityIndexAnnotation(2 * i)
+              : []
           )
         )
           .concat(
@@ -225,7 +227,7 @@ export const complexOctagonSequence: (
               500,
               complexOctagon(y[0], y[1], z[0], schemaOptions).concat(
                 schemaOptions.showDualityIndex.value
-                  ? dualityIndex(2 * i + 1)
+                  ? dualityIndexAnnotation(2 * i + 1)
                   : []
               )
             )
@@ -241,7 +243,7 @@ export const complexOctagonSequence: (
                 schemaOptions
               ).concat(
                 schemaOptions.showDualityIndex.value
-                  ? dualityIndex(2 * i + 2)
+                  ? dualityIndexAnnotation(2 * i + 2)
                   : []
               )
             )
@@ -259,7 +261,9 @@ export const complexOctagonSequence: (
           800,
           700,
           complexOctagon(w[0], w[1], x[0], schemaOptions).concat(
-            schemaOptions.showDualityIndex.value ? dualityIndex(4 * i) : []
+            schemaOptions.showDualityIndex.value
+              ? dualityIndexAnnotation(4 * i)
+              : []
           )
         )
           .concat(
@@ -268,7 +272,7 @@ export const complexOctagonSequence: (
               700,
               complexOctagon(x[0], x[1], y[0], schemaOptions).concat(
                 schemaOptions.showDualityIndex.value
-                  ? dualityIndex(4 * i + 1)
+                  ? dualityIndexAnnotation(4 * i + 1)
                   : []
               )
             )
@@ -279,7 +283,7 @@ export const complexOctagonSequence: (
               0,
               complexOctagon(y[0], y[1], z[0], schemaOptions).concat(
                 schemaOptions.showDualityIndex.value
-                  ? dualityIndex(4 * i + 2)
+                  ? dualityIndexAnnotation(4 * i + 2)
                   : []
               )
             )
@@ -297,7 +301,7 @@ export const complexOctagonSequence: (
                 schemaOptions
               ).concat(
                 schemaOptions.showDualityIndex.value
-                  ? dualityIndex(4 * i + 3)
+                  ? dualityIndexAnnotation(4 * i + 3)
                   : []
               )
             )
@@ -312,26 +316,20 @@ export const complexOctagonSequence: (
       800 * i + ((i + 1) % 2) * 100,
       dualities[i + 1]
         ? complexOctagon(x, y, dualities[i + 1][0], schemaOptions).concat(
-            schemaOptions.showDualityIndex.value ? dualityIndex(i) : []
+            schemaOptions.showDualityIndex.value
+              ? dualityIndexAnnotation(i)
+              : []
           )
         : complexSquare(x, y).concat(
-            schemaOptions.showDualityIndex.value ? dualityIndex(i) : []
+            schemaOptions.showDualityIndex.value
+              ? dualityIndexAnnotation(i)
+              : []
           )
     )
   )
 }
-/* dualities.flatMap(([x, y], i) =>
-    translateElements(
-      0,
-      800 * i + ((i + 1) % 2) * 100,
-      dualities[i + 1]
-        ? complexOctagon(x, y, dualities[i + 1][0], schemaOptions)
-        : complexSquare(x, y)
-    )
-  ) */
 
-export const empiricalComplexOctagonSequence: (
-  dualities: DialecticsDataEntry[],
-  schemaOptions: { [key: string]: SchemaOption }
-) => ExcalidrawElementSkeleton[] = (dualities, schemaOptions) =>
-  complexOctagonSequence(dualities.map(swapTetrads), schemaOptions)
+export const empiricalComplexOctagonSequence: DialecticsSchema = (
+  dualities,
+  schemaOptions
+) => complexOctagonSequence(dualities.map(swapTetrads), schemaOptions)

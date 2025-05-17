@@ -1,13 +1,13 @@
-import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
-import { DialecticsDataEntry, DualityData } from '../state/dialecticsSlice'
+import { DialecticsSchema, Schema } from './schema'
+import { DualityData } from './schema'
 import { palette } from './palette'
 import { translateElements } from './translateElements'
 
-export const procesual: (
-  a: string,
-  b: string,
-  c: string
-) => ExcalidrawElementSkeleton[] = (a, b, c) => [
+export const procesual: (a: string, b: string, c: string) => Schema = (
+  a,
+  b,
+  c
+) => [
   {
     type: 'arrow',
     version: 11183,
@@ -220,9 +220,7 @@ export const procesual: (
     strokeColor: palette.BLUE,
   },
 ]
-export const procesualSequence: (
-  dualities: DialecticsDataEntry[]
-) => ExcalidrawElementSkeleton[] = dualities =>
+export const procesualSequence: DialecticsSchema = dualities =>
   dualities.flatMap(([x, a], i) => {
     const y: DualityData = dualities[i + 1]
       ? dualities[i + 1][0]

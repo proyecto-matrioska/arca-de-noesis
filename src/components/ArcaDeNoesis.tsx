@@ -17,12 +17,12 @@ import Editor from './Editor'
 import OptionsPanel from './OptionsPanel'
 import { useAppDispatch, useAppSelector } from '../state/store'
 import {
-  DialecticsDataEntry,
   loadDataFile,
   loadExample,
   saveAsDataFile,
   saveDataFile,
 } from '../state/dialecticsSlice'
+import { DialecticsDataEntry } from '../schemas/schema'
 import {
   SchemaIdentifier,
   SchemaOption,

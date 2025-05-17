@@ -1,8 +1,8 @@
-import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 import { logo } from './logo'
 import { palette } from './palette'
+import { Schema } from './schema'
 
-export const initialScreen: () => ExcalidrawElementSkeleton[] = () =>
+export const initialScreen: () => Schema = () =>
   logo().concat([
     {
       type: 'text',

@@ -2,10 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import * as FileSaver from 'file-saver'
 import examples from '../examples/examples'
 import { AppDispatch, RootState } from './store'
-
-export type DualityData = [string, string, string, string]
-
-export type DialecticsDataEntry = [DualityData, DualityData]
+import { DialecticsDataEntry } from '../schemas/schema'
 
 type DialecticsState = {
   filename: string

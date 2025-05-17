@@ -1,13 +1,12 @@
-import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 import { palette } from './palette'
 import { translateElements } from './translateElements'
-import { DialecticsDataEntry } from '../state/dialecticsSlice'
+import { DialecticsSchema, Schema } from './schema'
 
 export const dialecticLayers: (
   x: [string, string],
   y: [string, string],
   z: [string, string]
-) => ExcalidrawElementSkeleton[] = (x, y, z) => [
+) => Schema = (x, y, z) => [
   {
     type: 'text',
     x: 210,
@@ -301,9 +300,7 @@ export const dialecticLayers: (
     ],
   },
 ]
-export const capasDiscursivasSequence: (
-  dualities: DialecticsDataEntry[]
-) => ExcalidrawElementSkeleton[] = dualities =>
+export const capasDiscursivasSequence: DialecticsSchema = dualities =>
   dualities.flatMap(([x, a], i) => {
     const y = dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
     const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']

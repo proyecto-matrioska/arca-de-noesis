@@ -1,7 +1,7 @@
 import metafisicaData from './Metafísica de la información.json'
 import intencionalidadData from './Intensionalidad.json'
 import rosalindKraussData from './Rosalind Krauss.json'
-import { DialecticsDataEntry } from '../state/dialecticsSlice';
+import { DialecticsDataEntry } from '../schemas/schema';
 
 export interface Example {
   filename: string

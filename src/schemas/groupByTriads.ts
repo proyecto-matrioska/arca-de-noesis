@@ -1,4 +1,4 @@
-import { DialecticsDataEntry } from '../state/dialecticsSlice'
+import { DialecticsDataEntry } from './schema'
 
 export const groupByTriads = (dualities: DialecticsDataEntry[]) => {
   const r: DialecticsDataEntry[][] = []

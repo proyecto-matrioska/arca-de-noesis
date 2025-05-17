@@ -1,12 +1,15 @@
 import { translateElements } from './translateElements'
 import { palette } from './palette'
 import { swapTetrads } from './swapTetrads'
-import { DialecticsDataEntry, DualityData } from '../state/dialecticsSlice'
+import {
+  DialecticsDataEntry,
+  DialecticsSchema,
+  Quadruplet,
+  Schema,
+  Triplet,
+} from './schema'
+import { DualityData } from './schema'
 import { SchemaOption } from '../state/uiSlice'
-import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
-
-type Triplet<T> = [T, T, T]
-type Quadruplet<T> = [T, T, T, T]
 
 export const toTriples: (
   x: DualityData,
@@ -28,7 +31,7 @@ export const toEmpiricalTriples: (
   [y[3], x[1], x[3]],
 ]
 
-const squareLines: () => ExcalidrawElementSkeleton[] = () => [
+const squareLines: () => Schema = () => [
   {
     type: 'line',
     x: 285,
@@ -77,7 +80,7 @@ export const triple: (
     color5?: string
     color6?: string
   }
-) => ExcalidrawElementSkeleton[] = (
+) => Schema = (
   a,
   b,
   c,
@@ -148,7 +151,7 @@ export const tripleSquare: (
   b: [string, string, string],
   c: [string, string, string],
   d: [string, string, string]
-) => ExcalidrawElementSkeleton[] = (a, b, c, d) =>
+) => Schema = (a, b, c, d) =>
   triple(...c, {
     color2: palette.BLUE,
     color3: palette.RED,
@@ -202,7 +205,7 @@ export const empiricalTripleSquare: (
   b: [string, string, string],
   c: [string, string, string],
   d: [string, string, string]
-) => ExcalidrawElementSkeleton[] = (a, b, c, d) =>
+) => Schema = (a, b, c, d) =>
   triple(...c, {
     color1: palette.BLUE,
     color2: palette.RED,
@@ -255,7 +258,7 @@ export const empiricalTripleSquare: (
     )
     .concat(squareLines())
 
-const dualityIndex: (index: number) => ExcalidrawElementSkeleton[] = index => [
+const dualityIndexAnnotation: (index: number) => Schema = index => [
   {
     type: 'text',
     x: -100,
@@ -270,7 +273,7 @@ const dualityIndex: (index: number) => ExcalidrawElementSkeleton[] = index => [
 const squareElementDescriptions: (
   intentional: number,
   schemaOptions: { [key: string]: SchemaOption }
-) => ExcalidrawElementSkeleton[] = (intentional, schemaOptions) =>
+) => Schema = (intentional, schemaOptions) =>
   schemaOptions.elementDescriptions.value
     ? [
         {
@@ -308,7 +311,7 @@ const squareElementDescriptions: (
       ]
     : []
 
-const formAndContextAnnotation: () => ExcalidrawElementSkeleton[] = () => [
+const formAndContextAnnotation: () => Schema = () => [
   {
     type: 'text',
     x: -114,
@@ -407,10 +410,10 @@ const formAndContextAnnotation: () => ExcalidrawElementSkeleton[] = () => [
   },
 ]
 
-export const tripleSquareSequence: (
-  dualities: DialecticsDataEntry[],
-  schemaOptions: { [key: string]: SchemaOption }
-) => ExcalidrawElementSkeleton[] = (dualities, schemaOptions) =>
+export const tripleSquareSequence: DialecticsSchema = (
+  dualities,
+  schemaOptions
+) =>
   (
     [
       [
@@ -426,7 +429,9 @@ export const tripleSquareSequence: (
       tripleSquare(
         ...toTriples(a, mapArray[i + 1] ? mapArray[i + 1][0] : ['', '', '', ''])
       )
-        .concat(schemaOptions.showDualityIndex.value ? dualityIndex(i) : [])
+        .concat(
+          schemaOptions.showDualityIndex.value ? dualityIndexAnnotation(i) : []
+        )
         .concat(
           schemaOptions.elementDescriptions.value
             ? squareElementDescriptions(1, schemaOptions)
@@ -462,8 +467,7 @@ export const tripleSquareSequence: (
     )
   )
 
-export const empiricalTripleSquareSequence: (
-  dualities: DialecticsDataEntry[],
-  schemaOptions: { [key: string]: SchemaOption }
-) => ExcalidrawElementSkeleton[] = (dualities, schemaOptions) =>
-  tripleSquareSequence(dualities.map(swapTetrads), schemaOptions)
+export const empiricalTripleSquareSequence: DialecticsSchema = (
+  dualities,
+  schemaOptions
+) => tripleSquareSequence(dualities.map(swapTetrads), schemaOptions)

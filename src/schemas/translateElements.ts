@@ -1,10 +1,6 @@
-import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
+import { Schema } from './schema'
 
-export const translateElements = (
-  x: number,
-  y: number,
-  elements: ExcalidrawElementSkeleton[]
-) =>
+export const translateElements = (x: number, y: number, elements: Schema) =>
   elements.map(e => {
     const r = { ...e }
     if (r.x !== undefined) r.x = r.x + x

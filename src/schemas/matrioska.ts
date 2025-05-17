@@ -1,13 +1,12 @@
-import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 import { translateElements } from './translateElements'
-import { DialecticsDataEntry } from '../state/dialecticsSlice'
+import { DialecticsSchema, Schema } from './schema'
 
 const matrioska: (
   x: [string, string],
   y: [string, string],
   a: [string, string],
   b: [string, string]
-) => ExcalidrawElementSkeleton[] = (x, y, a, b) =>
+) => Schema = (x, y, a, b) =>
   translateElements(-2400, 650, [
     {
       type: 'text',
@@ -5399,15 +5398,12 @@ const matrioska: (
     },
   ])
 
-export const matrioskaSequence: (
-  dualities: DialecticsDataEntry[]
-) => ExcalidrawElementSkeleton[] = dualities =>
+export const matrioskaSequence: DialecticsSchema = dualities =>
   dualities.flatMap(([x, a], i) => {
     const y = dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
     const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']
     const b = dualities[i + 1] ? dualities[i + 1][1] : ['', '', '', '']
     const c = dualities[i + 2] ? dualities[i + 2][1] : ['', '', '', '']
-    console.log({ x, y, z, a, b, c })
     return translateElements(
       0,
       1000 * i,

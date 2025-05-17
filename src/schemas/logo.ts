@@ -1,7 +1,7 @@
-import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 import { palette } from './palette'
+import { Schema } from './schema'
 
-export const logo: () => ExcalidrawElementSkeleton[] = () => [
+export const logo: () => Schema = () => [
   {
     type: 'ellipse',
     fillStyle: 'solid',

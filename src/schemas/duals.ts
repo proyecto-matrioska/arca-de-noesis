@@ -1,9 +1,7 @@
-import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 import { translateElements } from './translateElements'
 import { palette } from './palette'
-import { DialecticsDataEntry, DualityData } from '../state/dialecticsSlice'
-import { SchemaOption } from '../state/uiSlice'
-
+import { DialecticsSchema, Schema } from './schema'
+import { DualityData } from './schema'
 export const dual: (
   a: string,
   b: string,
@@ -13,7 +11,7 @@ export const dual: (
     color3?: string
     color4?: string
   }
-) => ExcalidrawElementSkeleton[] = (a, b, colors) => [
+) => Schema = (a, b, colors) => [
   {
     type: 'text',
     x: 108,
@@ -50,12 +48,7 @@ export const dual: (
   },
 ]
 
-export const duality: (data: DualityData) => ExcalidrawElementSkeleton[] = ([
-  a,
-  b,
-  c,
-  d,
-]) =>
+export const duality: (data: DualityData) => Schema = ([a, b, c, d]) =>
   dual(a, b).concat(
     translateElements(
       300,
@@ -64,7 +57,7 @@ export const duality: (data: DualityData) => ExcalidrawElementSkeleton[] = ([
     )
   )
 
-const dualityIndex: (index: number) => ExcalidrawElementSkeleton[] = index => [
+const dualityIndex: (index: number) => Schema = index => [
   {
     type: 'text',
     x: -120,
@@ -76,7 +69,7 @@ const dualityIndex: (index: number) => ExcalidrawElementSkeleton[] = index => [
   },
 ]
 
-const elementDescriptions: () => ExcalidrawElementSkeleton[] = () => [
+const elementDescriptions: () => Schema = () => [
   {
     type: 'text',
     x: 250,
@@ -133,9 +126,7 @@ const elementDescriptions: () => ExcalidrawElementSkeleton[] = () => [
   },
 ]
 
-const intensionFormContext: (
-  isEven: boolean
-) => ExcalidrawElementSkeleton[] = isEven => [
+const intensionFormContext: (isEven: boolean) => Schema = isEven => [
   {
     type: 'text',
     x: -20,
@@ -174,10 +165,7 @@ const intensionFormContext: (
   },
 ]
 
-export const dualitySequence: (
-  dualities: DialecticsDataEntry[],
-  schemaOptions: { [key: string]: SchemaOption }
-) => ExcalidrawElementSkeleton[] = (dualities, schemaOptions) =>
+export const dualitySequence: DialecticsSchema = (dualities, schemaOptions) =>
   dualities.flatMap(([x, y], i) =>
     translateElements(
       0,
