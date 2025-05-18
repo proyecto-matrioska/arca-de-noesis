@@ -1,4 +1,4 @@
-import { SchemaElement } from './schema'
+import { SchemaElement } from '../schema'
 
 /**
  * Creates an ellipse element for a schema.
