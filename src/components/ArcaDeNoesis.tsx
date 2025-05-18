@@ -17,16 +17,13 @@ import Editor from './Editor'
 import OptionsPanel from './OptionsPanel'
 import { useAppDispatch, useAppSelector } from '../state/store'
 import {
-  loadDataFile,
-  loadExample,
   saveAsDataFile,
   saveDataFile,
-} from '../state/dialecticsSlice'
+  loadDataFile,
+  loadExample,
+} from '../state/fileThunks'
 import { DialecticsDataEntry } from '../schemas/schema'
-import {
-  setSelectedDiagram,
-  setSidebarOpen,
-} from '../state/uiSlice'
+import { setSelectedDiagram, setSidebarOpen } from '../state/uiSlice'
 import { SchemaOption } from '../state/uiOptions'
 import { SchemaIdentifier } from '../schemas/schema'
 import { factorData } from '../schemas/transformations/factorization'
@@ -158,9 +155,14 @@ function ArcaDeNoesis() {
         break
     }
     const dialecticsSchema = selectedDiagram
-      ? maker(factorData(factorizationId, dialecticsData), schemaOptions[selectedDiagram])
+      ? maker(
+          factorData(factorizationId, dialecticsData),
+          schemaOptions[selectedDiagram]
+        )
       : []
-    const elements = convertToExcalidrawElements(dialecticsSchema as ExcalidrawElementSkeleton[])
+    const elements = convertToExcalidrawElements(
+      dialecticsSchema as ExcalidrawElementSkeleton[]
+    )
     excalidrawAPI?.updateScene({
       elements,
     })
