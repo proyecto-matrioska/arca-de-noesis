@@ -9,7 +9,7 @@ import {
   Triplet,
 } from './schema'
 import { DualityData } from './schema'
-import { SchemaOption } from '../state/uiSlice'
+import { SchemaOption } from '../state/uiOptions'
 import { lineElement } from './elements/lineElement'
 import { textElement } from './elements/textElement'
 import { ellipseElement } from './elements/ellpiseElement'

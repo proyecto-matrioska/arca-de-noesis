@@ -1,5 +1,5 @@
 import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
-import { SchemaOption } from '../state/uiSlice'
+import { SchemaOption } from '../state/uiOptions'
 
 export type SchemaIdentifier =
   | 'dualidades'

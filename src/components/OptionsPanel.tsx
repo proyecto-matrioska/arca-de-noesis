@@ -2,10 +2,10 @@ import React from 'react'
 import Switch from './Switch'
 import { useAppDispatch, useAppSelector } from '../state/store'
 import {
-  SchemaOption,
   setDiagramOption,
   setGeneralDiagramOption,
 } from '../state/uiSlice'
+import { SchemaOption } from '../state/uiOptions'
 import './OptionsPanel.css'
 
 export interface IBooleanOptionProps {

@@ -4,7 +4,7 @@ import { groupByTetrads } from './transformations/groupByTetrads'
 import { groupByTriads } from './transformations/groupByTriads'
 import { palette } from "./palette"
 import { translateElements } from './transformations/translateElements'
-import { SchemaOption } from '../state/uiSlice'
+import { SchemaOption } from '../state/uiOptions'
 import { textElement } from './elements/textElement'
 import { lineElement } from './elements/lineElement'
 import { ellipseElement } from './elements/ellpiseElement'

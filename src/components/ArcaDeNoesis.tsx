@@ -24,10 +24,10 @@ import {
 } from '../state/dialecticsSlice'
 import { DialecticsDataEntry } from '../schemas/schema'
 import {
-  SchemaOption,
   setSelectedDiagram,
   setSidebarOpen,
 } from '../state/uiSlice'
+import { SchemaOption } from '../state/uiOptions'
 import { SchemaIdentifier } from '../schemas/schema'
 import { factorData } from '../schemas/transformations/factorization'
 import { initialScreen } from '../schemas/initialScreen'
