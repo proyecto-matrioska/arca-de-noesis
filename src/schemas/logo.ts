@@ -1,58 +1,38 @@
-import { palette } from './palette'
+import { ellipseElement } from './elements/ellpiseElement'
+import { palette } from "./palette"
 import { Schema } from './schema'
 
 export const logo: () => Schema = () => [
-  {
-    type: 'ellipse',
+  ellipseElement(0, 240, 217, 217, palette.BLUE, {
+    backgroundColor: palette.BLUE,
     fillStyle: 'solid',
     strokeWidth: 1,
     strokeStyle: 'solid',
     roughness: 0,
     opacity: 100,
-    x: 0,
-    y: 240,
-    strokeColor: palette.BLUE,
-    backgroundColor: palette.BLUE,
-    width: 217,
-    height: 217,
-  },
-  {
-    type: 'ellipse',
-    fillStyle: 'solid',
-    strokeWidth: 1,
-    strokeStyle: 'solid',
-    roughness: 0,
-    x: 281,
-    y: 240,
-    strokeColor: palette.RED,
+  }),
+  ellipseElement(281, 240, 217, 217, palette.RED, {
     backgroundColor: palette.RED,
-    width: 217,
-    height: 217,
-  },
-  {
-    type: 'ellipse',
     fillStyle: 'solid',
     strokeWidth: 1,
     strokeStyle: 'solid',
     roughness: 0,
-    x: 140,
-    y: 0,
-    strokeColor: palette.BLUE,
+    opacity: 100,
+  }),
+  ellipseElement(140, 0, 217, 217, palette.BLUE, {
     backgroundColor: palette.BLUE,
-    width: 217,
-    height: 217,
-  },
-  {
-    type: 'ellipse',
     fillStyle: 'solid',
     strokeWidth: 1,
     strokeStyle: 'solid',
     roughness: 0,
-    x: 180,
-    y: 63,
-    strokeColor: palette.RED,
+    opacity: 100,
+  }),
+  ellipseElement(180, 63, 137, 137, palette.RED, {
     backgroundColor: palette.RED,
-    width: 137,
-    height: 137,
-  },
+    fillStyle: 'solid',
+    strokeWidth: 1,
+    strokeStyle: 'solid',
+    roughness: 0,
+    opacity: 100,
+  }),
 ]

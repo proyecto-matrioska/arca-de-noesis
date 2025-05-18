@@ -1,6 +1,6 @@
-import { translateElements } from './translateElements'
-import { palette } from './palette'
-import { swapTetrads } from './swapTetrads'
+import { translateElements } from './transformations/translateElements'
+import { palette } from "./palette"
+import { swapTetrads } from './transformations/swapTetrads'
 import {
   DialecticsDataEntry,
   DialecticsSchema,
@@ -10,6 +10,9 @@ import {
 } from './schema'
 import { DualityData } from './schema'
 import { SchemaOption } from '../state/uiSlice'
+import { lineElement } from './elements/lineElement'
+import { textElement } from './elements/textElement'
+import { ellipseElement } from './elements/ellpiseElement'
 
 export const toTriples: (
   x: DualityData,
@@ -32,40 +35,18 @@ export const toEmpiricalTriples: (
 ]
 
 const squareLines: () => Schema = () => [
-  {
-    type: 'line',
-    x: 285,
-    y: 80,
-    width: 100,
+  lineElement(285, 80, 100, 1, palette.LIGHT_BLUE, {
     strokeStyle: 'dotted',
-    strokeColor: palette.LIGHT_BLUE,
-  },
-  {
-    type: 'line',
-    x: 285,
-    y: 530,
-    width: 100,
+  }),
+  lineElement(285, 530, 100, 1, palette.LIGHT_BLUE, {
     strokeStyle: 'dotted',
-    strokeColor: palette.LIGHT_BLUE,
-  },
-  {
-    type: 'line',
-    x: 105,
-    y: 260,
-    width: 1,
-    height: 100,
+  }),
+  lineElement(105, 260, 1, 100, palette.PURPLE, {
     strokeStyle: 'dotted',
-    strokeColor: palette.PURPLE,
-  },
-  {
-    type: 'line',
-    x: 555,
-    y: 260,
-    width: 1,
-    height: 100,
+  }),
+  lineElement(555, 260, 1, 100, palette.PURPLE, {
     strokeStyle: 'dotted',
-    strokeColor: palette.PURPLE,
-  },
+  }),
 ]
 
 export const triple: (
@@ -93,57 +74,18 @@ export const triple: (
     color6 = palette.RED,
   } = {}
 ) => [
-  {
-    type: 'text',
-    x: 108,
-    y: -42,
+  textElement(108, -42, a, 28, color1, {
     textAlign: 'center',
-    fontSize: 28,
-    text: a,
-    strokeColor: color1,
-  },
-  {
-    type: 'text',
-    x: 110,
-    y: 20,
+  }),
+  textElement(110, 20, b, 28, color2, {
     textAlign: 'center',
-    fontSize: 28,
-    text: b,
-    strokeColor: color2,
-  },
-  {
-    type: 'text',
-    x: 108,
-    y: 110,
+  }),
+  textElement(108, 110, c, 28, color3, {
     textAlign: 'center',
-    fontSize: 28,
-    text: c,
-    strokeColor: color3,
-  },
-  {
-    type: 'ellipse',
-    strokeColor: color4,
-    x: -41,
-    y: -69,
-    width: 299,
-    height: 295,
-  },
-  {
-    type: 'ellipse',
-    strokeColor: color5,
-    x: -8,
-    y: 0,
-    width: 236,
-    height: 217,
-  },
-  {
-    type: 'ellipse',
-    strokeColor: color6,
-    x: 27,
-    y: 62,
-    width: 163,
-    height: 137,
-  },
+  }),
+  ellipseElement(-41, -69, 299, 295, color4),
+  ellipseElement(-8, 0, 236, 217, color5),
+  ellipseElement(27, 62, 163, 137, color6),
 ]
 
 export const tripleSquare: (
@@ -259,15 +201,9 @@ export const empiricalTripleSquare: (
     .concat(squareLines())
 
 const dualityIndexAnnotation: (index: number) => Schema = index => [
-  {
-    type: 'text',
-    x: -100,
-    y: -100,
+  textElement(-100, -100, `${index + 1}:`, 20, palette.ORANGE, {
     textAlign: 'center',
-    fontSize: 20,
-    text: `${index + 1}:`,
-    strokeColor: palette.ORANGE,
-  },
+  }),
 ]
 
 const squareElementDescriptions: (
@@ -276,138 +212,71 @@ const squareElementDescriptions: (
 ) => Schema = (intentional, schemaOptions) =>
   schemaOptions.elementDescriptions.value
     ? [
-        {
-          type: 'text',
-          x: 335,
-          y: -120,
+        textElement(
+          335,
+          -120,
+          intentional === 1
+            ? 'dualidad intensional/compleja'
+            : intentional === 2
+            ? 'dualidad empírica/simple'
+            : '',
+          20,
+          palette.ORANGE,
+          {
+            textAlign: 'center',
+          }
+        ),
+        textElement(
+          335,
+          450,
+          'eje intensional/\ncomplejo',
+          20,
+          palette.ORANGE,
+          {
+            textAlign: 'center',
+          }
+        ),
+        textElement(335, 0, 'eje empírico/\nsimple', 20, palette.ORANGE, {
           textAlign: 'center',
-          fontSize: 20,
-          text:
-            intentional === 1
-              ? 'dualidad intensional/compleja'
-              : intentional === 2
-              ? 'dualidad empírica/simple'
-              : '',
-          strokeColor: palette.ORANGE,
-        },
-        {
-          type: 'text',
-          x: 335,
-          y: 450,
-          textAlign: 'center',
-          fontSize: 20,
-          text: 'eje intensional/\ncomplejo',
-          strokeColor: palette.ORANGE,
-        },
-        {
-          type: 'text',
-          x: 335,
-          y: 0,
-          textAlign: 'center',
-          fontSize: 20,
-          text: 'eje empírico/\nsimple',
-          strokeColor: palette.ORANGE,
-        },
+        }),
       ]
     : []
 
 const formAndContextAnnotation: () => Schema = () => [
-  {
-    type: 'text',
-    x: -114,
-    y: 413,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'sentido',
-  },
-  {
-    type: 'text',
-    x: -125,
-    y: 475,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'intensión',
-  },
-  {
-    type: 'text',
-    x: -140,
-    y: 565,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'sustancia',
-  },
-  {
-    type: 'text',
-    x: -112,
-    y: -40,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'informa',
-  },
-  {
-    type: 'text',
-    x: -113,
-    y: 22,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'esencia',
-  },
-  {
-    type: 'text',
-    x: -138,
-    y: 112,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'sustancia',
-  },
-  {
-    type: 'text',
-    x: 714,
-    y: -40,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'forma',
-  },
-  {
-    type: 'text',
-    x: 714,
-    y: 22,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'intensión',
-  },
-  {
-    type: 'text',
-    x: 714,
-    y: 112,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'extensión',
-  },
-  {
-    type: 'text',
-    x: 716,
-    y: 413,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'contexto',
-  },
-  {
-    type: 'text',
-    x: 716,
-    y: 475,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'esencia',
-  },
-  {
-    type: 'text',
-    x: 716,
-    y: 565,
-    strokeColor: palette.ORANGE,
-    fontSize: 20,
-    text: 'extensión',
-  },
+  textElement(-114, 413, 'sentido', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(-125, 475, 'intensión', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(-140, 565, 'sustancia', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(-112, -40, 'informa', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(-113, 22, 'esencia', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(-138, 112, 'sustancia', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(714, -40, 'forma', 20, palette.ORANGE, { textAlign: undefined }),
+  textElement(714, 22, 'intensión', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(714, 122, 'extensión', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(716, 413, 'contexto', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(716, 475, 'esencia', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
+  textElement(716, 565, 'extensión', 20, palette.ORANGE, {
+    textAlign: 'left',
+  }),
 ]
 
 export const tripleSquareSequence: DialecticsSchema = (

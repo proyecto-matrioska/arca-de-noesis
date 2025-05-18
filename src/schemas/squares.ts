@@ -1,82 +1,39 @@
 import { DialecticsSchema, Schema } from './schema'
 import { DualityData } from './schema'
-import { groupByTetrads } from './groupByTetrads'
-import { groupByTriads } from './groupByTriads'
-import { palette } from './palette'
-import { translateElements } from './translateElements'
+import { groupByTetrads } from './transformations/groupByTetrads'
+import { groupByTriads } from './transformations/groupByTriads'
+import { palette } from "./palette"
+import { translateElements } from './transformations/translateElements'
 import { SchemaOption } from '../state/uiSlice'
+import { textElement } from './elements/textElement'
+import { lineElement } from './elements/lineElement'
+import { ellipseElement } from './elements/ellpiseElement'
 
 export const square: (duality: DualityData) => Schema = ([a, b, c, d]) => [
-  {
-    type: 'text',
-    x: 0,
-    y: 0,
+  textElement(0, 0, c, 28, palette.BLUE, {
     textAlign: 'center',
-    fontSize: 28,
-    text: c,
-    strokeColor: palette.BLUE,
-  },
-  {
-    type: 'text',
-    x: 300,
-    y: 0,
+  }),
+  textElement(300, 0, d, 28, palette.RED, {
     textAlign: 'center',
-    fontSize: 28,
-    text: d,
-    strokeColor: palette.RED,
-  },
-  {
-    type: 'text',
-    x: 300,
-    y: 300,
+  }),
+  textElement(300, 300, a, 28, palette.BLUE, {
     textAlign: 'center',
-    fontSize: 28,
-    text: a,
-    strokeColor: palette.BLUE,
-  },
-  {
-    type: 'text',
-    x: 0,
-    y: 300,
+  }),
+  textElement(0, 300, b, 28, palette.RED, {
     textAlign: 'center',
-    fontSize: 28,
-    text: b,
-    strokeColor: palette.RED,
-  },
-  {
-    type: 'line',
-    x: 60,
-    y: 20,
-    width: 180,
+  }),
+  lineElement(60, 20, 180, 1, palette.LIGHT_BLUE, {
     strokeStyle: 'dotted',
-    strokeColor: palette.LIGHT_BLUE,
-  },
-  {
-    type: 'line',
-    x: 60,
-    y: 320,
-    width: 180,
+  }),
+  lineElement(60, 320, 180, 1, palette.LIGHT_BLUE, {
     strokeStyle: 'dotted',
-    strokeColor: palette.LIGHT_BLUE,
-  },
-  {
-    type: 'line',
-    x: 0,
-    y: 50,
-    width: 1,
-    height: 240,
+  }),
+  lineElement(0, 50, 1, 240, palette.PURPLE, {
     strokeStyle: 'dotted',
-    strokeColor: palette.PURPLE,
-  },
-  {
-    type: 'line',
-    x: 300,
-    y: 50,
-    width: 1,
-    height: 240,
+  }),
+  lineElement(300, 50, 1, 240, palette.PURPLE, {
     strokeStyle: 'dotted',
-    strokeColor: palette.PURPLE,
-  },
+  }),
 ]
 
 export const complexSquare: (
@@ -86,64 +43,28 @@ export const complexSquare: (
 ) => Schema = (d1, [a, b, c, d], schemaOptions) =>
   square(d1)
     .concat([
-      {
-        type: 'text',
-        x: 100,
-        y: 85,
+      textElement(100, 85, a, 20, palette.BLUE, {
         textAlign: 'center',
-        fontSize: 20,
-        text: a,
-        strokeColor: palette.BLUE,
         angle: 0.7854,
-      },
-      {
-        type: 'text',
-        x: 75,
-        y: 110,
+      }),
+      textElement(75, 110, b, 20, palette.RED, {
         textAlign: 'center',
-        fontSize: 20,
-        text: b,
-        strokeColor: palette.RED,
         angle: 0.7854,
-      },
-      {
-        type: 'text',
-        x: 70,
-        y: 210,
+      }),
+      textElement(70, 210, c, 20, palette.BLUE, {
         textAlign: 'center',
-        fontSize: 20,
-        text: c,
-        strokeColor: palette.BLUE,
         angle: -0.7854,
-      },
-      {
-        type: 'text',
-        x: 95,
-        y: 230,
+      }),
+      textElement(95, 230, d, 20, palette.RED, {
         textAlign: 'center',
-        fontSize: 20,
-        text: d,
-        strokeColor: palette.RED,
         angle: -0.7854,
-      },
-      {
-        type: 'line',
-        x: 20,
-        y: 50,
-        width: 260,
-        height: 240,
+      }),
+      lineElement(20, 50, 260, 240, palette.CYAN, {
         strokeStyle: 'dotted',
-        strokeColor: palette.CYAN,
-      },
-      {
-        type: 'line',
-        x: 280,
-        y: 50,
-        width: -260,
-        height: 240,
+      }),
+      lineElement(280, 50, -260, 240, palette.CYAN, {
         strokeStyle: 'dotted',
-        strokeColor: palette.CYAN,
-      },
+      }),
     ])
     .concat(
       schemaOptions.elementDescriptions.value
@@ -152,15 +73,9 @@ export const complexSquare: (
     )
 
 const dualityIndexAnnotation: (index: number) => Schema = index => [
-  {
-    type: 'text',
-    x: -100,
-    y: -40,
+  textElement(-100, -40, `${index + 1}:`, 20, palette.ORANGE, {
     textAlign: 'center',
-    fontSize: 20,
-    text: `${index + 1}:`,
-    strokeColor: palette.ORANGE,
-  },
+  }),
 ]
 
 const squareElementDescriptions: (
@@ -169,141 +84,54 @@ const squareElementDescriptions: (
 ) => Schema = (intentional, schemaOptions) =>
   schemaOptions.elementDescriptions.value
     ? [
-        {
-          type: 'text',
-          x: 150,
-          y: -100,
+        textElement(
+          150,
+          -100,
+          intentional === 1
+            ? 'dualidad intensional/compleja'
+            : intentional === 2
+            ? 'dualidad empírica/simple'
+            : '',
+          20,
+          palette.ORANGE,
+          {
+            textAlign: 'center',
+          }
+        ),
+        textElement(150, 340, 'eje intensional/complejo', 20, palette.ORANGE, {
           textAlign: 'center',
-          fontSize: 20,
-          text:
-            intentional === 1
-              ? 'dualidad intensional/compleja'
-              : intentional === 2
-              ? 'dualidad empírica/simple'
-              : '',
-          strokeColor: palette.ORANGE,
-        },
-        /* {
-          type: 'text',
-          x: 950,
-          y: -100,
+        }),
+        textElement(150, -30, 'eje empírico/simple', 20, palette.ORANGE, {
           textAlign: 'center',
-          fontSize: 20,
-          text: 'dualidad empírica/simple',
-          strokeColor: palette.ORANGE,
-        }, */
-        {
-          type: 'text',
-          x: 150,
-          y: 340,
-          textAlign: 'center',
-          fontSize: 20,
-          text: 'eje intensional/complejo',
-          strokeColor: palette.ORANGE,
-        },
-        {
-          type: 'text',
-          x: 150,
-          y: -30,
-          textAlign: 'center',
-          fontSize: 20,
-          text: 'eje empírico/simple',
-          strokeColor: palette.ORANGE,
-        },
-        /* {
-          type: 'text',
-          x: 950,
-          y: 340,
-          textAlign: 'center',
-          fontSize: 20,
-          text: 'eje intensional/complejo',
-          strokeColor: palette.ORANGE,
-        },
-        {
-          type: 'text',
-          x: 950,
-          y: -30,
-          textAlign: 'center',
-          fontSize: 20,
-          text: 'eje empírico/simple',
-          strokeColor: palette.ORANGE,
-        }, */
+        }),
       ]
     : []
 
 const complexSquareElementDescriptions: () => Schema = () => [
-  {
-    type: 'text',
-    x: 150,
-    y: 340,
+  textElement(150, 340, 'eje intensional/complejo', 20, palette.ORANGE, {
     textAlign: 'center',
-    fontSize: 20,
-    text: 'eje intensional/complejo',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: 150,
-    y: -30,
+  }),
+  textElement(150, -30, 'eje empírico/simple', 20, palette.ORANGE, {
     textAlign: 'center',
-    fontSize: 20,
-    text: 'eje empírico/simple',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: 470,
-    y: 160,
+  }),
+  textElement(470, 160, 'abstracción empírica', 20, palette.ORANGE, {
     textAlign: 'center',
-    fontSize: 20,
-    text: 'abstracción empírica',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'line',
-    x: 170,
-    y: 170,
-    width: 180,
-    height: 1,
+  }),
+  lineElement(170, 170, 180, 1, palette.ORANGE, {
     strokeStyle: 'dashed',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: -200,
-    y: 60,
+  }),
+  textElement(-200, 60, 'eje intensional/complejo', 20, palette.ORANGE, {
     textAlign: 'center',
-    fontSize: 20,
-    text: 'eje intensional/complejo',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'line',
-    x: -70,
-    y: 75,
-    width: 110,
-    height: 1,
+  }),
+  lineElement(-70, 75, 110, 1, palette.ORANGE, {
     strokeStyle: 'dashed',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'text',
-    x: -200,
-    y: 260,
+  }),
+  textElement(-200, 260, 'eje empírico/simple', 20, palette.ORANGE, {
     textAlign: 'center',
-    fontSize: 20,
-    text: 'eje empírico/simple',
-    strokeColor: palette.ORANGE,
-  },
-  {
-    type: 'line',
-    x: -90,
-    y: 275,
-    width: 110,
-    height: 1,
+  }),
+  lineElement(-90, 275, 110, 1, palette.ORANGE, {
     strokeStyle: 'dashed',
-    strokeColor: palette.ORANGE,
-  },
+  }),
 ]
 
 const rectagularAnnotation: (
@@ -312,113 +140,115 @@ const rectagularAnnotation: (
   c: number,
   d: number
 ) => Schema = (a, b, c, d) => [
-  {
-    type: 'ellipse',
-    strokeWidth: 2,
-    strokeStyle: 'dashed',
-    x: a === 0 || a === 3 ? -80 : 220,
-    y: a > 1 ? 260 : -40,
-    strokeColor: palette.ORANGE,
-    backgroundColor: 'transparent',
-    width: 160,
-    height: 120,
-  },
-  {
-    type: 'ellipse',
-    strokeWidth: 2,
-    strokeStyle: 'dashed',
-    x: b === 0 || b === 3 ? 720 : 1020,
-    y: b > 1 ? 260 : -40,
-    strokeColor: palette.ORANGE,
-    backgroundColor: 'transparent',
-    width: 160,
-    height: 120,
-  },
-  {
-    type: 'ellipse',
-    strokeWidth: 2,
-    strokeStyle: 'dashed',
-    x: c === 0 || c === 3 ? 720 : 1020,
-    y: c > 1 ? 760 : 460,
-    strokeColor: palette.ORANGE,
-    backgroundColor: 'transparent',
-    width: 160,
-    height: 120,
-  },
-  {
-    type: 'ellipse',
-    strokeWidth: 2,
-    strokeStyle: 'dashed',
-    x: d === 0 || d === 3 ? -80 : 220,
-    y: d > 1 ? 760 : 460,
-    strokeColor: palette.ORANGE,
-    backgroundColor: 'transparent',
-    width: 160,
-    height: 120,
-  },
-  {
-    type: 'line',
-    strokeWidth: 2,
-    strokeStyle: 'dashed',
-    x: a === 0 || a === 3 ? 80 : 380,
-    y: a > 1 ? 320 : 20,
-    strokeColor: palette.ORANGE,
-    backgroundColor: 'transparent',
-    width:
-      340 + ([1, 2].includes(a) ? 0 : 300) + ([1, 2].includes(b) ? 300 : 0),
-    height: a <= 1 && b >= 2 ? 300 : a > 1 && b < 2 ? -300 : 0,
-  },
-  {
-    type: 'line',
-    strokeWidth: 2,
-    strokeStyle: 'dashed',
-    x: d === 0 || d === 3 ? 80 : 380,
-    y: d > 1 ? 820 : 520,
-    strokeColor: palette.ORANGE,
-    width:
-      340 + ([1, 2].includes(d) ? 0 : 300) + ([1, 2].includes(c) ? 300 : 0),
-    height: d <= 1 && c >= 2 ? 300 : d > 1 && c < 2 ? -300 : 0,
-  },
-  {
-    type: 'line',
-    strokeWidth: 2,
-    strokeStyle: 'dashed',
-    x: b === 0 || b === 3 ? 800 : 1100,
-    y: b > 1 ? 380 : 80,
-    strokeColor: palette.ORANGE,
-    width:
-      [0, 3].includes(b) && [1, 2].includes(c)
-        ? 300
-        : [1, 2].includes(b) && [0, 3].includes(c)
-        ? -300
-        : 1,
-    height:
-      [2, 3].includes(b) && [0, 1].includes(c)
-        ? 80
-        : [0, 1].includes(b) && [2, 3].includes(c)
-        ? 680
-        : 380,
-  },
-  {
-    type: 'line',
-    strokeWidth: 2,
-    strokeStyle: 'dashed',
-    x: a === 0 || a === 3 ? 0 : 300,
-    y: a > 1 ? 380 : 80,
-    strokeColor: palette.ORANGE,
-    width:
-      [0, 3].includes(a) && [1, 2].includes(d)
-        ? 300
-        : [1, 2].includes(a) && [0, 3].includes(d)
-        ? -300
-        : 1,
-    height:
-      [2, 3].includes(a) && [0, 1].includes(d)
-        ? 80
-        : [0, 1].includes(a) && [2, 3].includes(d)
-        ? 680
-        : 380,
-  },
+  ellipseElement(
+    a === 0 || a === 3 ? -80 : 220,
+    a > 1 ? 260 : -40,
+    160,
+    120,
+    palette.ORANGE,
+    {
+      backgroundColor: 'transparent',
+      strokeWidth: 2,
+      strokeStyle: 'dashed',
+    }
+  ),
+  ellipseElement(
+    b === 0 || b === 3 ? 720 : 1020,
+    b > 1 ? 260 : -40,
+    160,
+    120,
+    palette.ORANGE,
+    {
+      backgroundColor: 'transparent',
+      strokeWidth: 2,
+      strokeStyle: 'dashed',
+    }
+  ),
+  ellipseElement(
+    c === 0 || c === 3 ? 720 : 1020,
+    c > 1 ? 760 : 460,
+    160,
+    120,
+    palette.ORANGE,
+    {
+      backgroundColor: 'transparent',
+      strokeWidth: 2,
+      strokeStyle: 'dashed',
+    }
+  ),
+  ellipseElement(
+    d === 0 || d === 3 ? -80 : 220,
+    d > 1 ? 760 : 460,
+    160,
+    120,
+    palette.ORANGE,
+    {
+      backgroundColor: 'transparent',
+      strokeWidth: 2,
+      strokeStyle: 'dashed',
+    }
+  ),
+  lineElement(
+    a === 0 || a === 3 ? 80 : 380,
+    a > 1 ? 320 : 20,
+    340 + ([1, 2].includes(a) ? 0 : 300) + ([1, 2].includes(b) ? 300 : 0),
+    a <= 1 && b >= 2 ? 300 : a > 1 && b < 2 ? -300 : 0,
+    palette.ORANGE,
+    {
+      strokeWidth: 2,
+      strokeStyle: 'dashed',
+      backgroundColor: 'transparent',
+    }
+  ),
+  lineElement(
+    d === 0 || d === 3 ? 80 : 380,
+    d > 1 ? 820 : 520,
+    340 + ([1, 2].includes(d) ? 0 : 300) + ([1, 2].includes(c) ? 300 : 0),
+    d <= 1 && c >= 2 ? 300 : d > 1 && c < 2 ? -300 : 0,
+    palette.ORANGE,
+    {
+      strokeWidth: 2,
+      strokeStyle: 'dashed',
+    }
+  ),
+  lineElement(
+    b === 0 || b === 3 ? 800 : 1100,
+    b > 1 ? 380 : 80,
+    [0, 3].includes(b) && [1, 2].includes(c)
+      ? 300
+      : [1, 2].includes(b) && [0, 3].includes(c)
+      ? -300
+      : 1,
+    [2, 3].includes(b) && [0, 1].includes(c)
+      ? 80
+      : [0, 1].includes(b) && [2, 3].includes(c)
+      ? 680
+      : 380,
+    palette.ORANGE,
+    {
+      strokeWidth: 2,
+      strokeStyle: 'dashed',
+    }
+  ),
+  lineElement(
+    a === 0 || a === 3 ? 0 : 300,
+    a > 1 ? 380 : 80,
+    [0, 3].includes(a) && [1, 2].includes(d)
+      ? 300
+      : [1, 2].includes(a) && [0, 3].includes(d)
+      ? -300
+      : 1,
+    [2, 3].includes(a) && [0, 1].includes(d)
+      ? 80
+      : [0, 1].includes(a) && [2, 3].includes(d)
+      ? 680
+      : 380,
+    palette.ORANGE,
+    {
+      strokeWidth: 2,
+      strokeStyle: 'dashed',
+    }
+  ),
 ]
 
 const rectagularAnnotationParams: (

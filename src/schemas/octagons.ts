@@ -1,76 +1,42 @@
-import { palette } from './palette'
-import { swapTetrads } from './swapTetrads'
+import { palette } from "./palette"
+import { swapTetrads } from './transformations/swapTetrads'
 import { square } from './squares'
-import { translateElements } from './translateElements'
-import { groupByTetrads } from './groupByTetrads'
-import { groupByTriads } from './groupByTriads'
+import { translateElements } from './transformations/translateElements'
+import { groupByTetrads } from './transformations/groupByTetrads'
+import { groupByTriads } from './transformations/groupByTriads'
 import { DialecticsSchema, Schema } from './schema'
 import { DualityData } from './schema'
 import { SchemaOption } from '../state/uiSlice'
+import { textElement } from './elements/textElement'
+import { lineElement } from './elements/lineElement'
 
 const complexSquare: (d1: DualityData, d2: DualityData) => Schema = (
   d1,
   [a, b, c, d]
 ) =>
   square(d1).concat([
-    {
-      type: 'text',
-      x: 100,
-      y: 85,
+    textElement(100, 85, a, 20, palette.BLUE, {
       textAlign: 'center',
-      fontSize: 20,
-      text: a,
-      strokeColor: palette.BLUE,
       angle: 0.7854,
-    },
-    {
-      type: 'text',
-      x: 75,
-      y: 110,
+    }),
+    textElement(75, 110, b, 20, palette.RED, {
       textAlign: 'center',
-      fontSize: 20,
-      text: b,
-      strokeColor: palette.RED,
       angle: 0.7854,
-    },
-    {
-      type: 'text',
-      x: 70,
-      y: 210,
+    }),
+    textElement(70, 210, c, 20, palette.BLUE, {
       textAlign: 'center',
-      fontSize: 20,
-      text: c,
-      strokeColor: palette.BLUE,
       angle: -0.7854,
-    },
-    {
-      type: 'text',
-      x: 95,
-      y: 230,
+    }),
+    textElement(95, 230, d, 20, palette.RED, {
       textAlign: 'center',
-      fontSize: 20,
-      text: d,
-      strokeColor: palette.RED,
       angle: -0.7854,
-    },
-    {
-      type: 'line',
-      x: 20,
-      y: 50,
-      width: 260,
-      height: 240,
+    }),
+    lineElement(20, 50, 260, 240, palette.CYAN, {
       strokeStyle: 'dotted',
-      strokeColor: palette.CYAN,
-    },
-    {
-      type: 'line',
-      x: 280,
-      y: 50,
-      width: -260,
-      height: 240,
+    }),
+    lineElement(280, 50, -260, 240, palette.CYAN, {
       strokeStyle: 'dotted',
-      strokeColor: palette.CYAN,
-    },
+    }),
   ])
 
 export const complexOctagon: (
@@ -80,126 +46,48 @@ export const complexOctagon: (
   schemaOptions: Record<string, SchemaOption>
 ) => Schema = (s1, s2, [a, b, c, d], schemaOptions) =>
   complexSquare(s1, s2).concat([
-    {
-      type: 'text',
-      x: 150,
-      y: -150,
+    textElement(150, -150, c, 28, palette.BLUE, {
       textAlign: 'center',
-      fontSize: 28,
-      text: c,
-      strokeColor: palette.BLUE,
-    },
-    {
-      type: 'text',
-      x: 150,
-      y: 450,
+    }),
+    textElement(150, 450, d, 28, palette.RED, {
       textAlign: 'center',
-      fontSize: 28,
-      text: d,
-      strokeColor: palette.RED,
-    },
-    {
-      type: 'text',
-      x: -150,
-      y: 150,
+    }),
+    textElement(-150, 150, a, 28, palette.BLUE, {
       textAlign: 'center',
-      fontSize: 28,
-      text: a,
-      strokeColor: palette.BLUE,
-    },
-    {
-      type: 'text',
-      x: 450,
-      y: 150,
+    }),
+    textElement(450, 150, b, 28, palette.RED, {
       textAlign: 'center',
-      fontSize: 28,
-      text: b,
-      strokeColor: palette.RED,
-    },
-    {
-      type: 'line',
-      x: 160,
-      y: -110,
-      width: 140,
-      height: 110,
+    }),
+    lineElement(160, -110, 140, 110, palette.RED, {
       strokeStyle: 'dotted',
-      strokeColor: palette.RED,
-    },
-    {
-      type: 'line',
-      x: 140,
-      y: -110,
-      width: -140,
-      height: 110,
+    }),
+    lineElement(140, -110, -140, 110, palette.RED, {
       strokeStyle: 'dotted',
-      strokeColor: palette.RED,
-    },
-    {
-      type: 'line',
-      x: 0,
-      y: 340,
-      width: 140,
-      height: 110,
+    }),
+    lineElement(0, 340, 140, 110, palette.RED, {
       strokeStyle: 'dotted',
-      strokeColor: palette.RED,
-    },
-    {
-      type: 'line',
-      x: 300,
-      y: 340,
-      width: -140,
-      height: 110,
+    }),
+    lineElement(300, 340, -140, 110, palette.RED, {
       strokeStyle: 'dotted',
-      strokeColor: palette.RED,
-    },
-    {
-      type: 'line',
-      x: -150,
-      y: 190,
-      width: 120,
-      height: 110,
+    }),
+    lineElement(-150, 190, 120, 110, palette.RED, {
       strokeStyle: 'dotted',
-      strokeColor: palette.RED,
-    },
-    {
-      type: 'line',
-      x: -30,
-      y: 40,
-      width: -120,
-      height: 110,
+    }),
+    lineElement(-30, 40, -120, 110, palette.RED, {
       strokeStyle: 'dotted',
-      strokeColor: palette.RED,
-    },
-    {
-      type: 'line',
-      x: 330,
-      y: 40,
-      width: 120,
-      height: 110,
+    }),
+    lineElement(330, 40, 120, 110, palette.RED, {
       strokeStyle: 'dotted',
-      strokeColor: palette.RED,
-    },
-    {
-      type: 'line',
-      x: 450,
-      y: 190,
-      width: -120,
-      height: 110,
+    }),
+    lineElement(450, 190, -120, 110, palette.RED, {
       strokeStyle: 'dotted',
-      strokeColor: palette.RED,
-    },
+    }),
   ])
 
 const dualityIndexAnnotation: (index: number) => Schema = index => [
-  {
-    type: 'text',
-    x: -100,
-    y: -40,
+  textElement(-100, -40, `${index + 1}:`, 20, palette.ORANGE, {
     textAlign: 'center',
-    fontSize: 20,
-    text: `${index + 1}:`,
-    strokeColor: palette.ORANGE,
-  },
+  }),
 ]
 
 export const complexOctagonSequence: DialecticsSchema = (

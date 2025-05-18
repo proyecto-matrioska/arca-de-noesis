@@ -1,8 +1,10 @@
 import { dual } from './duals'
-import { translateElements } from './translateElements'
-import { palette } from './palette'
-import { swapTetrads } from './swapTetrads'
+import { translateElements } from './transformations/translateElements'
+import { palette } from "./palette"
+import { swapTetrads } from './transformations/swapTetrads'
 import { DialecticsDataEntry, DialecticsSchema, Schema } from './schema'
+import { textElement } from './elements/textElement'
+import { arrowElement } from './elements/arrowElement'
 
 export const dialectic: (
   a: string,
@@ -41,58 +43,14 @@ export const dialectic: (
       translateElements(200, 0, dual(e, f, { color3: color5, color4: color6 }))
     )
     .concat([
-      {
-        type: 'arrow',
-        x: 240,
-        y: 220,
-        width: -90,
-        height: 120,
-        strokeColor: palette.DARK_GRAY,
-      },
-      {
-        type: 'arrow',
-        x: 380,
-        y: 220,
-        width: 90,
-        height: 120,
-        strokeColor: palette.DARK_GRAY,
-      },
-      {
-        type: 'arrow',
-        x: 240,
-        y: 450,
-        width: 140,
-        height: 1,
-        strokeColor: palette.DARK_GRAY,
+      arrowElement(240, 220, -90, 120, palette.DARK_GRAY),
+      arrowElement(380, 220, 90, 120, palette.DARK_GRAY),
+      arrowElement(240, 450, 140, 1, palette.DARK_GRAY, {
         startArrowhead: 'arrow',
-      },
-      {
-        type: 'text',
-        x: 150,
-        y: 250,
-        textAlign: 'center',
-        fontSize: 18,
-        text: 'sintetiza',
-        strokeColor: palette.DARK_GRAY,
-      },
-      {
-        type: 'text',
-        x: 470,
-        y: 250,
-        textAlign: 'center',
-        fontSize: 18,
-        text: 'sintetiza',
-        strokeColor: palette.DARK_GRAY,
-      },
-      {
-        type: 'text',
-        x: 310,
-        y: 460,
-        textAlign: 'center',
-        fontSize: 18,
-        text: 'se opone',
-        strokeColor: palette.DARK_GRAY,
-      },
+      }),
+      textElement(150, 250, 'sintetiza', 18, palette.DARK_GRAY),
+      textElement(470, 250, 'sintetiza', 18, palette.DARK_GRAY),
+      textElement(310, 460, 'se opone', 18, palette.DARK_GRAY),
     ])
 
 export const dialecticSequence: (

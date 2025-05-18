@@ -29,7 +29,7 @@ import {
   setSelectedDiagram,
   setSidebarOpen,
 } from '../state/uiSlice'
-import { factorData } from '../schemas/factorization'
+import { factorData } from '../schemas/transformations/factorization'
 import { initialScreen } from '../schemas/initialScreen'
 import { dualitySequence } from '../schemas/duals'
 import { squareSequence, complexSquareSequence } from '../schemas/squares'
@@ -54,7 +54,7 @@ const smallButtonClasses =
 
 function ArcaDeNoesis() {
   const dispatch = useAppDispatch()
-  const data = useAppSelector(state => state.dialectics.data)
+  const dialecticsData = useAppSelector(state => state.dialectics.data)
   const dataFilename = useAppSelector(state => state.dialectics.filename)
   const isDirty = useAppSelector(state => state.dialectics.isDirty)
   const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>()
@@ -157,15 +157,15 @@ function ArcaDeNoesis() {
       default:
         break
     }
-    const elementSkeletons = selectedDiagram
-      ? maker(factorData(factorizationId, data), schemaOptions[selectedDiagram])
+    const dialecticsSchema = selectedDiagram
+      ? maker(factorData(factorizationId, dialecticsData), schemaOptions[selectedDiagram])
       : []
-    const elements = convertToExcalidrawElements(elementSkeletons)
+    const elements = convertToExcalidrawElements(dialecticsSchema as ExcalidrawElementSkeleton[])
     excalidrawAPI?.updateScene({
       elements,
     })
   }, [
-    data,
+    dialecticsData,
     excalidrawAPI,
     generalSchemaOptions.factorizations.value,
     schemaOptions,
@@ -190,7 +190,7 @@ function ArcaDeNoesis() {
   useEffect(() => {
     if (diagramAutoupdate && selectedDiagram) updateDiagram()
     return () => {}
-  }, [data, diagramAutoupdate, selectedDiagram, updateDiagram])
+  }, [dialecticsData, diagramAutoupdate, selectedDiagram, updateDiagram])
 
   return (
     <div className="ArcaDeNoesis">

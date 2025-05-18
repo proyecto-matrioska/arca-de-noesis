@@ -1,4 +1,4 @@
-import { Schema } from './schema'
+import { Schema } from '../schema'
 
 export const translateElements = (x: number, y: number, elements: Schema) =>
   elements.map(e => {

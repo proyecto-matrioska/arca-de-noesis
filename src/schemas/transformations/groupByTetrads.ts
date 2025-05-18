@@ -1,4 +1,4 @@
-import { DialecticsDataEntry } from './schema'
+import { DialecticsDataEntry } from '../schema'
 
 export const groupByTetrads = (dualities: DialecticsDataEntry[]) => {
   const r: DialecticsDataEntry[][] = []

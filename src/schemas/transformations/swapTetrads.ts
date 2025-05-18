@@ -1,4 +1,4 @@
-import { DialecticsDataEntry } from './schema'
+import { DialecticsDataEntry } from '../schema'
 
 export const swapTetrads: (d: DialecticsDataEntry) => DialecticsDataEntry = ([
   x,

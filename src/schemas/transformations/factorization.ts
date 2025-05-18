@@ -1,4 +1,4 @@
-import { DialecticsDataEntry } from './schema'
+import { DialecticsDataEntry } from '../schema'
 
 const rectagularIndexes = (name: string) => {
   switch (name) {
