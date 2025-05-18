@@ -24,11 +24,11 @@ import {
 } from '../state/dialecticsSlice'
 import { DialecticsDataEntry } from '../schemas/schema'
 import {
-  SchemaIdentifier,
   SchemaOption,
   setSelectedDiagram,
   setSidebarOpen,
 } from '../state/uiSlice'
+import { SchemaIdentifier } from '../schemas/schema'
 import { factorData } from '../schemas/transformations/factorization'
 import { initialScreen } from '../schemas/initialScreen'
 import { dualitySequence } from '../schemas/duals'

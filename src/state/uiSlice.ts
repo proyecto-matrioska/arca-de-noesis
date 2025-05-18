@@ -1,18 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-export type SchemaIdentifier =
-  | 'dualidades'
-  | 'cuadros'
-  | 'cuadros-complejos'
-  | 'octagonos'
-  | 'octagonos-empiricos'
-  | 'triadas'
-  | 'triadas-empiricas'
-  | 'dialectica'
-  | 'dialectica-empirica'
-  | 'procesual'
-  | 'capas-discursivas'
-  | 'matrioskas'
+import { SchemaIdentifier } from '../schemas/schema'
 
 export type SchemaOption = {
   type: string

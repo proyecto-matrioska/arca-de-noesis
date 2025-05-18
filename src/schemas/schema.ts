@@ -1,6 +1,20 @@
 import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 import { SchemaOption } from '../state/uiSlice'
 
+export type SchemaIdentifier =
+  | 'dualidades'
+  | 'cuadros'
+  | 'cuadros-complejos'
+  | 'octagonos'
+  | 'octagonos-empiricos'
+  | 'triadas'
+  | 'triadas-empiricas'
+  | 'dialectica'
+  | 'dialectica-empirica'
+  | 'procesual'
+  | 'capas-discursivas'
+  | 'matrioskas'
+
 export type Tuple<T> = [T, T]
 
 export type Triplet<T> = [T, T, T]
