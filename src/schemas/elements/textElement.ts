@@ -26,6 +26,7 @@ export const textElement = (
     fontSize,
     strokeColor,
     textAlign: 'center',
+    fontFamily: 1,
     ...(elementOptions ? elementOptions : {}),
   }
 }

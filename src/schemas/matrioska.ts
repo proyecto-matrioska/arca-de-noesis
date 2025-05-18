@@ -12,31 +12,26 @@ const matrioska: (
 ) => Schema = (x, y, a, b) =>
   translateElements(-2400, 650, [
     textElement(2500.891737872707, -427.2213115616323, x[0], 36, '#3846C8', {
-      fontFamily: 1,
       textAlign: 'right',
       verticalAlign: 'top',
       strokeWidth: 1.25,
     }),
     textElement(3144.028897522266, -421.0962947127264, x[1], 36, '#FF2B2B', {
-      fontFamily: 1,
       textAlign: 'left',
       verticalAlign: 'top',
       strokeWidth: 1.25,
     }),
     textElement(2531.8945334042996, -74.49932296169209, y[1], 36, '#FF2B2B', {
-      fontFamily: 1,
       textAlign: 'right',
       verticalAlign: 'top',
       strokeWidth: 1.25,
     }),
     textElement(3112.703761340826, -68.54697670736641, y[0], 36, '#3846C8', {
-      fontFamily: 1,
       textAlign: 'left',
       verticalAlign: 'top',
       strokeWidth: 1.25,
     }),
     textElement(2627.710787385296, -600, `${a[0]} & ${a[1]}`, 36, '#000000', {
-      fontFamily: 1,
       textAlign: 'center',
       verticalAlign: 'top',
       strokeWidth: 1.25,
@@ -48,7 +43,6 @@ const matrioska: (
       36,
       '#000000',
       {
-        fontFamily: 1,
         textAlign: 'center',
         verticalAlign: 'top',
         strokeWidth: 1.25,
