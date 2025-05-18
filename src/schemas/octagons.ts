@@ -44,7 +44,7 @@ export const complexOctagon: (
   d2: DualityData,
   d3: DualityData,
   schemaOptions: Record<string, SchemaOption>
-) => Schema = (s1, s2, [a, b, c, d], schemaOptions) =>
+) => Schema = (s1, s2, [a, b, c, d], _schemaOptions) =>
   complexSquare(s1, s2).concat([
     textElement(150, -150, c, 28, palette.BLUE, {
       textAlign: 'center',

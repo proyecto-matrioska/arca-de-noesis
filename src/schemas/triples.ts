@@ -1,5 +1,5 @@
 import { translateElements } from './transformations/translateElements'
-import { palette } from "./palette"
+import { palette } from './palette'
 import { swapTetrads } from './transformations/swapTetrads'
 import {
   DialecticsDataEntry,
@@ -291,7 +291,7 @@ export const tripleSquareSequence: DialecticsSchema = (
       ],
       ...dualities,
     ] as Array<DialecticsDataEntry>
-  ).flatMap(([a, b], i, mapArray) =>
+  ).flatMap(([a, _b], i, mapArray) =>
     translateElements(
       0,
       1000 * i,
