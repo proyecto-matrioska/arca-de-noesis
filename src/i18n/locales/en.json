@@ -32,6 +32,15 @@
     "EditorTabName": "Editor",
     "SchemaTabName": "Schema"
   },
-  "Editor": {},
+  "Editor": {
+    "Intention": "Intention",
+    "Extension": "Extension",
+    "IntentionAbbrv": "I.",
+    "ExtensionAbbrv": "E.",
+    "MoveUp": "Move Up",
+    "MoveDown": "Move Down",
+    "InsertDuality": "Insert Duality",
+    "DeleteDuality": "Delete Duality"
+  },
   "SchemaOptions": {}
 }

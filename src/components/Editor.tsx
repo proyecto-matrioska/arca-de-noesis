@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import './Editor.css'
 import {
   deleteEntry,
@@ -20,6 +21,7 @@ interface DualityProps {
 
 function Duality({ duality, onChange, intentional = true }: DualityProps) {
   const [a, b, c, d] = duality
+  const { t } = useTranslation()
   const changeHandler =
     (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const updatedDuality: DualityData = [a, b, c, d]
@@ -32,17 +34,21 @@ function Duality({ duality, onChange, intentional = true }: DualityProps) {
         <tr>
           <th>&nbsp;</th>
           <th>&nbsp;</th>
-          <th>Intensión</th>
-          <th>Extensión</th>
+          <th>{t('Editor.Intention')}</th>
+          <th>{t('Editor.Extension')}</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td rowSpan={2}>
-            <b>{intentional ? 'I.' : 'E.'}</b>
+            <b>
+              {intentional
+                ? t('Editor.IntentionAbbrv')
+                : t('Editor.ExtensionAbbrv')}
+            </b>
           </td>
           <td>
-            <b>I.</b>
+            <b>{t('Editor.IntentionAbbrv')}</b>
           </td>
           <td>
             <input type="text" value={a} onChange={changeHandler(0)} />
@@ -53,7 +59,7 @@ function Duality({ duality, onChange, intentional = true }: DualityProps) {
         </tr>
         <tr>
           <td>
-            <b>E.</b>
+            <b>{t('Editor.ExtensionAbbrv')}</b>
           </td>
           <td>
             <input type="text" value={c} onChange={changeHandler(2)} />
@@ -73,6 +79,7 @@ interface DataItemProps {
 }
 
 function DataItem({ index, item }: DataItemProps) {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const [x, y]: DialecticsDataEntry = item
   const changeHandler =
@@ -115,7 +122,7 @@ function DataItem({ index, item }: DataItemProps) {
         <button
           type="button"
           className="excalidraw-button"
-          title="Subir"
+          title={t('Editor.MoveUp')}
           onClick={moveUpHandler}
         >
           ▲
@@ -123,7 +130,7 @@ function DataItem({ index, item }: DataItemProps) {
         <button
           type="button"
           className="excalidraw-button"
-          title="Bajar"
+          title={t('Editor.MoveDown')}
           onClick={moveDownHandler}
         >
           ▼
@@ -131,7 +138,7 @@ function DataItem({ index, item }: DataItemProps) {
         <button
           type="button"
           className="excalidraw-button"
-          title="Insertar dualidad"
+          title={t('Editor.InsertDuality')}
           onClick={insertHandler}
         >
           ✚
@@ -139,7 +146,7 @@ function DataItem({ index, item }: DataItemProps) {
         <button
           type="button"
           className="excalidraw-button"
-          title="Eliminar"
+          title={t('Editor.DeleteDuality')}
           onClick={deleteHandler}
         >
           ✖
