@@ -218,80 +218,84 @@ function ArcaDeNoesis() {
         excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
       >
         <MainMenu>
-          <MainMenu.Group title={t("MainMenu.Data")}>
+          <MainMenu.Group title={t('MainMenu.Data')}>
             <MainMenu.Item onSelect={loadFileOptHandler}>
-              {t("MainMenu.Open")}
+              {t('MainMenu.Open')}
             </MainMenu.Item>
-            <MainMenu.Item onSelect={saveFileOptHandler}>{t("MainMenu.Save")}</MainMenu.Item>
+            <MainMenu.Item onSelect={saveFileOptHandler}>
+              {t('MainMenu.Save')}
+            </MainMenu.Item>
             {hasFileSystemAccessAPI && (
               <MainMenu.Item onSelect={saveAsFileOptHandler}>
-                {t("MainMenu.SaveAs")}
+                {t('MainMenu.SaveAs')}
               </MainMenu.Item>
             )}
-            <MainMenu.Item onSelect={editarOptHandler}>{t("MainMenu.Edit")}</MainMenu.Item>
+            <MainMenu.Item onSelect={editarOptHandler}>
+              {t('MainMenu.Edit')}
+            </MainMenu.Item>
           </MainMenu.Group>
-          <MainMenu.Group title={t("MainMenu.Examples")}>
+          <MainMenu.Group title={t('MainMenu.Examples')}>
             <MainMenu.Item onSelect={loadExampleHandler('metafisica')}>
-              {t("MainMenu.MetaphysicsExample")}
+              {t('MainMenu.MetaphysicsExample')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={loadExampleHandler('intensionalidad')}>
-              {t("MainMenu.IntentionalityVsIntensionExample")}
+              {t('MainMenu.IntentionalityVsIntensionExample')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={loadExampleHandler('rosalindKrauss')}>
-              {t("MainMenu.KraussExample")}
+              {t('MainMenu.KraussExample')}
             </MainMenu.Item>
           </MainMenu.Group>
           <MainMenu.Separator />
-          <MainMenu.Group title={t("MainMenu.CurrentDiagram")}>
+          <MainMenu.Group title={t('MainMenu.CurrentDiagram')}>
             <MainMenu.DefaultItems.Export />
             <MainMenu.DefaultItems.SaveAsImage />
           </MainMenu.Group>
           <MainMenu.Separator />
-          <MainMenu.Group title={t("MainMenu.SchemasGallery")}>
+          <MainMenu.Group title={t('MainMenu.SchemasGallery')}>
             <MainMenu.Item onSelect={selectSchemaHandler('dualidades')}>
-              {t("MainMenu.Dualities")}
+              {t('MainMenu.Dualities')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('cuadros')}>
-              {t("MainMenu.Squares")}
+              {t('MainMenu.Squares')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('cuadros-complejos')}>
-              {t("MainMenu.ComplexSquares")}
+              {t('MainMenu.ComplexSquares')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('octagonos')}>
-              {t("MainMenu.Octagons")}
+              {t('MainMenu.Octagons')}
             </MainMenu.Item>
             <MainMenu.Item
               onSelect={selectSchemaHandler('octagonos-empiricos')}
             >
-              {t("MainMenu.EmpiricalOctagons")}
+              {t('MainMenu.EmpiricalOctagons')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('triadas')}>
-              {t("MainMenu.Triads")}
+              {t('MainMenu.Triads')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('triadas-empiricas')}>
-              {t("MainMenu.EmpiricalTriads")}
+              {t('MainMenu.EmpiricalTriads')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('dialectica')}>
-              {t("MainMenu.Dialectics")}
+              {t('MainMenu.Dialectics')}
             </MainMenu.Item>
             <MainMenu.Item
               onSelect={selectSchemaHandler('dialectica-empirica')}
             >
-              {t("MainMenu.EmpiricalDialectics")}
+              {t('MainMenu.EmpiricalDialectics')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('procesual')}>
-              {t("MainMenu.Procesual")}
+              {t('MainMenu.Procesual')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('capas-discursivas')}>
-              {t("MainMenu.DiscursiveLayers")}
+              {t('MainMenu.DiscursiveLayers')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('matrioskas')}>
-              {t("MainMenu.Matrioskas")}
+              {t('MainMenu.Matrioskas')}
             </MainMenu.Item>
           </MainMenu.Group>
-          <MainMenu.Group title={t("MainMenu.About")}>
+          <MainMenu.Group title={t('MainMenu.About')}>
             <MainMenu.ItemLink href="https://proyecto-matrioska.github.io/notas/Proyecto%20Matrioska/">
-              {t("MainMenu.ProyectoMatrioska")}
+              {t('MainMenu.ProyectoMatrioska')}
             </MainMenu.ItemLink>
           </MainMenu.Group>
         </MainMenu>
@@ -306,7 +310,7 @@ function ArcaDeNoesis() {
               className={smallButtonClasses}
               disabled={selectedDiagram === null}
               onClick={updateDiagram}
-              title={t("Actualizar diagrama")}
+              title={t('Sidebar.RefreshDiagram')}
             >
               ⟲
             </button>
@@ -321,9 +325,11 @@ function ArcaDeNoesis() {
               <OptionsPanel />
             </Sidebar.Tab>
             <Sidebar.TabTriggers>
-              <Sidebar.TabTrigger tab="dataEditor">{t("Datos")}</Sidebar.TabTrigger>
+              <Sidebar.TabTrigger tab="dataEditor">
+                {t('Sidebar.EditorTabName')}
+              </Sidebar.TabTrigger>
               <Sidebar.TabTrigger tab="diagramOptions">
-                {t("Esquema")}
+                {t('Sidebar.SchemaTabName')}
               </Sidebar.TabTrigger>
             </Sidebar.TabTriggers>
           </Sidebar.Tabs>

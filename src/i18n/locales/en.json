@@ -27,6 +27,11 @@
     "Matrioskas": "Matrioskas",
     "ProyectoMatrioska": "Proyecto Matrioska"
   },
+  "Sidebar": {
+    "RefreshDiagram": "Refresh Diagram",
+    "EditorTabName": "Editor",
+    "SchemaTabName": "Schema"
+  },
   "Editor": {},
   "SchemaOptions": {}
 }
