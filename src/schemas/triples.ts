@@ -35,16 +35,16 @@ export const toEmpiricalTriples: (
 ]
 
 const squareLines: () => Schema = () => [
-  lineElement(285, 80, 100, 1, palette.LIGHT_BLUE, {
+  lineElement(285, 80, 100, 1, palette.RED, {
     strokeStyle: 'dotted',
   }),
-  lineElement(285, 530, 100, 1, palette.LIGHT_BLUE, {
+  lineElement(285, 530, 100, 1, palette.BLUE, {
     strokeStyle: 'dotted',
   }),
-  lineElement(105, 260, 1, 100, palette.PURPLE, {
+  lineElement(105, 260, 1, 100, palette.RED, {
     strokeStyle: 'dotted',
   }),
-  lineElement(555, 260, 1, 100, palette.PURPLE, {
+  lineElement(555, 260, 1, 100, palette.BLUE, {
     strokeStyle: 'dotted',
   }),
 ]

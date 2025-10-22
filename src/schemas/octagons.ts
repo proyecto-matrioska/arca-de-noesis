@@ -31,10 +31,10 @@ const complexSquare: (d1: DualityData, d2: DualityData) => Schema = (
       textAlign: 'center',
       angle: -0.7854,
     }),
-    lineElement(20, 50, 260, 240, palette.CYAN, {
+    lineElement(20, 50, 260, 240, palette.BLUE, {
       strokeStyle: 'dotted',
     }),
-    lineElement(280, 50, -260, 240, palette.CYAN, {
+    lineElement(280, 50, -260, 240, palette.RED, {
       strokeStyle: 'dotted',
     }),
   ])
@@ -61,25 +61,25 @@ export const complexOctagon: (
     lineElement(160, -110, 140, 110, palette.RED, {
       strokeStyle: 'dotted',
     }),
-    lineElement(140, -110, -140, 110, palette.RED, {
+    lineElement(140, -110, -140, 110, palette.BLUE, {
       strokeStyle: 'dotted',
     }),
     lineElement(0, 340, 140, 110, palette.RED, {
       strokeStyle: 'dotted',
     }),
-    lineElement(300, 340, -140, 110, palette.RED, {
+    lineElement(300, 340, -140, 110, palette.BLUE, {
       strokeStyle: 'dotted',
     }),
     lineElement(-150, 190, 120, 110, palette.RED, {
       strokeStyle: 'dotted',
     }),
-    lineElement(-30, 40, -120, 110, palette.RED, {
+    lineElement(-30, 40, -120, 110, palette.BLUE, {
       strokeStyle: 'dotted',
     }),
     lineElement(330, 40, 120, 110, palette.RED, {
       strokeStyle: 'dotted',
     }),
-    lineElement(450, 190, -120, 110, palette.RED, {
+    lineElement(450, 190, -120, 110, palette.BLUE, {
       strokeStyle: 'dotted',
     }),
   ])

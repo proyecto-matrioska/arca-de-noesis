@@ -22,16 +22,16 @@ export const square: (duality: DualityData) => Schema = ([a, b, c, d]) => [
   textElement(0, 300, b, 28, palette.RED, {
     textAlign: 'center',
   }),
-  lineElement(60, 20, 180, 1, palette.LIGHT_BLUE, {
+  lineElement(60, 20, 180, 1, palette.RED, {
     strokeStyle: 'dotted',
   }),
-  lineElement(60, 320, 180, 1, palette.LIGHT_BLUE, {
+  lineElement(60, 320, 180, 1, palette.BLUE, {
     strokeStyle: 'dotted',
   }),
-  lineElement(0, 50, 1, 240, palette.PURPLE, {
+  lineElement(0, 50, 1, 240, palette.RED, {
     strokeStyle: 'dotted',
   }),
-  lineElement(300, 50, 1, 240, palette.PURPLE, {
+  lineElement(300, 50, 1, 240, palette.BLUE, {
     strokeStyle: 'dotted',
   }),
 ]
@@ -59,10 +59,10 @@ export const complexSquare: (
         textAlign: 'center',
         angle: -0.7854,
       }),
-      lineElement(20, 50, 260, 240, palette.CYAN, {
+      lineElement(20, 50, 260, 240, palette.BLUE, {
         strokeStyle: 'dotted',
       }),
-      lineElement(280, 50, -260, 240, palette.CYAN, {
+      lineElement(280, 50, -260, 240, palette.RED, {
         strokeStyle: 'dotted',
       }),
     ])
