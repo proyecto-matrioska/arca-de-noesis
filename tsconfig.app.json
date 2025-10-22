@@ -6,6 +6,7 @@
     "module": "ES2020",
     "useDefineForClassFields": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
 
     /* Bundler mode */
     "moduleResolution": "node",
