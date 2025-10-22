@@ -105,6 +105,7 @@ export const schemaOptions: SchemaOptions = {
         { value: 'lista', name: 'lista consecutiva' },
         { value: 'triadas', name: 'agrupar por triadas' },
         { value: 'tetradas', name: 'agrupar por tétradas' },
+        { value: 'cascade', name: 'cascada' },
       ],
       longDescription: 'Agrupar y acomodar cuadros',
     },

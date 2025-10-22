@@ -2,7 +2,7 @@ import { DialecticsSchema, Schema } from './schema'
 import { DualityData } from './schema'
 import { groupByTetrads } from './transformations/groupByTetrads'
 import { groupByTriads } from './transformations/groupByTriads'
-import { palette } from "./palette"
+import { palette } from './palette'
 import { translateElements } from './transformations/translateElements'
 import { SchemaOption } from '../state/uiOptions'
 import { textElement } from './elements/textElement'
@@ -509,6 +509,28 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                   )
                 )
               : []
+          )
+      )
+    )
+  if (schemaOptions.arrangement.value === 'cascade')
+    return dualities.flatMap(([x, y], i) =>
+      translateElements(
+        i * 180,
+        i * 80,
+        square(x)
+          .concat(translateElements(1500, 0, square(y)))
+          .concat(
+            schemaOptions.showDualityIndex.value
+              ? dualityIndexAnnotation(i)
+              : []
+          )
+          .concat(squareElementDescriptions(1, schemaOptions))
+          .concat(
+            translateElements(
+              800,
+              0,
+              squareElementDescriptions(2, schemaOptions)
+            )
           )
       )
     )
