@@ -1,5 +1,32 @@
 {
-  "MainMenu": {},
+  "MainMenu": {
+    "Data": "Datos",
+    "Open": "Abrir...",
+    "Save": "Guardar",
+    "SaveAs": "Guardar como...",
+    "Edit": "Editar",
+    "Examples": "Ejemplos",
+    "MetaphysicsExample": "Metafísica de la información",
+    "IntentionalityVsIntensionExample": "Intentención vs Intensión",
+    "KraussExample": "Rosalind Krauss - Espacio y arquitectura",
+    "CurrentDiagram": "Diagrama actual",
+    "SchemasGallery": "Galería de esquemas",
+    "About": "Acerca de",
+
+    "Dualities": "Dualidades",
+    "Squares": "Cuadros",
+    "ComplexSquares": "Cuadros complejos",
+    "Octagons": "Octágonos",
+    "EmpiricalOctagons": "Octágonos empíricos",
+    "Triads": "Triadas",
+    "EmpiricalTriads": "Triadas empíricas",
+    "Dialectics": "Dialéctica",
+    "EmpiricalDialectics": "Dialéctica empírica",
+    "Procesual": "Procesual",
+    "DiscursiveLayers": "Capas discursivas",
+    "Matrioskas": "Matrioskas",
+    "ProyectoMatrioska": "Proyecto Matrioska"
+  },
   "Editor": {},
   "SchemaOptions": {}
 }

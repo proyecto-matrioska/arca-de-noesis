@@ -45,6 +45,7 @@ import {
 import { procesualSequence } from '../schemas/procesual'
 import { capasDiscursivasSequence } from '../schemas/layers'
 import { matrioskaSequence } from '../schemas/matrioska'
+import { useTranslation } from 'react-i18next'
 
 const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
@@ -79,6 +80,7 @@ function ArcaDeNoesis() {
   const initialElements = convertToExcalidrawElements(initialScreen())
   const elements = initialElements
   const hasFileSystemAccessAPI = 'showSaveFilePicker' in window
+  const { t } = useTranslation()
 
   const openEditorTab = () => {
     if (!isSidebarOpen)
@@ -216,80 +218,80 @@ function ArcaDeNoesis() {
         excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
       >
         <MainMenu>
-          <MainMenu.Group title="Datos">
+          <MainMenu.Group title={t("MainMenu.Data")}>
             <MainMenu.Item onSelect={loadFileOptHandler}>
-              Cargar...
+              {t("MainMenu.Open")}
             </MainMenu.Item>
-            <MainMenu.Item onSelect={saveFileOptHandler}>Guardar</MainMenu.Item>
+            <MainMenu.Item onSelect={saveFileOptHandler}>{t("MainMenu.Save")}</MainMenu.Item>
             {hasFileSystemAccessAPI && (
               <MainMenu.Item onSelect={saveAsFileOptHandler}>
-                Guardar como...
+                {t("MainMenu.SaveAs")}
               </MainMenu.Item>
             )}
-            <MainMenu.Item onSelect={editarOptHandler}>Editar</MainMenu.Item>
+            <MainMenu.Item onSelect={editarOptHandler}>{t("MainMenu.Edit")}</MainMenu.Item>
           </MainMenu.Group>
-          <MainMenu.Group title="Ejemplos">
+          <MainMenu.Group title={t("MainMenu.Examples")}>
             <MainMenu.Item onSelect={loadExampleHandler('metafisica')}>
-              Metafísica de la información
+              {t("MainMenu.MetaphysicsExample")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={loadExampleHandler('intensionalidad')}>
-              Intención vs intensión
+              {t("MainMenu.IntentionalityVsIntensionExample")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={loadExampleHandler('rosalindKrauss')}>
-              Rosalind Krauss - Espacio y arquitectura
+              {t("MainMenu.KraussExample")}
             </MainMenu.Item>
           </MainMenu.Group>
           <MainMenu.Separator />
-          <MainMenu.Group title="Diagrama actual">
+          <MainMenu.Group title={t("MainMenu.CurrentDiagram")}>
             <MainMenu.DefaultItems.Export />
             <MainMenu.DefaultItems.SaveAsImage />
           </MainMenu.Group>
           <MainMenu.Separator />
-          <MainMenu.Group title="Galería de esquemas">
+          <MainMenu.Group title={t("MainMenu.SchemasGallery")}>
             <MainMenu.Item onSelect={selectSchemaHandler('dualidades')}>
-              Dualidades
+              {t("MainMenu.Dualities")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('cuadros')}>
-              Cuadros
+              {t("MainMenu.Squares")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('cuadros-complejos')}>
-              Cuadros complejos
+              {t("MainMenu.ComplexSquares")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('octagonos')}>
-              Octágonos
+              {t("MainMenu.Octagons")}
             </MainMenu.Item>
             <MainMenu.Item
               onSelect={selectSchemaHandler('octagonos-empiricos')}
             >
-              Octágonos empíricos
+              {t("MainMenu.EmpiricalOctagons")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('triadas')}>
-              Triadas
+              {t("MainMenu.Triads")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('triadas-empiricas')}>
-              Triadas empíricas
+              {t("MainMenu.EmpiricalTriads")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('dialectica')}>
-              Dialéctica
+              {t("MainMenu.Dialectics")}
             </MainMenu.Item>
             <MainMenu.Item
               onSelect={selectSchemaHandler('dialectica-empirica')}
             >
-              Dialéctica empírica
+              {t("MainMenu.EmpiricalDialectics")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('procesual')}>
-              Procesual
+              {t("MainMenu.Procesual")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('capas-discursivas')}>
-              Capas discursivas
+              {t("MainMenu.DiscursiveLayers")}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('matrioskas')}>
-              Matrioskas
+              {t("MainMenu.Matrioskas")}
             </MainMenu.Item>
           </MainMenu.Group>
-          <MainMenu.Group title="Acerca de">
+          <MainMenu.Group title={t("MainMenu.About")}>
             <MainMenu.ItemLink href="https://proyecto-matrioska.github.io/notas/Proyecto%20Matrioska/">
-              Proyecto Matrioska
+              {t("MainMenu.ProyectoMatrioska")}
             </MainMenu.ItemLink>
           </MainMenu.Group>
         </MainMenu>
@@ -304,7 +306,7 @@ function ArcaDeNoesis() {
               className={smallButtonClasses}
               disabled={selectedDiagram === null}
               onClick={updateDiagram}
-              title="Actualizar diagrama"
+              title={t("Actualizar diagrama")}
             >
               ⟲
             </button>
@@ -319,9 +321,9 @@ function ArcaDeNoesis() {
               <OptionsPanel />
             </Sidebar.Tab>
             <Sidebar.TabTriggers>
-              <Sidebar.TabTrigger tab="dataEditor">Datos</Sidebar.TabTrigger>
+              <Sidebar.TabTrigger tab="dataEditor">{t("Datos")}</Sidebar.TabTrigger>
               <Sidebar.TabTrigger tab="diagramOptions">
-                Esquema
+                {t("Esquema")}
               </Sidebar.TabTrigger>
             </Sidebar.TabTriggers>
           </Sidebar.Tabs>
