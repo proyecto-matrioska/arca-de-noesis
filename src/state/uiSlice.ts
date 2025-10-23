@@ -16,18 +16,18 @@ type UIState = {
 }
 
 const schemaNames: Record<SchemaIdentifier, string> = {
-  dualidades: 'Dualidades',
-  cuadros: 'Cuadros',
-  'cuadros-complejos': 'Cuadros complejos',
-  octagonos: 'Octágonos',
-  'octagonos-empiricos': 'Octágonos empíricos',
-  triadas: 'Triadas',
-  'triadas-empiricas': 'Triadas empíricas',
-  dialectica: 'Dialéctica',
-  'dialectica-empirica': 'Dialéctica empírica',
-  procesual: 'Procesual',
-  'capas-discursivas': 'Capas discursivas',
-  matrioskas: 'Matrioskas',
+  dualidades: 'SchemaNames.Dualities',
+  cuadros: 'SchemaNames.Squares',
+  'cuadros-complejos': 'SchemaNames.ComplexSquares',
+  octagonos: 'SchemaNames.Octagons',
+  'octagonos-empiricos': 'SchemaNames.EmpiricalOctagons',
+  triadas: 'SchemaNames.Triads',
+  'triadas-empiricas': 'SchemaNames.EmpiricalTriads',
+  dialectica: 'SchemaNames.Dialectics',
+  'dialectica-empirica': 'SchemaNames.EmpiricalDialectics',
+  procesual: 'SchemaNames.Procesual',
+  'capas-discursivas': 'SchemaNames.DiscursiveLayers',
+  matrioskas: 'SchemaNames.Matrioskas',
 }
 
 const initialState: UIState = {

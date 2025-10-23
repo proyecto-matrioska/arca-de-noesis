@@ -1,4 +1,18 @@
 {
+  "SchemaNames": {
+    "Dualities": "Dualidades",
+    "Squares": "Cuadros",
+    "ComplexSquares": "Cuadros complejos",
+    "Octagons": "Octágonos",
+    "EmpiricalOctagons": "Octágonos empíricos",
+    "Triads": "Triadas",
+    "EmpiricalTriads": "Triadas empíricas",
+    "Dialectics": "Dialéctica",
+    "EmpiricalDialectics": "Dialéctica empírica",
+    "Procesual": "Procesual",
+    "DiscursiveLayers": "Capas discursivas",
+    "Matrioskas": "Matrioskas"
+  },
   "MainMenu": {
     "Data": "Datos",
     "Open": "Abrir...",
@@ -12,19 +26,6 @@
     "CurrentDiagram": "Diagrama actual",
     "SchemasGallery": "Galería de esquemas",
     "About": "Acerca de",
-
-    "Dualities": "Dualidades",
-    "Squares": "Cuadros",
-    "ComplexSquares": "Cuadros complejos",
-    "Octagons": "Octágonos",
-    "EmpiricalOctagons": "Octágonos empíricos",
-    "Triads": "Triadas",
-    "EmpiricalTriads": "Triadas empíricas",
-    "Dialectics": "Dialéctica",
-    "EmpiricalDialectics": "Dialéctica empírica",
-    "Procesual": "Procesual",
-    "DiscursiveLayers": "Capas discursivas",
-    "Matrioskas": "Matrioskas",
     "ProyectoMatrioska": "Proyecto Matrioska"
   },
   "Sidebar": {
@@ -42,5 +43,23 @@
     "InsertDuality": "Insertar dualidad",
     "DeleteDuality": "Eliminar dualidad"
   },
-  "SchemaOptions": {}
+  "SchemaOptions": {
+    "General": "General",
+    "AutoRefresh": "Actualizar diagrama automáticamente",
+    "AutoRefreshLngDesc": "Actualizar diagrama automáticamente cuando se realizan cambios",
+    "Factorizations": "Factorizar",
+    "ShowDualityIndexes": "Mostrar índices de dualidad",
+    "ShowDualityIndexesLngDesc": "Mostrar los índices de las dualidades en el diagrama",
+    "ShowMainElementDescriptions": "Mostrar descripciones de elementos principales",
+    "ShowMainElementDescriptionsLngDesc": "Mostrar descripciones de los elementos principales en el diagrama",
+    "IntensionFormContext": "Intensión, forma, contexto",
+    "IntensionFormContextLngDesc": "Anotaciones Intensión,Extensión, Contexto, Forma, Contenido",
+    "Arrangement": "Agrupar",
+    "ArrangementLngDesc": "Agrupar y organizar esquemas",
+    "ListArrangementOption": "Lista consecutiva",
+    "TriadsArrangementOption": "Agrupar por triadas",
+    "TetradsArrangementOption": "Agrupar por tetradas",
+    "CascadeArrangementOption": "Cascada",
+    "DrawRectangularFactorizations": "Dibujar factorizaciones rectangulares"
+  }
 }

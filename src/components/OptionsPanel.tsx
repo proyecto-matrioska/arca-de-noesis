@@ -1,12 +1,10 @@
 import React from 'react'
 import Switch from './Switch'
 import { useAppDispatch, useAppSelector } from '../state/store'
-import {
-  setDiagramOption,
-  setGeneralDiagramOption,
-} from '../state/uiSlice'
+import { setDiagramOption, setGeneralDiagramOption } from '../state/uiSlice'
 import { SchemaOption } from '../state/uiOptions'
 import './OptionsPanel.css'
+import { useTranslation } from 'react-i18next'
 
 export interface IBooleanOptionProps {
   optionId: string
@@ -27,9 +25,10 @@ const BooleanOption = ({
 }: IBooleanOptionProps) => {
   const dispatch = useAppDispatch()
   const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
+  const { t } = useTranslation()
   return (
     <div className="BooleanOption" title={longDescription}>
-      <div>{name}:</div>
+      <div>{t(name)}:</div>
       <div>
         <Switch
           id={`${selectedDiagram}-checkbox-${optionId}`}
@@ -53,7 +52,7 @@ const BooleanOption = ({
               )
             }
           }}
-          title={longDescription}
+          title={t(longDescription)}
           disabled={disabled}
         />
       </div>
@@ -82,9 +81,10 @@ const SelectOption = ({
 }: ISelectOptionProps) => {
   const dispatch = useAppDispatch()
   const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
+  const { t } = useTranslation()
   return (
-    <div className="SelectOption" title={longDescription}>
-      <div>{name}:</div>
+    <div className="SelectOption" title={t(longDescription)}>
+      <div>{t(name)}:</div>
       <div>
         <select
           id={`${globalOption ? 'global' : selectedDiagram}-select-${optionId}`}
@@ -111,7 +111,7 @@ const SelectOption = ({
               )
             }
           }}
-          title={longDescription}
+          title={t(longDescription)}
           disabled={disabled}
         >
           {options.map(opt => (
@@ -121,7 +121,7 @@ const SelectOption = ({
               }-select-${optionId}-${opt.value}`}
               value={opt.value}
             >
-              {opt.name}
+              {t(opt.name)}
             </option>
           ))}
         </select>
@@ -174,11 +174,12 @@ const OptionsPanel = () => {
   )
   const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
   const diagramOptions = selectedDiagram ? schemaOptions[selectedDiagram] : {}
+  const { t } = useTranslation()
   return (
     <div className="OptionsPanel">
       <div className="OptionsPanelContents">
         <div>
-          <b>General:</b>
+          <b>{t('General')}: </b>
         </div>
         {Object.keys(generalSchemaOptions).map((k, i) => (
           <Option
@@ -195,7 +196,7 @@ const OptionsPanel = () => {
           />
         ))}
         <div>
-          <b>{schemaName ? `${schemaName}:` : ''}</b>
+          <b>{schemaName ? `${t(schemaName)}:` : ''}</b>
         </div>
         {Object.keys(diagramOptions).map((k, i) => (
           <Option

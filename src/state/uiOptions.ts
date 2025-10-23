@@ -26,17 +26,16 @@ export type SchemaOptions = Record<
 export const generalSchemaOptions: Record<string, SchemaOption> = {
   diagramAutoupdate: {
     type: 'bool',
-    name: 'Actualizar diagrama automáticamente',
+    name: 'SchemaOptions.AutoRefresh',
     value: true,
-    longDescription:
-      'Actualizar diagrama automáticamente cuando se realizan cambios',
+    longDescription: 'SchemaOptions.AutoRefreshLngDesc',
   },
   factorizations: {
     type: 'select',
-    name: 'Factorizar',
+    name: 'SchemaOptions.Factorizations',
     value: 'ninguna',
     options: [
-      { value: 'ninguna', name: 'ninguna' },
+      { value: 'ninguna', name: 'none' },
       { value: 'rectangular-1', name: 'rectangular 1' },
       { value: 'rectangular-2', name: 'rectangular 2' },
       { value: 'rectangular-3', name: 'rectangular 3' },
@@ -66,52 +65,51 @@ export const schemaOptions: SchemaOptions = {
   dualidades: {
     showDualityIndex: {
       type: 'bool',
-      name: 'Índice',
+      name: 'SchemaOptions.ShowDualityIndexes',
       value: false,
-      longDescription: 'Muestra el índice de cada dualidad',
+      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
     },
     elementDescriptions: {
       type: 'bool',
-      name: 'Descripciones de elementos principales',
+      name: 'SchemaOptions.ShowMainElementDescriptions',
       value: false,
-      longDescription: 'Descripciones de los elementos principales',
+      longDescription: 'SchemaOptions.ShowMainElementDescriptionsLngDesc',
     },
     intensionFormContext: {
       type: 'bool',
-      name: 'Intensión, forma, contexto',
+      name: 'SchemaOptions.IntensionFormContext',
       value: false,
-      longDescription:
-        'Anotaciones Intensión,Extensión, Contexto, Forma, Contenido',
+      longDescription: 'SchemaOptions.IntensionFormContextLngDesc',
     },
   },
   cuadros: {
     showDualityIndex: {
       type: 'bool',
-      name: 'Índice',
+      name: 'SchemaOptions.ShowDualityIndexes',
       value: false,
-      longDescription: 'Muestra el índice de cada dualidad',
+      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
     },
     elementDescriptions: {
       type: 'bool',
-      name: 'Descripciones de elementos principales',
+      name: 'SchemaOptions.ShowMainElementDescriptions',
       value: false,
-      longDescription: 'Descripciones de los elementos principales',
+      longDescription: 'SchemaOptions.ShowMainElementDescriptionsLngDesc',
     },
     arrangement: {
       type: 'select',
-      name: 'Agrupar',
+      name: 'SchemaOptions.Arrangement',
       value: 'lista',
       options: [
-        { value: 'lista', name: 'lista consecutiva' },
-        { value: 'triadas', name: 'agrupar por triadas' },
-        { value: 'tetradas', name: 'agrupar por tétradas' },
-        { value: 'cascade', name: 'cascada' },
+        { value: 'lista', name: 'SchemaOptions.ListArrangementOption' },
+        { value: 'triadas', name: 'SchemaOptions.TriadsArrangementOption' },
+        { value: 'tetradas', name: 'SchemaOptions.TetradsArrangementOption' },
+        { value: 'cascade', name: 'SchemaOptions.CascadeArrangementOption' },
       ],
-      longDescription: 'Agrupar y acomodar cuadros',
+      longDescription: 'SchemaOptions.ArrangementLngDesc',
     },
     showRectangularFactorizations: {
       type: 'select',
-      name: 'Ver factorizaciones',
+      name: 'SchemaOptions.DrawRectangularFactorizations',
       value: 'ninguna',
       options: [
         { value: 'ninguna', name: 'ninguna' },
@@ -147,30 +145,30 @@ export const schemaOptions: SchemaOptions = {
   'cuadros-complejos': {
     showDualityIndex: {
       type: 'bool',
-      name: 'Índice',
+      name: 'SchemaOptions.ShowDualityIndexes',
       value: false,
-      longDescription: 'Muestra el índice de cada dualidad',
+      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
     },
     elementDescriptions: {
       type: 'bool',
-      name: 'Descripciones de elementos principales',
+      name: 'SchemaOptions.ShowMainElementDescriptions',
       value: false,
-      longDescription: 'Descripciones de los elementos principales',
+      longDescription: 'SchemaOptions.ShowMainElementDescriptionsLngDesc',
     },
     arrangement: {
       type: 'select',
-      name: 'Agrupar',
+      name: 'SchemaOptions.Arrangement',
       value: 'lista',
       options: [
-        { value: 'lista', name: 'lista consecutiva' },
-        { value: 'triadas', name: 'agrupar por triadas' },
-        { value: 'tetradas', name: 'agrupar por tétradas' },
+        { value: 'lista', name: 'SchemaOptions.ListArrangementOption' },
+        { value: 'triadas', name: 'SchemaOptions.TriadsArrangementOption' },
+        { value: 'tetradas', name: 'SchemaOptions.TetradsArrangementOption' },
       ],
-      longDescription: 'Agrupar y acomodar cuadros',
+      longDescription: 'SchemaOptions.ArrangementLngDesc',
     },
     showRectangularFactorizations: {
       type: 'select',
-      name: 'Ver factorizaciones',
+      name: 'SchemaOptions.DrawRectangularFactorizations',
       value: 'ninguna',
       options: [
         { value: 'ninguna', name: 'ninguna' },
@@ -206,74 +204,73 @@ export const schemaOptions: SchemaOptions = {
   octagonos: {
     showDualityIndex: {
       type: 'bool',
-      name: 'Índice',
+      name: 'SchemaOptions.ShowDualityIndexes',
       value: false,
-      longDescription: 'Muestra el índice de cada dualidad',
+      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
     },
     arrangement: {
       type: 'select',
-      name: 'Agrupar',
+      name: 'SchemaOptions.Arrangement',
       value: 'lista',
       options: [
-        { value: 'lista', name: 'lista consecutiva' },
-        { value: 'triadas', name: 'agrupar por triadas' },
-        { value: 'tetradas', name: 'agrupar por tétradas' },
+        { value: 'lista', name: 'SchemaOptions.ListArrangementOption' },
+        { value: 'triadas', name: 'SchemaOptions.TriadsArrangementOption' },
+        { value: 'tetradas', name: 'SchemaOptions.TetradsArrangementOption' },
       ],
-      longDescription: 'Agrupar y acomodar cuadros',
+      longDescription: 'SchemaOptions.ArrangementLngDesc',
     },
   },
   'octagonos-empiricos': {
     showDualityIndex: {
       type: 'bool',
-      name: 'Índice',
+      name: 'SchemaOptions.ShowDualityIndexes',
       value: false,
-      longDescription: 'Muestra el índice de cada dualidad',
+      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
     },
     arrangement: {
       type: 'select',
-      name: 'Agrupar',
+      name: 'SchemaOptions.Arrangement',
       value: 'lista',
       options: [
-        { value: 'lista', name: 'lista consecutiva' },
-        { value: 'triadas', name: 'agrupar por triadas' },
-        { value: 'tetradas', name: 'agrupar por tétradas' },
+        { value: 'lista', name: 'SchemaOptions.ListArrangementOption' },
+        { value: 'triadas', name: 'SchemaOptions.TriadsArrangementOption' },
+        { value: 'tetradas', name: 'SchemaOptions.TetradsArrangementOption' },
       ],
-      longDescription: 'Agrupar y acomodar cuadros',
+      longDescription: 'SchemaOptions.ArrangementLngDesc',
     },
   },
   triadas: {
     showDualityIndex: {
       type: 'bool',
-      name: 'Índice',
+      name: 'SchemaOptions.ShowDualityIndexes',
       value: false,
-      longDescription: 'Muestra el índice de cada dualidad',
+      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
     },
     elementDescriptions: {
       type: 'bool',
-      name: 'Descripciones de elementos principales',
+      name: 'SchemaOptions.ShowMainElementDescriptions',
       value: false,
-      longDescription: 'Descripciones de los elementos principales',
+      longDescription: 'SchemaOptions.ShowMainElementDescriptionsLngDesc',
     },
     intensionFormContext: {
       type: 'bool',
-      name: 'Intensión, forma, contexto',
+      name: 'SchemaOptions.IntensionFormContext',
       value: false,
-      longDescription:
-        'Anotaciones Intensión,Extensión, Contexto, Forma, Contenido',
+      longDescription: 'SchemaOptions.IntensionFormContextLngDesc',
     },
   },
   'triadas-empiricas': {
     showDualityIndex: {
       type: 'bool',
-      name: 'Índice',
+      name: 'SchemaOptions.ShowDualityIndexes',
       value: false,
-      longDescription: 'Muestra el índice de cada dualidad',
+      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
     },
     elementDescriptions: {
       type: 'bool',
-      name: 'Descripciones de elementos principales',
+      name: 'SchemaOptions.ShowMainElementDescriptions',
       value: false,
-      longDescription: 'Descripciones de los elementos principales',
+      longDescription: 'SchemaOptions.ShowMainElementDescriptionsLngDesc',
     },
     intensionFormContext: {
       type: 'bool',
@@ -286,33 +283,33 @@ export const schemaOptions: SchemaOptions = {
   dialectica: {
     elementDescriptions: {
       type: 'bool',
-      name: 'Descripciones de elementos principales',
+      name: 'SchemaOptions.ShowMainElementDescriptions',
       value: false,
-      longDescription: 'Descripciones de los elementos principales',
+      longDescription: 'SchemaOptions.ShowMainElementDescriptionsLngDesc',
     },
   },
   'dialectica-empirica': {
     elementDescriptions: {
       type: 'bool',
-      name: 'Descripciones de elementos principales',
+      name: 'SchemaOptions.ShowMainElementDescriptions',
       value: false,
-      longDescription: 'Descripciones de los elementos principales',
+      longDescription: 'SchemaOptions.ShowMainElementDescriptionsLngDesc',
     },
   },
   procesual: {
     elementDescriptions: {
       type: 'bool',
-      name: 'Descripciones de elementos principales',
+      name: 'SchemaOptions.ShowMainElementDescriptions',
       value: false,
-      longDescription: 'Descripciones de los elementos principales',
+      longDescription: 'SchemaOptions.ShowMainElementDescriptionsLngDesc',
     },
   },
   'capas-discursivas': {
     elementDescriptions: {
       type: 'bool',
-      name: 'Descripciones de elementos principales',
+      name: 'SchemaOptions.ShowMainElementDescriptions',
       value: false,
-      longDescription: 'Descripciones de los elementos principales',
+      longDescription: 'SchemaOptions.ShowMainElementDescriptionsLngDesc',
     },
   },
   matrioskas: {},

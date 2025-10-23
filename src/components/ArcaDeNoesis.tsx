@@ -253,44 +253,44 @@ function ArcaDeNoesis() {
           <MainMenu.Separator />
           <MainMenu.Group title={t('MainMenu.SchemasGallery')}>
             <MainMenu.Item onSelect={selectSchemaHandler('dualidades')}>
-              {t('MainMenu.Dualities')}
+              {t('SchemaNames.Dualities')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('cuadros')}>
-              {t('MainMenu.Squares')}
+              {t('SchemaNames.Squares')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('cuadros-complejos')}>
-              {t('MainMenu.ComplexSquares')}
+              {t('SchemaNames.ComplexSquares')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('octagonos')}>
-              {t('MainMenu.Octagons')}
+              {t('SchemaNames.Octagons')}
             </MainMenu.Item>
             <MainMenu.Item
               onSelect={selectSchemaHandler('octagonos-empiricos')}
             >
-              {t('MainMenu.EmpiricalOctagons')}
+              {t('SchemaNames.EmpiricalOctagons')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('triadas')}>
-              {t('MainMenu.Triads')}
+              {t('SchemaNames.Triads')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('triadas-empiricas')}>
-              {t('MainMenu.EmpiricalTriads')}
+              {t('SchemaNames.EmpiricalTriads')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('dialectica')}>
-              {t('MainMenu.Dialectics')}
+              {t('SchemaNames.Dialectics')}
             </MainMenu.Item>
             <MainMenu.Item
               onSelect={selectSchemaHandler('dialectica-empirica')}
             >
-              {t('MainMenu.EmpiricalDialectics')}
+              {t('SchemaNames.EmpiricalDialectics')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('procesual')}>
-              {t('MainMenu.Procesual')}
+              {t('SchemaNames.Procesual')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('capas-discursivas')}>
-              {t('MainMenu.DiscursiveLayers')}
+              {t('SchemaNames.DiscursiveLayers')}
             </MainMenu.Item>
             <MainMenu.Item onSelect={selectSchemaHandler('matrioskas')}>
-              {t('MainMenu.Matrioskas')}
+              {t('SchemaNames.Matrioskas')}
             </MainMenu.Item>
           </MainMenu.Group>
           <MainMenu.Group title={t('MainMenu.About')}>

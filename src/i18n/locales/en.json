@@ -1,4 +1,18 @@
 {
+  "SchemaNames": {
+    "Dualities": "Dualities",
+    "Squares": "Squares",
+    "ComplexSquares": "Complex Squares",
+    "Octagons": "Octagons",
+    "EmpiricalOctagons": "Empirical Octagons",
+    "Triads": "Triads",
+    "EmpiricalTriads": "Empirical Triads",
+    "Dialectics": "Dialectics",
+    "EmpiricalDialectics": "Empirical Dialectics",
+    "Procesual": "Procesual",
+    "DiscursiveLayers": "Discursive Layers",
+    "Matrioskas": "Matrioskas"
+  },
   "MainMenu": {
     "Data": "Data",
     "Open": "Open...",
@@ -12,19 +26,6 @@
     "CurrentDiagram": "Current Diagram",
     "SchemasGallery": "Schemas Gallery",
     "About": "About",
-
-    "Dualities": "Dualities",
-    "Squares": "Squares",
-    "ComplexSquares": "Complex Squares",
-    "Octagons": "Octagons",
-    "EmpiricalOctagons": "Empirical Octagons",
-    "Triads": "Triads",
-    "EmpiricalTriads": "Empirical Triads",
-    "Dialectics": "Dialectics",
-    "EmpiricalDialectics": "Empirical Dialectics",
-    "Procesual": "Procesual",
-    "DiscursiveLayers": "Discursive Layers",
-    "Matrioskas": "Matrioskas",
     "ProyectoMatrioska": "Proyecto Matrioska"
   },
   "Sidebar": {
@@ -42,5 +43,23 @@
     "InsertDuality": "Insert Duality",
     "DeleteDuality": "Delete Duality"
   },
-  "SchemaOptions": {}
+  "SchemaOptions": {
+    "General": "General",
+    "AutoRefresh": "Auto Refresh",
+    "AutoRefreshLngDesc": "Automatically refresh the diagram when changes are made",
+    "Factorizations": "Factorize",
+    "ShowDualityIndexes": "Show Duality Indexes",
+    "ShowDualityIndexesLngDesc": "Display the indexes of dualities in the diagram",
+    "ShowMainElementDescriptions": "Show Main Element Descriptions",
+    "ShowMainElementDescriptionsLngDesc": "Show Main Element Descriptions in the diagram",
+    "IntensionFormContext": "Intension, form, context",
+    "IntensionFormContextLngDesc": "Annotations Intension, Extension, Context, Form, Content",
+    "Arrangement": "Group & Arrange",
+    "ArrangementLngDesc": "Group and organize schemas",
+    "ListArrangementOption": "Consecutive List",
+    "TriadsArrangementOption": "Group by Triads",
+    "TetradsArrangementOption": "Group by Tetrads",
+    "CascadeArrangementOption": "Cascade",
+    "DrawRectangularFactorizations": "Draw Rectangular Factorizations"
+  }
 }
