@@ -31,5 +31,6 @@ export type Schema = Array<SchemaElement>
 
 export type DialecticsSchema = (
   dualities: Array<DialecticsDataEntry>,
-  schemaOptions: Record<string, SchemaOption>
+  schemaOptions: Record<string, SchemaOption>,
+  translations: (key: string) => string
 ) => Schema

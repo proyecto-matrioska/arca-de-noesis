@@ -13,6 +13,7 @@ import { SchemaOption } from '../state/uiOptions'
 import { lineElement } from './elements/lineElement'
 import { textElement } from './elements/textElement'
 import { ellipseElement } from './elements/ellpiseElement'
+import { t } from 'i18next'
 
 export const toTriples: (
   x: DualityData,
@@ -208,17 +209,22 @@ const dualityIndexAnnotation: (index: number) => Schema = index => [
 
 const squareElementDescriptions: (
   intentional: number,
-  schemaOptions: { [key: string]: SchemaOption }
-) => Schema = (intentional, schemaOptions) =>
+  schemaOptions: { [key: string]: SchemaOption },
+  translations: (key: string) => string
+) => Schema = (intentional, schemaOptions, translations) =>
   schemaOptions.elementDescriptions.value
     ? [
         textElement(
           335,
           -120,
           intentional === 1
-            ? 'dualidad intensional/compleja'
+            ? translations(
+                'Schemas.Annotations.squares.dualidad intensional/compleja'
+              )
             : intentional === 2
-            ? 'dualidad empírica/simple'
+            ? translations(
+                'Schemas.Annotations.squares.dualidad empírica/simple'
+              )
             : '',
           20,
           palette.ORANGE,
@@ -229,59 +235,153 @@ const squareElementDescriptions: (
         textElement(
           335,
           450,
-          'eje intensional/\ncomplejo',
+          translations('Schemas.Annotations.squares.eje intensional/complejo'),
           20,
           palette.ORANGE,
           {
             textAlign: 'center',
           }
         ),
-        textElement(335, 0, 'eje empírico/\nsimple', 20, palette.ORANGE, {
-          textAlign: 'center',
-        }),
+        textElement(
+          335,
+          0,
+          translations('Schemas.Annotations.squares.eje empírico/simple'),
+          20,
+          palette.ORANGE,
+          {
+            textAlign: 'center',
+          }
+        ),
       ]
     : []
 
-const formAndContextAnnotation: () => Schema = () => [
-  textElement(-114, 413, 'sentido', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(-125, 475, 'intensión', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(-140, 565, 'sustancia', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(-112, -40, 'informa', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(-113, 22, 'esencia', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(-138, 112, 'sustancia', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(714, -40, 'forma', 20, palette.ORANGE, { textAlign: undefined }),
-  textElement(714, 22, 'intensión', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(714, 122, 'extensión', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(716, 413, 'contexto', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(716, 475, 'esencia', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(716, 565, 'extensión', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
+const formAndContextAnnotation: (
+  translations: (key: string) => string
+) => Schema = translations => [
+  textElement(
+    -114,
+    413,
+    translations('Schemas.Annotations.duals.sentido'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    -125,
+    475,
+    translations('Schemas.Annotations.duals.intensión'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    -140,
+    565,
+    translations('Schemas.Annotations.duals.sustancia'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    -112,
+    -40,
+    translations('Schemas.Annotations.duals.informa'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    -113,
+    22,
+    translations('Schemas.Annotations.duals.esencia'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    -138,
+    112,
+    translations('Schemas.Annotations.duals.sustancia'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    714,
+    -40,
+    translations('Schemas.Annotations.duals.forma'),
+    20,
+    palette.ORANGE,
+    { textAlign: undefined }
+  ),
+  textElement(
+    714,
+    22,
+    translations('Schemas.Annotations.duals.intensión'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    714,
+    122,
+    translations('Schemas.Annotations.duals.extensión'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    716,
+    413,
+    translations('Schemas.Annotations.duals.contexto'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    716,
+    475,
+    translations('Schemas.Annotations.duals.esencia'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    716,
+    565,
+    translations('Schemas.Annotations.duals.extensión'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
 ]
 
 export const tripleSquareSequence: DialecticsSchema = (
   dualities,
-  schemaOptions
+  schemaOptions,
+  translations
 ) =>
   (
     [
@@ -303,12 +403,12 @@ export const tripleSquareSequence: DialecticsSchema = (
         )
         .concat(
           schemaOptions.elementDescriptions.value
-            ? squareElementDescriptions(1, schemaOptions)
+            ? squareElementDescriptions(1, schemaOptions, translations)
             : []
         )
         .concat(
           schemaOptions.intensionFormContext.value
-            ? formAndContextAnnotation()
+            ? formAndContextAnnotation(translations)
             : []
         )
         .concat(
@@ -323,12 +423,12 @@ export const tripleSquareSequence: DialecticsSchema = (
             )
               .concat(
                 schemaOptions.elementDescriptions.value
-                  ? squareElementDescriptions(2, schemaOptions)
+                  ? squareElementDescriptions(2, schemaOptions, translations)
                   : []
               )
               .concat(
                 schemaOptions.intensionFormContext.value
-                  ? formAndContextAnnotation()
+                  ? formAndContextAnnotation(translations)
                   : []
               )
           )
@@ -338,5 +438,7 @@ export const tripleSquareSequence: DialecticsSchema = (
 
 export const empiricalTripleSquareSequence: DialecticsSchema = (
   dualities,
-  schemaOptions
-) => tripleSquareSequence(dualities.map(swapTetrads), schemaOptions)
+  schemaOptions,
+  translations
+) =>
+  tripleSquareSequence(dualities.map(swapTetrads), schemaOptions, translations)

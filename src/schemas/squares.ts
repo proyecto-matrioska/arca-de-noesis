@@ -39,8 +39,9 @@ export const square: (duality: DualityData) => Schema = ([a, b, c, d]) => [
 export const complexSquare: (
   d1: DualityData,
   d2: DualityData,
-  schemaOptions: Record<string, SchemaOption>
-) => Schema = (d1, [a, b, c, d], schemaOptions) =>
+  schemaOptions: Record<string, SchemaOption>,
+  translations: (key: string) => string
+) => Schema = (d1, [a, b, c, d], schemaOptions, translations) =>
   square(d1)
     .concat([
       textElement(100, 85, a, 20, palette.BLUE, {
@@ -68,7 +69,7 @@ export const complexSquare: (
     ])
     .concat(
       schemaOptions.elementDescriptions.value
-        ? complexSquareElementDescriptions()
+        ? complexSquareElementDescriptions(translations)
         : []
     )
 
@@ -80,17 +81,22 @@ const dualityIndexAnnotation: (index: number) => Schema = index => [
 
 const squareElementDescriptions: (
   intentional: number,
-  schemaOptions: Record<string, SchemaOption>
-) => Schema = (intentional, schemaOptions) =>
+  schemaOptions: Record<string, SchemaOption>,
+  translations: (key: string) => string
+) => Schema = (intentional, schemaOptions, translations) =>
   schemaOptions.elementDescriptions.value
     ? [
         textElement(
           150,
           -100,
           intentional === 1
-            ? 'dualidad intensional/compleja'
+            ? translations(
+                'Schemas.Annotations.squares.dualidad intensional/compleja'
+              )
             : intentional === 2
-            ? 'dualidad empírica/simple'
+            ? translations(
+                'Schemas.Annotations.squares.dualidad empírica/simple'
+              )
             : '',
           20,
           palette.ORANGE,
@@ -98,37 +104,88 @@ const squareElementDescriptions: (
             textAlign: 'center',
           }
         ),
-        textElement(150, 340, 'eje intensional/complejo', 20, palette.ORANGE, {
-          textAlign: 'center',
-        }),
-        textElement(150, -30, 'eje empírico/simple', 20, palette.ORANGE, {
-          textAlign: 'center',
-        }),
+        textElement(
+          150,
+          340,
+          translations('Schemas.Annotations.squares.eje intensional/complejo'),
+          20,
+          palette.ORANGE,
+          {
+            textAlign: 'center',
+          }
+        ),
+        textElement(
+          150,
+          -30,
+          translations('Schemas.Annotations.squares.eje empírico/simple'),
+          20,
+          palette.ORANGE,
+          {
+            textAlign: 'center',
+          }
+        ),
       ]
     : []
 
-const complexSquareElementDescriptions: () => Schema = () => [
-  textElement(150, 340, 'eje intensional/complejo', 20, palette.ORANGE, {
-    textAlign: 'center',
-  }),
-  textElement(150, -30, 'eje empírico/simple', 20, palette.ORANGE, {
-    textAlign: 'center',
-  }),
-  textElement(470, 160, 'abstracción empírica', 20, palette.ORANGE, {
-    textAlign: 'center',
-  }),
+const complexSquareElementDescriptions: (
+  translations: (key: string) => string
+) => Schema = translations => [
+  textElement(
+    150,
+    340,
+    translations('Schemas.Annotations.squares.eje intensional/complejo'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'center',
+    }
+  ),
+  textElement(
+    150,
+    -30,
+    translations('Schemas.Annotations.squares.eje empírico/simple'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'center',
+    }
+  ),
+  textElement(
+    470,
+    160,
+    translations('Schemas.Annotations.squares.cuadro dual empírico'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'center',
+    }
+  ),
   lineElement(170, 170, 180, 1, palette.ORANGE, {
     strokeStyle: 'dashed',
   }),
-  textElement(-200, 60, 'eje intensional/complejo', 20, palette.ORANGE, {
-    textAlign: 'center',
-  }),
+  textElement(
+    -200,
+    60,
+    translations('Schemas.Annotations.squares.eje intensional/complejo'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'center',
+    }
+  ),
   lineElement(-70, 75, 110, 1, palette.ORANGE, {
     strokeStyle: 'dashed',
   }),
-  textElement(-200, 260, 'eje empírico/simple', 20, palette.ORANGE, {
-    textAlign: 'center',
-  }),
+  textElement(
+    -200,
+    260,
+    translations('Schemas.Annotations.squares.eje empírico/simple'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'center',
+    }
+  ),
   lineElement(-90, 275, 110, 1, palette.ORANGE, {
     strokeStyle: 'dashed',
   }),
@@ -300,7 +357,11 @@ const rectagularAnnotationParams: (
   }
 }
 
-export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
+export const squareSequence: DialecticsSchema = (
+  dualities,
+  schemaOptions,
+  translations
+) => {
   if (schemaOptions.arrangement.value === 'triadas')
     return groupByTriads(dualities).flatMap(([x, y, z], i) =>
       translateElements(
@@ -315,7 +376,7 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                 ? dualityIndexAnnotation(2 * i)
                 : []
             )
-            .concat(squareElementDescriptions(3, schemaOptions))
+            .concat(squareElementDescriptions(3, schemaOptions, translations))
             .concat(
               translateElements(
                 2000,
@@ -326,7 +387,9 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                       ? dualityIndexAnnotation(2 * i)
                       : []
                   )
-                  .concat(squareElementDescriptions(3, schemaOptions))
+                  .concat(
+                    squareElementDescriptions(3, schemaOptions, translations)
+                  )
               )
             )
         )
@@ -340,7 +403,9 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                     ? dualityIndexAnnotation(2 * i + 1)
                     : []
                 )
-                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  squareElementDescriptions(3, schemaOptions, translations)
+                )
                 .concat(
                   translateElements(
                     2000,
@@ -351,7 +416,13 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                           ? dualityIndexAnnotation(2 * i + 1)
                           : []
                       )
-                      .concat(squareElementDescriptions(3, schemaOptions))
+                      .concat(
+                        squareElementDescriptions(
+                          3,
+                          schemaOptions,
+                          translations
+                        )
+                      )
                   )
                 )
             )
@@ -366,7 +437,9 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                     ? dualityIndexAnnotation(2 * i + 2)
                     : []
                 )
-                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  squareElementDescriptions(3, schemaOptions, translations)
+                )
                 .concat(
                   translateElements(
                     2000,
@@ -377,7 +450,13 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                           ? dualityIndexAnnotation(2 * i + 2)
                           : []
                       )
-                      .concat(squareElementDescriptions(3, schemaOptions))
+                      .concat(
+                        squareElementDescriptions(
+                          3,
+                          schemaOptions,
+                          translations
+                        )
+                      )
                   )
                 )
             )
@@ -398,7 +477,7 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                 ? dualityIndexAnnotation(4 * i)
                 : []
             )
-            .concat(squareElementDescriptions(3, schemaOptions))
+            .concat(squareElementDescriptions(3, schemaOptions, translations))
             .concat(
               translateElements(
                 2000,
@@ -409,7 +488,9 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                       ? dualityIndexAnnotation(4 * i)
                       : []
                   )
-                  .concat(squareElementDescriptions(3, schemaOptions))
+                  .concat(
+                    squareElementDescriptions(3, schemaOptions, translations)
+                  )
               )
             )
         )
@@ -423,7 +504,9 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                     ? dualityIndexAnnotation(4 * i + 1)
                     : []
                 )
-                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  squareElementDescriptions(3, schemaOptions, translations)
+                )
                 .concat(
                   translateElements(
                     2000,
@@ -434,7 +517,13 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                           ? dualityIndexAnnotation(4 * i + 1)
                           : []
                       )
-                      .concat(squareElementDescriptions(3, schemaOptions))
+                      .concat(
+                        squareElementDescriptions(
+                          3,
+                          schemaOptions,
+                          translations
+                        )
+                      )
                   )
                 )
             )
@@ -449,7 +538,9 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                     ? dualityIndexAnnotation(4 * i + 2)
                     : []
                 )
-                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  squareElementDescriptions(3, schemaOptions, translations)
+                )
                 .concat(
                   translateElements(
                     2000,
@@ -460,7 +551,13 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                           ? dualityIndexAnnotation(4 * i + 2)
                           : []
                       )
-                      .concat(squareElementDescriptions(3, schemaOptions))
+                      .concat(
+                        squareElementDescriptions(
+                          3,
+                          schemaOptions,
+                          translations
+                        )
+                      )
                   )
                 )
             )
@@ -475,7 +572,9 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                     ? dualityIndexAnnotation(4 * i + 3)
                     : []
                 )
-                .concat(squareElementDescriptions(3, schemaOptions))
+                .concat(
+                  squareElementDescriptions(3, schemaOptions, translations)
+                )
                 .concat(
                   translateElements(
                     2000,
@@ -486,7 +585,13 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
                           ? dualityIndexAnnotation(4 * i + 3)
                           : []
                       )
-                      .concat(squareElementDescriptions(3, schemaOptions))
+                      .concat(
+                        squareElementDescriptions(
+                          3,
+                          schemaOptions,
+                          translations
+                        )
+                      )
                   )
                 )
             )
@@ -524,12 +629,12 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
               ? dualityIndexAnnotation(i)
               : []
           )
-          .concat(squareElementDescriptions(1, schemaOptions))
+          .concat(squareElementDescriptions(1, schemaOptions, translations))
           .concat(
             translateElements(
               800,
               0,
-              squareElementDescriptions(2, schemaOptions)
+              squareElementDescriptions(2, schemaOptions, translations)
             )
           )
       )
@@ -544,9 +649,13 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
         .concat(
           schemaOptions.showDualityIndex.value ? dualityIndexAnnotation(i) : []
         )
-        .concat(squareElementDescriptions(1, schemaOptions))
+        .concat(squareElementDescriptions(1, schemaOptions, translations))
         .concat(
-          translateElements(800, 0, squareElementDescriptions(2, schemaOptions))
+          translateElements(
+            800,
+            0,
+            squareElementDescriptions(2, schemaOptions, translations)
+          )
         )
     )
   )
@@ -554,7 +663,8 @@ export const squareSequence: DialecticsSchema = (dualities, schemaOptions) => {
 
 export const complexSquareSequence: DialecticsSchema = (
   dualities,
-  schemaOptions
+  schemaOptions,
+  translations
 ) => {
   if (schemaOptions.arrangement.value === 'triadas')
     return groupByTriads(dualities).flatMap(([x, y, z], i) =>
@@ -564,7 +674,7 @@ export const complexSquareSequence: DialecticsSchema = (
         translateElements(
           0,
           500,
-          complexSquare(x[0], x[1], schemaOptions).concat(
+          complexSquare(x[0], x[1], schemaOptions, translations).concat(
             schemaOptions.showDualityIndex.value
               ? dualityIndexAnnotation(2 * i)
               : []
@@ -574,7 +684,7 @@ export const complexSquareSequence: DialecticsSchema = (
             translateElements(
               800,
               500,
-              complexSquare(y[0], y[1], schemaOptions).concat(
+              complexSquare(y[0], y[1], schemaOptions, translations).concat(
                 schemaOptions.showDualityIndex.value
                   ? dualityIndexAnnotation(2 * i + 1)
                   : []
@@ -585,7 +695,7 @@ export const complexSquareSequence: DialecticsSchema = (
             translateElements(
               400,
               0,
-              complexSquare(z[0], z[1], schemaOptions).concat(
+              complexSquare(z[0], z[1], schemaOptions, translations).concat(
                 schemaOptions.showDualityIndex.value
                   ? dualityIndexAnnotation(2 * i + 2)
                   : []
@@ -602,7 +712,7 @@ export const complexSquareSequence: DialecticsSchema = (
         translateElements(
           800,
           500,
-          complexSquare(w[0], w[1], schemaOptions).concat(
+          complexSquare(w[0], w[1], schemaOptions, translations).concat(
             schemaOptions.showDualityIndex.value
               ? dualityIndexAnnotation(4 * i)
               : []
@@ -612,7 +722,7 @@ export const complexSquareSequence: DialecticsSchema = (
             translateElements(
               0,
               500,
-              complexSquare(x[0], x[1], schemaOptions).concat(
+              complexSquare(x[0], x[1], schemaOptions, translations).concat(
                 schemaOptions.showDualityIndex.value
                   ? dualityIndexAnnotation(4 * i + 1)
                   : []
@@ -623,7 +733,7 @@ export const complexSquareSequence: DialecticsSchema = (
             translateElements(
               0,
               0,
-              complexSquare(y[0], y[1], schemaOptions).concat(
+              complexSquare(y[0], y[1], schemaOptions, translations).concat(
                 schemaOptions.showDualityIndex.value
                   ? dualityIndexAnnotation(4 * i + 2)
                   : []
@@ -634,7 +744,7 @@ export const complexSquareSequence: DialecticsSchema = (
             translateElements(
               800,
               0,
-              complexSquare(z[0], z[1], schemaOptions).concat(
+              complexSquare(z[0], z[1], schemaOptions, translations).concat(
                 schemaOptions.showDualityIndex.value
                   ? dualityIndexAnnotation(4 * i + 3)
                   : []
@@ -657,7 +767,7 @@ export const complexSquareSequence: DialecticsSchema = (
     translateElements(
       0,
       700 * i + ((i + 1) % 2) * 50,
-      complexSquare(x, y, schemaOptions).concat(
+      complexSquare(x, y, schemaOptions, translations).concat(
         schemaOptions.showDualityIndex.value ? dualityIndexAnnotation(i) : []
       )
     )

@@ -1,5 +1,5 @@
 import { translateElements } from './transformations/translateElements'
-import { palette } from "./palette"
+import { palette } from './palette'
 import { DialecticsSchema, Schema } from './schema'
 import { DualityData } from './schema'
 import { textElement } from './elements/textElement'
@@ -34,31 +34,112 @@ const dualityIndex: (index: number) => Schema = index => [
   textElement(-120, -40, `${index + 1}:`, 20, palette.ORANGE),
 ]
 
-const elementDescriptions: () => Schema = () => [
-  textElement(250, -80, 'dualidad intensional/compleja', 20, palette.ORANGE),
-  textElement(1150, -80, 'dualidad empírica/simple', 20, palette.ORANGE),
-  textElement(100, -40, 'dual intensional/complejo', 20, palette.ORANGE),
-  textElement(400, -40, 'dual empírico/simple', 20, palette.ORANGE),
-  textElement(1000, -40, 'dual intensional/complejo', 20, palette.ORANGE),
-  textElement(1300, -40, 'dual empírico/simple', 20, palette.ORANGE),
+const elementDescriptions: (
+  translations: (key: string) => string
+) => Schema = translations => [
+  textElement(
+    250,
+    -80,
+    translations('Schemas.Annotations.duals.dualidad intensional/compleja'),
+    20,
+    palette.ORANGE
+  ),
+  textElement(
+    1150,
+    -80,
+    translations('Schemas.Annotations.duals.dualidad empírica/simple'),
+    20,
+    palette.ORANGE
+  ),
+  textElement(
+    100,
+    -40,
+    translations('Schemas.Annotations.duals.dual intensional/complejo'),
+    20,
+    palette.ORANGE
+  ),
+  textElement(
+    400,
+    -40,
+    translations('Schemas.Annotations.duals.dual empírico/simple'),
+    20,
+    palette.ORANGE
+  ),
+  textElement(
+    1000,
+    -40,
+    translations('Schemas.Annotations.duals.dual intensional/complejo'),
+    20,
+    palette.ORANGE
+  ),
+  textElement(
+    1300,
+    -40,
+    translations('Schemas.Annotations.duals.dual empírico/simple'),
+    20,
+    palette.ORANGE
+  ),
 ]
 
-const intensionFormContext: (isEven: boolean) => Schema = isEven => [
-  textElement(-20, 30, isEven ? 'intensión' : 'contexto', 20, palette.ORANGE, {
-    textAlign: 'right',
-  }),
-  textElement(-20, 120, isEven ? 'extensión' : 'sentido', 20, palette.ORANGE, {
-    textAlign: 'right',
-  }),
-  textElement(540, 30, isEven ? 'esencia' : 'informa', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
-  textElement(540, 120, isEven ? 'sustancia' : 'forma', 20, palette.ORANGE, {
-    textAlign: 'left',
-  }),
+const intensionFormContext: (
+  isEven: boolean,
+  translations: (key: string) => string
+) => Schema = (isEven, translations) => [
+  textElement(
+    -20,
+    30,
+    isEven
+      ? translations('Schemas.Annotations.duals.intensión')
+      : translations('Schemas.Annotations.duals.contexto'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'right',
+    }
+  ),
+  textElement(
+    -20,
+    120,
+    isEven
+      ? translations('Schemas.Annotations.duals.extensión')
+      : translations('Schemas.Annotations.duals.sentido'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'right',
+    }
+  ),
+  textElement(
+    540,
+    30,
+    isEven
+      ? translations('Schemas.Annotations.duals.esencia')
+      : translations('Schemas.Annotations.duals.informa'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
+  textElement(
+    540,
+    120,
+    isEven
+      ? translations('Schemas.Annotations.duals.sustancia')
+      : translations('Schemas.Annotations.duals.forma'),
+    20,
+    palette.ORANGE,
+    {
+      textAlign: 'left',
+    }
+  ),
 ]
 
-export const dualitySequence: DialecticsSchema = (dualities, schemaOptions) =>
+export const dualitySequence: DialecticsSchema = (
+  dualities,
+  schemaOptions,
+  translations
+) =>
   dualities.flatMap(([x, y], i) =>
     translateElements(
       0,
@@ -67,12 +148,18 @@ export const dualitySequence: DialecticsSchema = (dualities, schemaOptions) =>
         .concat(translateElements(900, 0, duality(y)))
         .concat(schemaOptions.showDualityIndex.value ? dualityIndex(i) : [])
         .concat(
-          schemaOptions.elementDescriptions.value ? elementDescriptions() : []
+          schemaOptions.elementDescriptions.value
+            ? elementDescriptions(translations)
+            : []
         )
         .concat(
           schemaOptions.intensionFormContext.value
-            ? intensionFormContext(i % 2 === 0).concat(
-                translateElements(900, 0, intensionFormContext(i % 2 === 0))
+            ? intensionFormContext(i % 2 === 0, translations).concat(
+                translateElements(
+                  900,
+                  0,
+                  intensionFormContext(i % 2 === 0, translations)
+                )
               )
             : []
         )

@@ -119,7 +119,8 @@ function ArcaDeNoesis() {
     const factorizationId = generalSchemaOptions.factorizations.value
     let maker: (
       dualities: DialecticsDataEntry[],
-      schemaOptions: { [key: string]: SchemaOption }
+      schemaOptions: { [key: string]: SchemaOption },
+      translations: (key: string) => string
     ) => ExcalidrawElementSkeleton[] = () => []
     switch (selectedDiagram) {
       case 'dualidades':
@@ -164,7 +165,8 @@ function ArcaDeNoesis() {
     const dialecticsSchema = selectedDiagram
       ? maker(
           factorData(factorizationId, dialecticsData),
-          schemaOptions[selectedDiagram]
+          schemaOptions[selectedDiagram],
+          t
         )
       : []
     const elements = convertToExcalidrawElements(

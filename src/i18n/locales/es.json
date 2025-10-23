@@ -61,5 +61,30 @@
     "TetradsArrangementOption": "Agrupar por tetradas",
     "CascadeArrangementOption": "Cascada",
     "DrawRectangularFactorizations": "Dibujar factorizaciones rectangulares"
+  },
+  "Schemas": {
+    "Annotations": {
+      "duals": {
+        "dualidad intensional/compleja": "dualidad intensional/compleja",
+        "dualidad empírica/simple": "dualidad empírica/simple",
+        "dual intensional/complejo": "dual intensional/complejo",
+        "dual empírico/simple": "dual empírico/simple",
+        "intensión": "intensión",
+        "extensión": "extensión",
+        "esencia": "esencia",
+        "sustancia": "sustancia",
+        "contexto": "contexto",
+        "sentido": "sentido",
+        "forma": "forma",
+        "informa": "informa"
+      },
+      "squares": {
+        "dualidad intensional/compleja": "dualidad intensional/compleja",
+        "dualidad empírica/simple": "dualidad empírica/simple",
+        "eje intensional/complejo": "eje intensional/complejo",
+        "eje empírico/simple": "eje empírico/simple",
+        "cuadro dual empírico": "cuadro dual empírico"
+      }
+    }
   }
 }
