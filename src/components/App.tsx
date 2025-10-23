@@ -5,9 +5,9 @@ import { useAppSelector } from '../state/store'
 function App() {
   const filename = useAppSelector(state => state.dialectics.filename)
   const isDirty = useAppSelector(state => state.dialectics.isDirty)
-  const windowTitle = `Arca de Noesis - ${
-    filename ? filename : 'untitled'
-  }.noesis${isDirty ? ' (modificado)' : ''}`
+  const windowTitle = `Arca de Noesis - ${filename ? filename : 'untitled'}${
+    filename && filename.endsWith('.noesis') ? '' : '.noesis'
+  }${isDirty ? ' (modificado)' : ''}`
   return (
     <>
       <Helmet>
