@@ -1,0 +1,38 @@
+[
+  [
+    ["yin", "yang", "ser", "estar"],
+    ["imagination", "explanation", "contemplation", "experimentation"]
+  ],
+  [
+    ["pure form", "inform", "mind", "soul"],
+    ["abstraction", "phenomenon", "quale", "perception"]
+  ],
+  [
+    ["quality", "quantity", "spirit", "matter"],
+    ["attribute", "value", "measure", "magnitude"]
+  ],
+  [
+    ["content", "form", "mass", "energy"],
+    ["atom", "electron", "particle", "wave"]
+  ],
+  [
+    ["information", "data", "entropy", "negentropy"],
+    ["signal", "pattern", "message", "token"]
+  ],
+  [
+    ["distribution", "repetition", "disorder", "schema"],
+    ["chaos", "fractal", "polar", "iterative"]
+  ],
+  [
+    ["cycle", "structure", "relation", "archetype"],
+    ["change", "duality", "order", "category"]
+  ],
+  [
+    ["model", "process", "opposition", "dialectic"],
+    ["reflection", "rotation", "tetrad", "triad"]
+  ],
+  [
+    ["communication", "language", "composition", "flow"],
+    ["image", "symbol", "narration", "writing"]
+  ]
+]

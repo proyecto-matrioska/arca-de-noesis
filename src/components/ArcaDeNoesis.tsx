@@ -80,7 +80,12 @@ function ArcaDeNoesis() {
   const initialElements = convertToExcalidrawElements(initialScreen())
   const elements = initialElements
   const hasFileSystemAccessAPI = 'showSaveFilePicker' in window
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const currentLanguage = (
+    i18n.language ||
+    window.navigator.language ||
+    'en'
+  ).split('-')[0]
 
   const openEditorTab = () => {
     if (!isSidebarOpen)
@@ -235,13 +240,27 @@ function ArcaDeNoesis() {
             </MainMenu.Item>
           </MainMenu.Group>
           <MainMenu.Group title={t('MainMenu.Examples')}>
-            <MainMenu.Item onSelect={loadExampleHandler('metafisica')}>
+            <MainMenu.Item
+              onSelect={loadExampleHandler(
+                currentLanguage === 'en' ? 'metafisicaEN' : 'metafisica'
+              )}
+            >
               {t('MainMenu.MetaphysicsExample')}
             </MainMenu.Item>
-            <MainMenu.Item onSelect={loadExampleHandler('intensionalidad')}>
+            <MainMenu.Item
+              onSelect={loadExampleHandler(
+                currentLanguage === 'en'
+                  ? 'intensionalidadEN'
+                  : 'intensionalidad'
+              )}
+            >
               {t('MainMenu.IntentionalityVsIntensionExample')}
             </MainMenu.Item>
-            <MainMenu.Item onSelect={loadExampleHandler('rosalindKrauss')}>
+            <MainMenu.Item
+              onSelect={loadExampleHandler(
+                currentLanguage === 'en' ? 'rosalindKraussEN' : 'rosalindKrauss'
+              )}
+            >
               {t('MainMenu.KraussExample')}
             </MainMenu.Item>
           </MainMenu.Group>

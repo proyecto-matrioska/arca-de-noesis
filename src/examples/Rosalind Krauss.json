@@ -1,58 +1,26 @@
 [
   [
-    [
-      "interpretación",
-      "percepción",
-      "espíritu",
-      "materia"
-    ],
-    [
-      "",
-      "",
-      "",
-      ""
-    ]
+    ["yin", "yang", "ser", "estar"],
+    ["", "", "", ""]
   ],
   [
-    [
-      "contenido",
-      "forma",
-      "fondo",
-      "figura"
-    ],
-    [
-      "",
-      "",
-      "",
-      ""
-    ]
+    ["forma pura", "informe", "mente", "alma"],
+    ["", "", "", ""]
   ],
   [
-    [
-      "no-arquitectura",
-      "no-paisaje",
-      "paisaje",
-      "arquitectura"
-    ],
-    [
-      "",
-      "",
-      "",
-      ""
-    ]
+    ["interpretación", "percepción", "espíritu", "materia"],
+    ["", "", "", ""]
   ],
   [
-    [
-      "marca",
-      "estructura",
-      "construcción",
-      "escultura"
-    ],
-    [
-      "",
-      "",
-      "",
-      ""
-    ]
+    ["contenido", "forma", "fondo", "figura"],
+    ["", "", "", ""]
+  ],
+  [
+    ["no-arquitectura", "no-paisaje", "paisaje", "arquitectura"],
+    ["", "", "", ""]
+  ],
+  [
+    ["marca", "estructura", "construcción", "escultura"],
+    ["", "", "", ""]
   ]
 ]
