@@ -1,15 +1,16 @@
 import { DialecticsSchema, Schema } from './schema'
 import { DualityData } from './schema'
-import { palette } from "./palette"
+import { palette } from './palette'
 import { translateElements } from './transformations/translateElements'
 import { arrowElement } from './elements/arrowElement'
 import { textElement } from './elements/textElement'
 
-export const procesual: (a: string, b: string, c: string) => Schema = (
-  a,
-  b,
-  c
-) => [
+export const procesual: (
+  a: string,
+  b: string,
+  c: string,
+  translations: (key: string) => string
+) => Schema = (a, b, c, translations) => [
   arrowElement(20, 36, 100, 2, '#000000', {
     strokeWidth: 1,
     strokeStyle: 'solid',
@@ -64,18 +65,46 @@ export const procesual: (a: string, b: string, c: string) => Schema = (
       [-254.97223619599026, -1.6882998441242307],
     ],
   }),
-  textElement(55, -125, 'estructura', 20, palette.DARK_GRAY, {
-    textAlign: 'center',
-  }),
-  textElement(340, -135, 'significa', 20, palette.DARK_GRAY, {
-    textAlign: 'center',
-  }),
-  textElement(60, 45, 'intenciona', 20, palette.DARK_GRAY, {
-    textAlign: 'center',
-  }),
-  textElement(350, 45, 'contextualiza', 20, palette.DARK_GRAY, {
-    textAlign: 'center',
-  }),
+  textElement(
+    55,
+    -125,
+    translations('Schemas.Annotations.procesual.estructura'),
+    20,
+    palette.DARK_GRAY,
+    {
+      textAlign: 'center',
+    }
+  ),
+  textElement(
+    340,
+    -135,
+    translations('Schemas.Annotations.procesual.significa'),
+    20,
+    palette.DARK_GRAY,
+    {
+      textAlign: 'center',
+    }
+  ),
+  textElement(
+    60,
+    45,
+    translations('Schemas.Annotations.procesual.intenciona'),
+    20,
+    palette.DARK_GRAY,
+    {
+      textAlign: 'center',
+    }
+  ),
+  textElement(
+    350,
+    45,
+    translations('Schemas.Annotations.procesual.contextualiza'),
+    20,
+    palette.DARK_GRAY,
+    {
+      textAlign: 'center',
+    }
+  ),
   textElement(-60, 15, a, 28, palette.BLUE, {
     textAlign: 'center',
   }),
@@ -86,7 +115,11 @@ export const procesual: (a: string, b: string, c: string) => Schema = (
     textAlign: 'center',
   }),
 ]
-export const procesualSequence: DialecticsSchema = dualities =>
+export const procesualSequence: DialecticsSchema = (
+  dualities,
+  schemaOptions,
+  translations
+) =>
   dualities.flatMap(([x, a], i) => {
     const y: DualityData = dualities[i + 1]
       ? dualities[i + 1][0]
@@ -103,13 +136,27 @@ export const procesualSequence: DialecticsSchema = dualities =>
     return translateElements(
       0,
       400 * i,
-      procesual(x[0], y[3], z[0])
-        .concat(translateElements(800, 0, procesual(x[1], y[2], z[1])))
-        .concat(translateElements(1600, 0, procesual(x[2], y[1], z[2])))
-        .concat(translateElements(2400, 0, procesual(x[3], y[0], z[3])))
-        .concat(translateElements(3200, 0, procesual(a[0], b[3], c[0])))
-        .concat(translateElements(4000, 0, procesual(a[1], b[2], c[1])))
-        .concat(translateElements(4800, 0, procesual(a[2], b[1], c[2])))
-        .concat(translateElements(5600, 0, procesual(a[3], b[0], c[3])))
+      procesual(x[0], y[3], z[0], translations)
+        .concat(
+          translateElements(800, 0, procesual(x[1], y[2], z[1], translations))
+        )
+        .concat(
+          translateElements(1600, 0, procesual(x[2], y[1], z[2], translations))
+        )
+        .concat(
+          translateElements(2400, 0, procesual(x[3], y[0], z[3], translations))
+        )
+        .concat(
+          translateElements(3200, 0, procesual(a[0], b[3], c[0], translations))
+        )
+        .concat(
+          translateElements(4000, 0, procesual(a[1], b[2], c[1], translations))
+        )
+        .concat(
+          translateElements(4800, 0, procesual(a[2], b[1], c[2], translations))
+        )
+        .concat(
+          translateElements(5600, 0, procesual(a[3], b[0], c[3], translations))
+        )
     )
   })

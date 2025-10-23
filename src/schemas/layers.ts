@@ -1,4 +1,4 @@
-import { palette } from "./palette"
+import { palette } from './palette'
 import { translateElements } from './transformations/translateElements'
 import { DialecticsSchema, Schema } from './schema'
 import { textElement } from './elements/textElement'
@@ -7,8 +7,9 @@ import { arrowElement } from './elements/arrowElement'
 export const dialecticLayers: (
   x: [string, string],
   y: [string, string],
-  z: [string, string]
-) => Schema = (x, y, z) => [
+  z: [string, string],
+  translations: (key: string) => string
+) => Schema = (x, y, z, translations) => [
   textElement(210, -40, `${x[0]} & ${x[1]}`, 28, palette.BLUE, {
     textAlign: 'right',
   }),
@@ -18,21 +19,64 @@ export const dialecticLayers: (
   textElement(370, 280, `${z[0]} & ${z[1]}`, 28, palette.BLUE, {
     textAlign: 'left',
   }),
-  textElement(140, 30, 'base\nconceptual\nde', 20, palette.BLUE, {
-    textAlign: 'center',
-  }),
-  textElement(340, 180, 'base\ntécnica\nde', 20, palette.RED, {
-    textAlign: 'center',
-  }),
-  textElement(450, 10, 'forma (simplifica)', 20, palette.RED, {
-    textAlign: 'center',
-  }),
-  textElement(650, 150, 'informa (complejiza)', 20, palette.BLUE, {
-    textAlign: 'center',
-  }),
-  textElement(160, 240, 'sintetiza', 20, palette.DARK_GRAY, {
-    textAlign: 'center',
-  }),
+  textElement(
+    140,
+    30,
+    `${translations(
+      'Schemas.Annotations.layers.base-conceptual-1'
+    )}\n${translations(
+      'Schemas.Annotations.layers.base-conceptual-2'
+    )}\n${translations('Schemas.Annotations.layers.base-conceptual-3')}`,
+    20,
+    palette.BLUE,
+    {
+      textAlign: 'center',
+    }
+  ),
+  textElement(
+    340,
+    180,
+    `${translations(
+      'Schemas.Annotations.layers.base-técnica-1'
+    )}\n${translations(
+      'Schemas.Annotations.layers.base-técnica-2'
+    )}\n${translations('Schemas.Annotations.layers.base-técnica-3')}`,
+    20,
+    palette.RED,
+    {
+      textAlign: 'center',
+    }
+  ),
+  textElement(
+    450,
+    10,
+    translations('Schemas.Annotations.layers.forma'),
+    20,
+    palette.RED,
+    {
+      textAlign: 'center',
+    }
+  ),
+  textElement(
+    650,
+    150,
+    translations('Schemas.Annotations.layers.informa'),
+    20,
+    palette.BLUE,
+    {
+      textAlign: 'center',
+    }
+  ),
+  textElement(
+    160,
+    240,
+    translations('Schemas.Annotations.layers.synthesizes'),
+    20,
+    palette.DARK_GRAY,
+    {
+      textAlign: 'center',
+    }
+  ),
   arrowElement(158, 3, 121.38490691041625, 108.47572347039363, '#000000', {
     strokeWidth: 1,
     strokeStyle: 'solid',
@@ -112,7 +156,11 @@ export const dialecticLayers: (
   }),
 ]
 
-export const capasDiscursivasSequence: DialecticsSchema = dualities =>
+export const capasDiscursivasSequence: DialecticsSchema = (
+  dualities,
+  schemaOptions,
+  translations
+) =>
   dualities.flatMap(([x, a], i) => {
     const y = dualities[i + 1] ? dualities[i + 1][0] : ['', '', '', '']
     const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']
@@ -121,26 +169,41 @@ export const capasDiscursivasSequence: DialecticsSchema = dualities =>
     return translateElements(
       0,
       600 * i,
-      dialecticLayers([x[0], x[1]], [y[2], y[3]], [z[0], z[1]])
+      dialecticLayers([x[0], x[1]], [y[2], y[3]], [z[0], z[1]], translations)
         .concat(
           translateElements(
             1000,
             0,
-            dialecticLayers([x[2], x[3]], [y[0], y[1]], [z[2], z[3]])
+            dialecticLayers(
+              [x[2], x[3]],
+              [y[0], y[1]],
+              [z[2], z[3]],
+              translations
+            )
           )
         )
         .concat(
           translateElements(
             2000,
             0,
-            dialecticLayers([a[0], a[1]], [b[2], b[3]], [c[0], c[1]])
+            dialecticLayers(
+              [a[0], a[1]],
+              [b[2], b[3]],
+              [c[0], c[1]],
+              translations
+            )
           )
         )
         .concat(
           translateElements(
             3000,
             0,
-            dialecticLayers([a[2], a[3]], [b[0], b[1]], [c[2], c[3]])
+            dialecticLayers(
+              [a[2], a[3]],
+              [b[0], b[1]],
+              [c[2], c[3]],
+              translations
+            )
           )
         )
     )

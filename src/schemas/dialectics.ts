@@ -1,6 +1,6 @@
 import { dual } from './duals'
 import { translateElements } from './transformations/translateElements'
-import { palette } from "./palette"
+import { palette } from './palette'
 import { swapTetrads } from './transformations/swapTetrads'
 import { DialecticsDataEntry, DialecticsSchema, Schema } from './schema'
 import { textElement } from './elements/textElement'
@@ -13,6 +13,7 @@ export const dialectic: (
   d: string,
   e: string,
   f: string,
+  translations: (key: string) => string,
   colors?: {
     color1?: string
     color2?: string
@@ -28,6 +29,7 @@ export const dialectic: (
   d,
   e,
   f,
+  translations,
   {
     color1 = palette.BLUE,
     color2 = palette.RED,
@@ -48,14 +50,34 @@ export const dialectic: (
       arrowElement(240, 450, 140, 1, palette.DARK_GRAY, {
         startArrowhead: 'arrow',
       }),
-      textElement(150, 250, 'sintetiza', 18, palette.DARK_GRAY),
-      textElement(470, 250, 'sintetiza', 18, palette.DARK_GRAY),
-      textElement(310, 460, 'se opone', 18, palette.DARK_GRAY),
+      textElement(
+        150,
+        250,
+        translations('Schemas.Annotations.dialectics.synthesizes'),
+        18,
+        palette.DARK_GRAY
+      ),
+      textElement(
+        470,
+        250,
+        translations('Schemas.Annotations.dialectics.synthesizes'),
+        18,
+        palette.DARK_GRAY
+      ),
+      textElement(
+        310,
+        460,
+        translations('Schemas.Annotations.dialectics.opposes'),
+        18,
+        palette.DARK_GRAY
+      ),
     ])
 
-export const dialecticSequence: (
-  dualities: DialecticsDataEntry[]
-) => Schema = dualities =>
+export const dialecticSequence: DialecticsSchema = (
+  dualities,
+  schemaOptions,
+  translations
+) =>
   dualities.flatMap(([x, y], i) =>
     translateElements(
       0,
@@ -66,7 +88,8 @@ export const dialecticSequence: (
         x[2],
         x[1],
         dualities[i + 1] ? dualities[i + 1][0][0] : '',
-        dualities[i + 1] ? dualities[i + 1][0][1] : ''
+        dualities[i + 1] ? dualities[i + 1][0][1] : '',
+        translations
       )
         .concat(
           translateElements(
@@ -79,6 +102,7 @@ export const dialecticSequence: (
               x[3],
               dualities[i + 1] ? dualities[i + 1][0][2] : '',
               dualities[i + 1] ? dualities[i + 1][0][3] : '',
+              translations,
               {
                 color1: palette.BLUE,
                 color2: palette.BLUE,
@@ -94,14 +118,14 @@ export const dialecticSequence: (
           translateElements(
             1500,
             0,
-            dialectic(x[0], x[2], x[2], x[0], y[0], y[1])
+            dialectic(x[0], x[2], x[2], x[0], y[0], y[1], translations)
           )
         )
         .concat(
           translateElements(
             2200,
             0,
-            dialectic(x[1], x[3], x[3], x[1], y[2], y[3], {
+            dialectic(x[1], x[3], x[3], x[1], y[2], y[3], translations, {
               color1: palette.BLUE,
               color2: palette.BLUE,
               color3: palette.RED,
@@ -114,5 +138,8 @@ export const dialecticSequence: (
     )
   )
 
-export const empiricalDialecticSequence: DialecticsSchema = dualities =>
-  dialecticSequence(dualities.map(swapTetrads))
+export const empiricalDialecticSequence: DialecticsSchema = (
+  dualities,
+  schemaOptions,
+  translations
+) => dialecticSequence(dualities.map(swapTetrads), schemaOptions, translations)

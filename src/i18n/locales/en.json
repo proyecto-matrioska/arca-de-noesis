@@ -84,6 +84,27 @@
         "eje intensional/complejo": "intentional/complex axis",
         "eje empírico/simple": "empirical/simple axis",
         "cuadro dual empírico": "empirical dual square"
+      },
+      "dialectics": {
+        "synthesizes": "synthesizes",
+        "opposes": "opposes"
+      },
+      "procesual": {
+        "estructura": "structures",
+        "significa": "signifies",
+        "intenciona": "intends",
+        "contextualiza": "contextualizes"
+      },
+      "layers": {
+        "synthesizes": "synthesizes",
+        "base-técnica-1": "technical",
+        "base-técnica-2": "basis of",
+        "base-técnica-3": "",
+        "base-conceptual-1": "conceptual",
+        "base-conceptual-2": "basis of",
+        "base-conceptual-3": "",
+        "forma": "forms (simplifies)",
+        "informa": "informs (complexifies)"
       }
     }
   }
