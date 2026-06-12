@@ -3,13 +3,13 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
     "lib": ["Es2022", "DOM", "DOM.Iterable"],
-    "module": "nodenext",
+    "module": "ES2020",
     "useDefineForClassFields": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
 
     /* Bundler mode */
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node" ,
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
