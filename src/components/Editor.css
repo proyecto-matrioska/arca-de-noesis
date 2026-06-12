@@ -13,7 +13,7 @@
 }
 
 .excalidraw .Editor input[type="text"] {
-  width: 6rem;
+  width: 100%;
   padding: 0.2rem;
   font-size: 0.7rem;
 }
@@ -34,6 +34,7 @@
 }
 
 .Editor .Duality {
+  width: 100%;
   list-style: none;
   padding: 0.5rem;
 }
@@ -49,4 +50,26 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+}
+
+.Editor .DualitySwapControl {
+  display: flex;
+  justify-content: center;
+  padding: 0.2rem 0;
+}
+
+.Editor .swap-btn {
+  display: inline-flex;
+  padding: 0.1rem 0.2rem;
+  margin-left: 0.2rem;
+  height: 1.5rem;
+  font-size: 0.65rem;
+}
+
+.Editor .Duality tr td:first-child {
+  white-space: nowrap;
+}
+
+.Editor .Duality tr td:has(input) {
+  padding: 0 0.25rem;
 }

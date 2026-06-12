@@ -41,7 +41,12 @@
     "MoveUp": "Move Up",
     "MoveDown": "Move Down",
     "InsertDuality": "Insert Duality",
-    "DeleteDuality": "Delete Duality"
+    "DeleteDuality": "Delete Duality",
+    "SwapIntCol": "Swap Intention column",
+    "SwapExtCol": "Swap Extension column",
+    "SwapIntRow": "Swap Intention row",
+    "SwapExtRow": "Swap Extension row",
+    "SwapDualities": "Swap dualities"
   },
   "SchemaOptions": {
     "General": "General",

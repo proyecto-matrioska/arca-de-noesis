@@ -16,10 +16,22 @@ import { useAppSelector } from '../state/store'
 interface DualityProps {
   duality: DualityData
   onChange: (data: DualityData) => void
+  onSwapIntCol: () => void
+  onSwapExtCol: () => void
+  onSwapIntRow: () => void
+  onSwapExtRow: () => void
   intentional?: boolean
 }
 
-function Duality({ duality, onChange, intentional = true }: DualityProps) {
+function Duality({
+  duality,
+  onChange,
+  onSwapIntCol,
+  onSwapExtCol,
+  onSwapIntRow,
+  onSwapExtRow,
+  intentional = true,
+}: DualityProps) {
   const [a, b, c, d] = duality
   const { t } = useTranslation()
   const changeHandler =
@@ -34,8 +46,28 @@ function Duality({ duality, onChange, intentional = true }: DualityProps) {
         <tr>
           <th>&nbsp;</th>
           <th>&nbsp;</th>
-          <th>{t('Editor.Intention')}</th>
-          <th>{t('Editor.Extension')}</th>
+          <th>
+            {t('Editor.Intention')}
+            <button
+              type="button"
+              className="excalidraw-button swap-btn"
+              title={t('Editor.SwapIntCol')}
+              onClick={onSwapIntCol}
+            >
+              ⇅
+            </button>
+          </th>
+          <th>
+            {t('Editor.Extension')}
+            <button
+              type="button"
+              className="excalidraw-button swap-btn"
+              title={t('Editor.SwapExtCol')}
+              onClick={onSwapExtCol}
+            >
+              ⇅
+            </button>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -49,6 +81,14 @@ function Duality({ duality, onChange, intentional = true }: DualityProps) {
           </td>
           <td>
             <b>{t('Editor.IntentionAbbrv')}</b>
+            <button
+              type="button"
+              className="excalidraw-button swap-btn"
+              title={t('Editor.SwapIntRow')}
+              onClick={onSwapIntRow}
+            >
+              ⇄
+            </button>
           </td>
           <td>
             <input type="text" value={a} onChange={changeHandler(0)} />
@@ -60,6 +100,14 @@ function Duality({ duality, onChange, intentional = true }: DualityProps) {
         <tr>
           <td>
             <b>{t('Editor.ExtensionAbbrv')}</b>
+            <button
+              type="button"
+              className="excalidraw-button swap-btn"
+              title={t('Editor.SwapExtRow')}
+              onClick={onSwapExtRow}
+            >
+              ⇄
+            </button>
           </td>
           <td>
             <input type="text" value={c} onChange={changeHandler(2)} />
@@ -92,6 +140,18 @@ function DataItem({ index, item }: DataItemProps) {
   const moveDownHandler = () => dispatch(moveDownEntry({ index }))
   const insertHandler = () => dispatch(insertEntry({ index }))
   const deleteHandler = () => dispatch(deleteEntry({ index }))
+
+  const swapHandler =
+    (di: number, transform: (d: DualityData) => DualityData) => () => {
+      const duality = di === 0 ? x : y
+      const update: DialecticsDataEntry = [x, y]
+      update[di] = transform(duality)
+      dispatch(updateEntry({ update, index }))
+    }
+
+  const swapDualitiesHandler = () =>
+    dispatch(updateEntry({ update: [y, x] as DialecticsDataEntry, index }))
+
   return (
     <li className="DataItem">
       <div>
@@ -105,13 +165,31 @@ function DataItem({ index, item }: DataItemProps) {
             <Duality
               duality={x}
               onChange={changeHandler(0)}
+              onSwapIntCol={swapHandler(0, ([p, q, r, s]) => [r, q, p, s])}
+              onSwapExtCol={swapHandler(0, ([p, q, r, s]) => [p, s, r, q])}
+              onSwapIntRow={swapHandler(0, ([p, q, r, s]) => [q, p, r, s])}
+              onSwapExtRow={swapHandler(0, ([p, q, r, s]) => [p, q, s, r])}
               intentional={true}
             />
+          </li>
+          <li className="DualitySwapControl">
+            <button
+              type="button"
+              className="excalidraw-button swap-btn"
+              title={t('Editor.SwapDualities')}
+              onClick={swapDualitiesHandler}
+            >
+              ⇅
+            </button>
           </li>
           <li>
             <Duality
               duality={y}
               onChange={changeHandler(1)}
+              onSwapIntCol={swapHandler(1, ([p, q, r, s]) => [r, q, p, s])}
+              onSwapExtCol={swapHandler(1, ([p, q, r, s]) => [p, s, r, q])}
+              onSwapIntRow={swapHandler(1, ([p, q, r, s]) => [q, p, r, s])}
+              onSwapExtRow={swapHandler(1, ([p, q, r, s]) => [p, q, s, r])}
               intentional={false}
             />
           </li>
