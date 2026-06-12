@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   convertToExcalidrawElements,
@@ -56,6 +56,8 @@ function ArcaDeNoesis() {
   const dataFilename = useAppSelector(state => state.dialectics.filename)
   const isDirty = useAppSelector(state => state.dialectics.isDirty)
   const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [sidebarWidth, setSidebarWidth] = useState(302)
   const isSidebarOpen = useAppSelector(state => state.ui.isSidebarOpen)
   const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
   const schemaOptions = useAppSelector(state => state.ui.schemaOptions)
@@ -203,8 +205,32 @@ function ArcaDeNoesis() {
     return () => {}
   }, [dialecticsData, diagramAutoupdate, selectedDiagram, updateDiagram])
 
+  useEffect(() => {
+    const el = containerRef.current?.querySelector<HTMLElement>('.excalidraw')
+    el?.style.setProperty('--right-sidebar-width', `${sidebarWidth}px`)
+  }, [sidebarWidth, isSidebarOpen])
+
+  const handleResizeMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      const startX = e.clientX
+      const startWidth = sidebarWidth
+      const onMove = (ev: MouseEvent) => {
+        const delta = startX - ev.clientX
+        setSidebarWidth(Math.max(200, Math.min(700, startWidth + delta)))
+      }
+      const onUp = () => {
+        window.removeEventListener('mousemove', onMove)
+        window.removeEventListener('mouseup', onUp)
+      }
+      window.addEventListener('mousemove', onMove)
+      window.addEventListener('mouseup', onUp)
+    },
+    [sidebarWidth]
+  )
+
   return (
-    <div className="ArcaDeNoesis">
+    <div className="ArcaDeNoesis" ref={containerRef}>
       <Excalidraw
         UIOptions={{
           dockedSidebarBreakpoint: 0,
@@ -356,6 +382,13 @@ function ArcaDeNoesis() {
           </Sidebar.Tabs>
         </Sidebar>
       </Excalidraw>
+      {isSidebarOpen && (
+        <div
+          className="sidebar-resize-handle"
+          style={{ right: sidebarWidth - 4 }}
+          onMouseDown={handleResizeMouseDown}
+        />
+      )}
     </div>
   )
 }
