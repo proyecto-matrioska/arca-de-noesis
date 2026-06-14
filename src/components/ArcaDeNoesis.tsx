@@ -14,6 +14,7 @@ import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/exc
 import '@excalidraw/excalidraw/index.css'
 import './ArcaDeNoesis.css'
 import Editor from './Editor'
+import FileTabs from './FileTabs'
 import OptionsPanel from './OptionsPanel'
 import { useAppDispatch, useAppSelector } from '../state/store'
 import {
@@ -23,7 +24,6 @@ import {
   loadExample,
 } from '../state/fileThunks'
 import { DialecticsDataEntry } from '../schemas/schema'
-import { setSelectedDiagram, setSidebarOpen } from '../state/uiSlice'
 import { SchemaOption } from '../state/uiOptions'
 import { SchemaIdentifier } from '../schemas/schema'
 import { factorData } from '../schemas/transformations/factorization'
@@ -46,27 +46,48 @@ import { procesualSequence } from '../schemas/procesual'
 import { capasDiscursivasSequence } from '../schemas/layers'
 import { matrioskaSequence } from '../schemas/matrioska'
 import { useTranslation } from 'react-i18next'
+import {
+  selectActiveTab,
+  setTabSelectedDiagram,
+  setTabSidebarOpen,
+  setTabSidebarActiveTab,
+  setExcalidrawViewport,
+  ExcalidrawViewport,
+  SidebarTabId,
+} from '../state/dialecticsSlice'
 
 const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
 
 function ArcaDeNoesis() {
   const dispatch = useAppDispatch()
-  const dialecticsData = useAppSelector(state => state.dialectics.data)
-  const dataFilename = useAppSelector(state => state.dialectics.filename)
-  const isDirty = useAppSelector(state => state.dialectics.isDirty)
+  const activeTab = useAppSelector(selectActiveTab)
+  const dialecticsData: DialecticsDataEntry[] = activeTab.entries.map(
+    e => e.data
+  )
+  const annotations = activeTab.entries.map(e => e.annotations)
+  const dataFilename = activeTab.filename
+  const isDirty = activeTab.isDirty
+  const anyDirty = useAppSelector(state =>
+    state.dialectics.tabs.some(t => t.isDirty)
+  )
+
+  const activeTabId = useAppSelector(state => state.dialectics.activeTabId)
+  const isSidebarOpen = activeTab.isSidebarOpen
+  const sidebarActiveTab = activeTab.sidebarActiveTab
+  const selectedDiagram = activeTab.selectedDiagram
+  const schemaOptions = activeTab.schemaOptions
+  const generalOptions = activeTab.generalOptions
+  const diagramAutoupdate = generalOptions.diagramAutoupdate
+  const showAnnotations: boolean = generalOptions.showAnnotations?.value ?? false
+
   const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>()
+  const sidebarActuallyOpen = useRef(false)
+  // Prevents onStateChange from writing to Redux during programmatic tab-sync toggles
+  const sidebarSyncRef = useRef(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [sidebarWidth, setSidebarWidth] = useState(302)
-  const isSidebarOpen = useAppSelector(state => state.ui.isSidebarOpen)
-  const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
-  const schemaOptions = useAppSelector(state => state.ui.schemaOptions)
-  const diagramAutoupdate = useAppSelector(
-    state => state.ui.generalSchemaOptions.diagramAutoupdate
-  )
-  const generalSchemaOptions = useAppSelector(
-    state => state.ui.generalSchemaOptions
-  )
+
   const defaultDarkMode = useMediaQuery(
     {
       query: '(prefers-color-scheme: dark)',
@@ -94,9 +115,7 @@ function ArcaDeNoesis() {
       excalidrawAPI?.toggleSidebar({ name: 'edit-sidebar', tab: 'dataEditor' })
   }
   const loadFileOptHandler = async () => {
-    if (isDirty && !window.confirm('¿Perder los cambios no guardados?')) return
-
-    dispatch(loadDataFile())
+    dispatch(loadDataFile(true))
     editarOptHandler()
   }
   const saveFileOptHandler = () => {
@@ -106,23 +125,25 @@ function ArcaDeNoesis() {
     dispatch(saveAsDataFile())
   }
   const selectSchemaHandler = (schema: SchemaIdentifier) => () => {
-    dispatch(setSelectedDiagram(schema))
+    dispatch(setTabSelectedDiagram(schema))
   }
   const editarOptHandler = () => {
     openEditorTab()
   }
   const loadExampleHandler = (exampleName: string) => () => {
-    if (isDirty && !window.confirm('¿Perder los cambios no guardados?')) return
+    if (isDirty && !window.confirm(t('Tabs.UnsavedConfirm'))) return
     dispatch(loadExample(exampleName))
     editarOptHandler()
   }
 
   const updateDiagram = useCallback(() => {
-    const factorizationId = generalSchemaOptions.factorizations.value
+    const factorizationId = generalOptions.factorizations.value
+    const annotationsParam = showAnnotations ? annotations : undefined
     let maker: (
       dualities: DialecticsDataEntry[],
       schemaOptions: { [key: string]: SchemaOption },
-      translations: (key: string) => string
+      translations: (key: string) => string,
+      annotations?: [string, string][]
     ) => ExcalidrawElementSkeleton[] = () => []
     switch (selectedDiagram) {
       case 'dualidades':
@@ -166,49 +187,116 @@ function ArcaDeNoesis() {
     }
     const dialecticsSchema = selectedDiagram
       ? maker(
-          factorData(factorizationId, dialecticsData),
-          schemaOptions[selectedDiagram],
-          t
-        )
+        factorData(factorizationId, dialecticsData),
+        schemaOptions[selectedDiagram],
+        t,
+        annotationsParam
+      )
       : []
-    const elements = convertToExcalidrawElements(
+    const excalidrawElements = convertToExcalidrawElements(
       dialecticsSchema as ExcalidrawElementSkeleton[]
     )
     excalidrawAPI?.updateScene({
-      elements,
+      elements: excalidrawElements,
     })
   }, [
+    annotations,
     dialecticsData,
     excalidrawAPI,
-    generalSchemaOptions.factorizations.value,
+    generalOptions.factorizations.value,
     schemaOptions,
     selectedDiagram,
+    showAnnotations,
   ])
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (isDirty) {
+      if (anyDirty) {
         e.preventDefault()
         e.returnValue = ''
       }
     }
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [isDirty])
+  }, [anyDirty])
 
+  // Diagram update on tab switch or schema change; clear canvas when no schema is selected
   useEffect(() => {
-    if (selectedDiagram) updateDiagram()
-  }, [selectedDiagram, updateDiagram])
+    if (selectedDiagram) {
+      updateDiagram()
+    } else {
+      excalidrawAPI?.updateScene({ elements: convertToExcalidrawElements(initialScreen()) })
+    }
+  }, [activeTabId, selectedDiagram, updateDiagram, excalidrawAPI])
 
+  // Sidebar sync on tab switch — use force to avoid toggle ambiguity
+  useEffect(() => {
+    if (!excalidrawAPI) return
+    const shouldBeOpen = activeTab.isSidebarOpen
+    if (shouldBeOpen !== sidebarActuallyOpen.current) {
+      sidebarSyncRef.current = true
+      excalidrawAPI.toggleSidebar({
+        name: 'edit-sidebar',
+        force: shouldBeOpen,
+        tab: shouldBeOpen ? activeTab.sidebarActiveTab : undefined,
+      })
+    }
+  }, [activeTabId, excalidrawAPI])
+
+  // Auto-update diagram when data or options change
   useEffect(() => {
     if (diagramAutoupdate && selectedDiagram) updateDiagram()
-    return () => {}
+    return () => { }
   }, [dialecticsData, diagramAutoupdate, selectedDiagram, updateDiagram])
 
   useEffect(() => {
-    const el = containerRef.current?.querySelector<HTMLElement>('.excalidraw')
+    const el = containerRef.current?.querySelector<HTMLElement>('.excalidraw-wrapper > .excalidraw')
     el?.style.setProperty('--right-sidebar-width', `${sidebarWidth}px`)
   }, [sidebarWidth, isSidebarOpen])
+
+  // --- Viewport save / restore on tab switch ---
+  const prevTabIdRef = useRef<string>(activeTabId)
+
+  // Capture new tab's viewport at render time so the restore effect doesn't
+  // need it in its dependency array (avoids firing on every viewport save).
+  const pendingViewportRef = useRef<ExcalidrawViewport | null>(activeTab.excalidrawViewport)
+  if (prevTabIdRef.current !== activeTabId) {
+    pendingViewportRef.current = activeTab.excalidrawViewport
+  }
+
+  useEffect(() => {
+    if (!excalidrawAPI) return
+    const prevTabId = prevTabIdRef.current
+    if (prevTabId === activeTabId) return
+
+    // Save the viewport we're leaving
+    const appState = excalidrawAPI.getAppState()
+    dispatch(
+      setExcalidrawViewport({
+        viewport: {
+          scrollX: appState.scrollX,
+          scrollY: appState.scrollY,
+          zoom: appState.zoom.value,
+        },
+        tabId: prevTabId,
+      })
+    )
+    prevTabIdRef.current = activeTabId
+  }, [activeTabId, excalidrawAPI, dispatch])
+
+  useEffect(() => {
+    if (!excalidrawAPI) return
+    const viewport = pendingViewportRef.current
+    if (!viewport) return
+    excalidrawAPI.updateScene({
+      appState: {
+        scrollX: viewport.scrollX,
+        scrollY: viewport.scrollY,
+        zoom: { value: viewport.zoom as NormalizedZoomValue },
+      },
+    })
+  }, [activeTabId, excalidrawAPI])
+  // --- end viewport ---
 
   const handleResizeMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -231,164 +319,183 @@ function ArcaDeNoesis() {
 
   return (
     <div className="ArcaDeNoesis" ref={containerRef}>
-      <Excalidraw
-        UIOptions={{
-          dockedSidebarBreakpoint: 0,
-        }}
-        initialData={{
-          elements,
-          appState: {
-            viewBackgroundColor: defaultDarkMode ? '#e8e8e8' : '#fcf5e4',
-            viewModeEnabled: true,
-            zoom: { value: 0.5 as NormalizedZoomValue },
-          },
-          scrollToContent: true,
-        }}
-        gridModeEnabled={true}
-        //viewModeEnabled={true}
-        //zenModeEnabled={true}
-        theme={defaultDarkMode ? 'dark' : 'light'}
-        excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
-      >
-        <MainMenu>
-          <MainMenu.Group title={t('MainMenu.Data')}>
-            <MainMenu.Item onSelect={loadFileOptHandler}>
-              {t('MainMenu.Open')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={saveFileOptHandler}>
-              {t('MainMenu.Save')}
-            </MainMenu.Item>
-            {hasFileSystemAccessAPI && (
-              <MainMenu.Item onSelect={saveAsFileOptHandler}>
-                {t('MainMenu.SaveAs')}
-              </MainMenu.Item>
-            )}
-            <MainMenu.Item onSelect={editarOptHandler}>
-              {t('MainMenu.Edit')}
-            </MainMenu.Item>
-          </MainMenu.Group>
-          <MainMenu.Group title={t('MainMenu.Examples')}>
-            <MainMenu.Item
-              onSelect={loadExampleHandler(
-                currentLanguage === 'en' ? 'metafisicaEN' : 'metafisica'
-              )}
-            >
-              {t('MainMenu.MetaphysicsExample')}
-            </MainMenu.Item>
-            <MainMenu.Item
-              onSelect={loadExampleHandler(
-                currentLanguage === 'en'
-                  ? 'intensionalidadEN'
-                  : 'intensionalidad'
-              )}
-            >
-              {t('MainMenu.IntentionalityVsIntensionExample')}
-            </MainMenu.Item>
-            <MainMenu.Item
-              onSelect={loadExampleHandler(
-                currentLanguage === 'en' ? 'rosalindKraussEN' : 'rosalindKrauss'
-              )}
-            >
-              {t('MainMenu.KraussExample')}
-            </MainMenu.Item>
-          </MainMenu.Group>
-          <MainMenu.Separator />
-          <MainMenu.Group title={t('MainMenu.CurrentDiagram')}>
-            <MainMenu.DefaultItems.Export />
-            <MainMenu.DefaultItems.SaveAsImage />
-          </MainMenu.Group>
-          <MainMenu.Separator />
-          <MainMenu.Group title={t('MainMenu.SchemasGallery')}>
-            <MainMenu.Item onSelect={selectSchemaHandler('dualidades')}>
-              {t('SchemaNames.Dualities')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={selectSchemaHandler('cuadros')}>
-              {t('SchemaNames.Squares')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={selectSchemaHandler('cuadros-complejos')}>
-              {t('SchemaNames.ComplexSquares')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={selectSchemaHandler('octagonos')}>
-              {t('SchemaNames.Octagons')}
-            </MainMenu.Item>
-            <MainMenu.Item
-              onSelect={selectSchemaHandler('octagonos-empiricos')}
-            >
-              {t('SchemaNames.EmpiricalOctagons')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={selectSchemaHandler('triadas')}>
-              {t('SchemaNames.Triads')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={selectSchemaHandler('triadas-empiricas')}>
-              {t('SchemaNames.EmpiricalTriads')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={selectSchemaHandler('dialectica')}>
-              {t('SchemaNames.Dialectics')}
-            </MainMenu.Item>
-            <MainMenu.Item
-              onSelect={selectSchemaHandler('dialectica-empirica')}
-            >
-              {t('SchemaNames.EmpiricalDialectics')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={selectSchemaHandler('procesual')}>
-              {t('SchemaNames.Procesual')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={selectSchemaHandler('capas-discursivas')}>
-              {t('SchemaNames.DiscursiveLayers')}
-            </MainMenu.Item>
-            <MainMenu.Item onSelect={selectSchemaHandler('matrioskas')}>
-              {t('SchemaNames.Matrioskas')}
-            </MainMenu.Item>
-          </MainMenu.Group>
-          <MainMenu.Group title={t('MainMenu.About')}>
-            <MainMenu.ItemLink href="https://proyecto-matrioska.github.io/notas/Proyecto%20Matrioska/">
-              {t('MainMenu.ProyectoMatrioska')}
-            </MainMenu.ItemLink>
-          </MainMenu.Group>
-        </MainMenu>
-        <Sidebar
-          name="edit-sidebar"
-          docked={true}
-          onStateChange={(e: any) => dispatch(setSidebarOpen(e !== null))}
+      <FileTabs />
+      <div className="excalidraw-wrapper">
+        <Excalidraw
+          UIOptions={{
+            dockedSidebarBreakpoint: 0,
+          }}
+          initialData={{
+            elements,
+            appState: {
+              viewBackgroundColor: defaultDarkMode ? '#e8e8e8' : '#fcf5e4',
+              viewModeEnabled: true,
+              zoom: { value: 0.5 as NormalizedZoomValue },
+            },
+            scrollToContent: true,
+          }}
+          gridModeEnabled={true}
+          theme={defaultDarkMode ? 'dark' : 'light'}
+          excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
         >
-          <Sidebar.Header>
-            <button
-              type="button"
-              className={smallButtonClasses}
-              disabled={selectedDiagram === null}
-              onClick={updateDiagram}
-              title={t('Sidebar.RefreshDiagram')}
-            >
-              ⟲
-            </button>
-            <b>{dataFilename}</b>
-            {isDirty && <span className="unsavedDataMark">🖫</span>}
-          </Sidebar.Header>
-          <Sidebar.Tabs>
-            <Sidebar.Tab tab="dataEditor">
-              <Editor />
-            </Sidebar.Tab>
-            <Sidebar.Tab tab="diagramOptions">
-              <OptionsPanel />
-            </Sidebar.Tab>
-            <Sidebar.TabTriggers>
-              <Sidebar.TabTrigger tab="dataEditor">
-                {t('Sidebar.EditorTabName')}
-              </Sidebar.TabTrigger>
-              <Sidebar.TabTrigger tab="diagramOptions">
-                {t('Sidebar.SchemaTabName')}
-              </Sidebar.TabTrigger>
-            </Sidebar.TabTriggers>
-          </Sidebar.Tabs>
-        </Sidebar>
-      </Excalidraw>
-      {isSidebarOpen && (
-        <div
-          className="sidebar-resize-handle"
-          style={{ right: sidebarWidth - 4 }}
-          onMouseDown={handleResizeMouseDown}
-        />
-      )}
+          <MainMenu>
+            <MainMenu.Group title={t('MainMenu.Data')}>
+              <MainMenu.Item onSelect={loadFileOptHandler}>
+                {t('MainMenu.Open')}
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={saveFileOptHandler}>
+                {t('MainMenu.Save')}
+              </MainMenu.Item>
+              {hasFileSystemAccessAPI && (
+                <MainMenu.Item onSelect={saveAsFileOptHandler}>
+                  {t('MainMenu.SaveAs')}
+                </MainMenu.Item>
+              )}
+              <MainMenu.Item onSelect={editarOptHandler}>
+                {t('MainMenu.Edit')}
+              </MainMenu.Item>
+            </MainMenu.Group>
+            <MainMenu.Group title={t('MainMenu.Examples')}>
+              <MainMenu.Item
+                onSelect={loadExampleHandler(
+                  currentLanguage === 'en' ? 'metafisicaEN' : 'metafisica'
+                )}
+              >
+                {t('MainMenu.MetaphysicsExample')}
+              </MainMenu.Item>
+              <MainMenu.Item
+                onSelect={loadExampleHandler(
+                  currentLanguage === 'en'
+                    ? 'intensionalidadEN'
+                    : 'intensionalidad'
+                )}
+              >
+                {t('MainMenu.IntentionalityVsIntensionExample')}
+              </MainMenu.Item>
+              <MainMenu.Item
+                onSelect={loadExampleHandler(
+                  currentLanguage === 'en'
+                    ? 'rosalindKraussEN'
+                    : 'rosalindKrauss'
+                )}
+              >
+                {t('MainMenu.KraussExample')}
+              </MainMenu.Item>
+            </MainMenu.Group>
+            <MainMenu.Separator />
+            <MainMenu.Group title={t('MainMenu.CurrentDiagram')}>
+              <MainMenu.DefaultItems.Export />
+              <MainMenu.DefaultItems.SaveAsImage />
+            </MainMenu.Group>
+            <MainMenu.Separator />
+            <MainMenu.Group title={t('MainMenu.SchemasGallery')}>
+              <MainMenu.Item onSelect={selectSchemaHandler('dualidades')}>
+                {t('SchemaNames.Dualities')}
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={selectSchemaHandler('cuadros')}>
+                {t('SchemaNames.Squares')}
+              </MainMenu.Item>
+              <MainMenu.Item
+                onSelect={selectSchemaHandler('cuadros-complejos')}
+              >
+                {t('SchemaNames.ComplexSquares')}
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={selectSchemaHandler('octagonos')}>
+                {t('SchemaNames.Octagons')}
+              </MainMenu.Item>
+              <MainMenu.Item
+                onSelect={selectSchemaHandler('octagonos-empiricos')}
+              >
+                {t('SchemaNames.EmpiricalOctagons')}
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={selectSchemaHandler('triadas')}>
+                {t('SchemaNames.Triads')}
+              </MainMenu.Item>
+              <MainMenu.Item
+                onSelect={selectSchemaHandler('triadas-empiricas')}
+              >
+                {t('SchemaNames.EmpiricalTriads')}
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={selectSchemaHandler('dialectica')}>
+                {t('SchemaNames.Dialectics')}
+              </MainMenu.Item>
+              <MainMenu.Item
+                onSelect={selectSchemaHandler('dialectica-empirica')}
+              >
+                {t('SchemaNames.EmpiricalDialectics')}
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={selectSchemaHandler('procesual')}>
+                {t('SchemaNames.Procesual')}
+              </MainMenu.Item>
+              <MainMenu.Item
+                onSelect={selectSchemaHandler('capas-discursivas')}
+              >
+                {t('SchemaNames.DiscursiveLayers')}
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={selectSchemaHandler('matrioskas')}>
+                {t('SchemaNames.Matrioskas')}
+              </MainMenu.Item>
+            </MainMenu.Group>
+            <MainMenu.Group title={t('MainMenu.About')}>
+              <MainMenu.ItemLink href="https://proyecto-matrioska.github.io/notas/Proyecto%20Matrioska/">
+                {t('MainMenu.ProyectoMatrioska')}
+              </MainMenu.ItemLink>
+            </MainMenu.Group>
+          </MainMenu>
+          <Sidebar
+            name="edit-sidebar"
+            docked={true}
+            onStateChange={(e: any) => {
+              const open = e !== null
+              sidebarActuallyOpen.current = open
+              if (sidebarSyncRef.current) {
+                sidebarSyncRef.current = false
+                if (selectedDiagram) updateDiagram()
+                return
+              }
+              dispatch(setTabSidebarOpen(open))
+              console.log('Sidebar state change')
+            }}
+          >
+            <Sidebar.Header>
+              <button
+                type="button"
+                className={smallButtonClasses}
+                disabled={selectedDiagram === null}
+                onClick={updateDiagram}
+                title={t('Sidebar.RefreshDiagram')}
+              >
+                ⟲
+              </button>
+              <b>{dataFilename}</b>
+              {isDirty && <span className="unsavedDataMark">🖫</span>}
+            </Sidebar.Header>
+            <Sidebar.Tabs>
+              <Sidebar.Tab tab="dataEditor">
+                <Editor />
+              </Sidebar.Tab>
+              <Sidebar.Tab tab="diagramOptions">
+                <OptionsPanel />
+              </Sidebar.Tab>
+              <Sidebar.TabTriggers>
+                <Sidebar.TabTrigger tab="dataEditor" onClick={() => dispatch(setTabSidebarActiveTab('dataEditor' as SidebarTabId))}>
+                  {t('Sidebar.EditorTabName')}
+                </Sidebar.TabTrigger>
+                <Sidebar.TabTrigger tab="diagramOptions" onClick={() => dispatch(setTabSidebarActiveTab('diagramOptions' as SidebarTabId))}>
+                  {t('Sidebar.SchemaTabName')}
+                </Sidebar.TabTrigger>
+              </Sidebar.TabTriggers>
+            </Sidebar.Tabs>
+          </Sidebar>
+        </Excalidraw>
+        {isSidebarOpen && (
+          <div
+            className="sidebar-resize-handle"
+            style={{ right: sidebarWidth - 4 }}
+            onMouseDown={handleResizeMouseDown}
+          />
+        )}
+      </div>
     </div>
   )
 }

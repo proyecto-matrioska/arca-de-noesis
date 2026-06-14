@@ -28,6 +28,7 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^22.15.17",
     "@types/react": "^19.1.4",

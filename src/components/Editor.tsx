@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import './Editor.css'
@@ -7,29 +8,41 @@ import {
   moveDownEntry,
   moveUpEntry,
   updateEntry,
+  updateAnnotation,
 } from '../state/dialecticsSlice'
 import { DialecticsDataEntry } from '../schemas/schema'
 import { DualityData } from '../schemas/schema'
 import React from 'react'
 import { useAppSelector } from '../state/store'
+import { selectActiveTab } from '../state/dialecticsSlice'
+import { NoesisEntry } from '../state/noesisFormat'
+import AnnotationPopover, {
+  AnnotationTarget,
+} from './AnnotationPopover'
 
 interface DualityProps {
   duality: DualityData
+  annotation: string
+  entryIndex: number
+  dualityIndex: 0 | 1
   onChange: (data: DualityData) => void
   onSwapIntCol: () => void
   onSwapExtCol: () => void
   onSwapIntRow: () => void
   onSwapExtRow: () => void
+  onAnnotationClick: (e: React.MouseEvent, rect: DOMRect) => void
   intentional?: boolean
 }
 
 function Duality({
   duality,
+  annotation,
   onChange,
   onSwapIntCol,
   onSwapExtCol,
   onSwapIntRow,
   onSwapExtRow,
+  onAnnotationClick,
   intentional = true,
 }: DualityProps) {
   const [a, b, c, d] = duality
@@ -66,6 +79,19 @@ function Duality({
               onClick={onSwapExtCol}
             >
               ⇅
+            </button>
+          </th>
+          <th>
+            <button
+              type="button"
+              className={`excalidraw-button annotation-btn${annotation ? ' annotation-btn--set' : ''}`}
+              title={t('Annotation.Tooltip')}
+              onClick={e => {
+                const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+                onAnnotationClick(e, rect)
+              }}
+            >
+              ✎
             </button>
           </th>
         </tr>
@@ -123,13 +149,15 @@ function Duality({
 
 interface DataItemProps {
   index: number
-  item: DialecticsDataEntry
+  item: NoesisEntry
+  onAnnotationClick: (target: AnnotationTarget) => void
 }
 
-function DataItem({ index, item }: DataItemProps) {
+function DataItem({ index, item, onAnnotationClick }: DataItemProps) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const [x, y]: DialecticsDataEntry = item
+  const { data: [x, y], annotations } = item
+
   const changeHandler =
     (dualityIndex: number) => (updatedDuality: DualityData) => {
       const update: DialecticsDataEntry = [x, y]
@@ -152,6 +180,11 @@ function DataItem({ index, item }: DataItemProps) {
   const swapDualitiesHandler = () =>
     dispatch(updateEntry({ update: [y, x] as DialecticsDataEntry, index }))
 
+  const annotationClickHandler =
+    (dualityIndex: 0 | 1) => (_e: React.MouseEvent, anchorRect: DOMRect) => {
+      onAnnotationClick({ entryIndex: index, dualityIndex, anchorRect })
+    }
+
   return (
     <li className="DataItem">
       <div>
@@ -164,11 +197,15 @@ function DataItem({ index, item }: DataItemProps) {
           <li>
             <Duality
               duality={x}
+              annotation={annotations[0]}
+              entryIndex={index}
+              dualityIndex={0}
               onChange={changeHandler(0)}
               onSwapIntCol={swapHandler(0, ([p, q, r, s]) => [r, q, p, s])}
               onSwapExtCol={swapHandler(0, ([p, q, r, s]) => [p, s, r, q])}
               onSwapIntRow={swapHandler(0, ([p, q, r, s]) => [q, p, r, s])}
               onSwapExtRow={swapHandler(0, ([p, q, r, s]) => [p, q, s, r])}
+              onAnnotationClick={annotationClickHandler(0)}
               intentional={true}
             />
           </li>
@@ -185,11 +222,15 @@ function DataItem({ index, item }: DataItemProps) {
           <li>
             <Duality
               duality={y}
+              annotation={annotations[1]}
+              entryIndex={index}
+              dualityIndex={1}
               onChange={changeHandler(1)}
               onSwapIntCol={swapHandler(1, ([p, q, r, s]) => [r, q, p, s])}
               onSwapExtCol={swapHandler(1, ([p, q, r, s]) => [p, s, r, q])}
               onSwapIntRow={swapHandler(1, ([p, q, r, s]) => [q, p, r, s])}
               onSwapExtRow={swapHandler(1, ([p, q, r, s]) => [p, q, s, r])}
+              onAnnotationClick={annotationClickHandler(1)}
               intentional={false}
             />
           </li>
@@ -235,17 +276,63 @@ function DataItem({ index, item }: DataItemProps) {
 }
 
 function Editor() {
-  const data = useAppSelector(state => state.dialectics.data)
+  const dispatch = useDispatch()
+  const activeTab = useAppSelector(selectActiveTab)
+  const entries = activeTab.entries
+  const [activeAnnotation, setActiveAnnotation] =
+    useState<AnnotationTarget | null>(null)
+
+  const annotationValue =
+    activeAnnotation !== null
+      ? entries[activeAnnotation.entryIndex]?.annotations[
+          activeAnnotation.dualityIndex
+        ] ?? ''
+      : ''
+
+  const handleAnnotationChange = (text: string) => {
+    if (activeAnnotation === null) return
+    dispatch(
+      updateAnnotation({
+        entryIndex: activeAnnotation.entryIndex,
+        dualityIndex: activeAnnotation.dualityIndex,
+        text,
+      })
+    )
+  }
+
+  const handleAnnotationClick = (target: AnnotationTarget) => {
+    setActiveAnnotation(prev =>
+      prev &&
+      prev.entryIndex === target.entryIndex &&
+      prev.dualityIndex === target.dualityIndex
+        ? null
+        : target
+    )
+  }
+
   return (
     <div className="Editor">
       <div className="EditorContents">
         <ul className="Dualities">
-          {data.map((item, index) => (
-            <DataItem key={`DataItem-${index}`} item={item} index={index} />
+          {entries.map((item, index) => (
+            <DataItem
+              key={`DataItem-${index}`}
+              item={item}
+              index={index}
+              onAnnotationClick={handleAnnotationClick}
+            />
           ))}
         </ul>
         <div className="EditorControls" />
       </div>
+      {activeAnnotation !== null && (
+        <AnnotationPopover
+          target={activeAnnotation}
+          value={annotationValue}
+          onChange={handleAnnotationChange}
+          onClose={() => setActiveAnnotation(null)}
+        />
+      )}
     </div>
   )
 }

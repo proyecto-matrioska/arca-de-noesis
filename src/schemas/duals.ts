@@ -135,10 +135,20 @@ const intensionFormContext: (
   ),
 ]
 
+const annotationLabel: (text: string, x: number) => Schema = (text, x) =>
+  text
+    ? [
+        textElement(x, 240, text, 18, palette.ORANGE, {
+          textAlign: 'center',
+        }),
+      ]
+    : []
+
 export const dualitySequence: DialecticsSchema = (
   dualities,
   schemaOptions,
-  translations
+  translations,
+  annotations
 ) =>
   dualities.flatMap(([x, y], i) =>
     translateElements(
@@ -163,5 +173,7 @@ export const dualitySequence: DialecticsSchema = (
               )
             : []
         )
+        .concat(annotations ? annotationLabel(annotations[i]?.[0] ?? '', 258) : [])
+        .concat(annotations ? translateElements(900, 0, annotationLabel(annotations[i]?.[1] ?? '', 258)) : [])
     )
   )

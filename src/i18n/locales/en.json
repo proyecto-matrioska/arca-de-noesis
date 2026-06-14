@@ -48,10 +48,23 @@
     "SwapExtRow": "Swap Extension row",
     "SwapDualities": "Swap dualities"
   },
+  "Annotation": {
+    "Tooltip": "Edit annotation",
+    "Placeholder": "Type an annotation for this duality…",
+    "EscHint": "to close"
+  },
+  "Tabs": {
+    "Untitled": "untitled",
+    "NewTab": "New tab",
+    "Close": "Close tab",
+    "UnsavedConfirm": "Discard unsaved changes in this tab?"
+  },
   "SchemaOptions": {
     "General": "General",
     "AutoRefresh": "Auto Refresh",
     "AutoRefreshLngDesc": "Automatically refresh the diagram when changes are made",
+    "ShowAnnotations": "Show Annotations",
+    "ShowAnnotationsLngDesc": "Render duality annotations as labels on the diagram",
     "Factorizations": "Factorize",
     "ShowDualityIndexes": "Show Duality Indexes",
     "ShowDualityIndexesLngDesc": "Display the indexes of dualities in the diagram",

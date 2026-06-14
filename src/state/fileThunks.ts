@@ -1,13 +1,20 @@
 import { AppDispatch, RootState } from './store'
-import { setDialecticsData, setFileHandle, setIsDirty } from './dialecticsSlice'
+import {
+  addTab,
+  setDialecticsData,
+  setFileHandle,
+  setIsDirty,
+  selectActiveTab,
+} from './dialecticsSlice'
+import { migrateToLatest } from './noesisFormat'
 import * as FileSaver from 'file-saver'
 import examples from '../examples/examples'
 
 const hasFileSystemAccessAPI = () => 'showSaveFilePicker' in window
 
 export const loadDataFile =
-  () =>
-  async (dispatch: AppDispatch): Promise<void> => {
+  (openInNewTab = false) =>
+  async (dispatch: AppDispatch, getState: () => RootState): Promise<void> => {
     try {
       let file: File | null
 
@@ -22,12 +29,15 @@ export const loadDataFile =
         })
         file = await fileHandle.getFile()
         const contents = await file.text()
-        const data = JSON.parse(contents)
-        dispatch(setDialecticsData({ filename: file.name, data }))
-        dispatch(setFileHandle(fileHandle))
-        dispatch(setIsDirty(false))
+        const raw = JSON.parse(contents)
+        const { entries } = migrateToLatest(raw)
+
+        if (openInNewTab) dispatch(addTab())
+        const tabId = selectActiveTab(getState()).id
+        dispatch(setDialecticsData({ filename: file.name, entries, tabId }))
+        dispatch(setFileHandle({ handle: fileHandle, tabId }))
+        dispatch(setIsDirty({ dirty: false, tabId }))
       } else {
-        // Fallback usando input type="file"
         return new Promise(resolve => {
           const input = document.createElement('input')
           input.type = 'file'
@@ -38,15 +48,19 @@ export const loadDataFile =
             const reader = new FileReader()
             reader.readAsText(file)
             reader.onload = () => {
-              const data = JSON.parse(reader.result as string)
+              const raw = JSON.parse(reader.result as string)
+              const { entries } = migrateToLatest(raw)
+              if (openInNewTab) dispatch(addTab())
+              const tabId = selectActiveTab(getState()).id
               dispatch(
                 setDialecticsData({
                   filename: file?.name || 'untitled.noesis',
-                  data,
+                  entries,
+                  tabId,
                 })
               )
-              dispatch(setFileHandle(null))
-              dispatch(setIsDirty(false))
+              dispatch(setFileHandle({ handle: null, tabId }))
+              dispatch(setIsDirty({ dirty: false, tabId }))
               resolve()
             }
           }
@@ -62,8 +76,8 @@ export const loadDataFile =
 
 export const saveDataFile =
   () => async (dispatch: AppDispatch, getState: () => RootState) => {
-    const state = getState().dialectics
-    const { filename, data, fileHandle } = state
+    const tab = selectActiveTab(getState())
+    const { id: tabId, filename, entries, fileHandle } = tab
 
     if (hasFileSystemAccessAPI()) {
       try {
@@ -82,14 +96,22 @@ export const saveDataFile =
         }
 
         const writable = await targetFileHandle.createWritable()
-        await writable.write(JSON.stringify(data, null, 2))
+        await writable.write(
+          JSON.stringify({ version: 2, entries }, null, 2)
+        )
         await writable.close()
 
-        dispatch(setFileHandle(targetFileHandle))
-        dispatch(setDialecticsData({ filename: targetFileHandle.name, data }))
-        dispatch(setIsDirty(false))
+        dispatch(setFileHandle({ handle: targetFileHandle, tabId }))
+        dispatch(
+          setDialecticsData({
+            filename: targetFileHandle.name,
+            entries,
+            tabId,
+          })
+        )
+        dispatch(setIsDirty({ dirty: false, tabId }))
       } catch (error) {
-        return // Usuario canceló
+        return
       }
     } else {
       let name = filename || 'untitled.noesis'
@@ -101,19 +123,20 @@ export const saveDataFile =
         return
       }
       const finalName = input.endsWith('.noesis') ? input : `${input}.noesis`
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
-        type: 'application/json;charset=utf-8',
-      })
+      const blob = new Blob(
+        [JSON.stringify({ version: 2, entries }, null, 2)],
+        { type: 'application/json;charset=utf-8' }
+      )
       FileSaver.saveAs(blob, finalName)
-      dispatch(setDialecticsData({ filename: finalName, data }))
-      dispatch(setIsDirty(false))
+      dispatch(setDialecticsData({ filename: finalName, entries, tabId }))
+      dispatch(setIsDirty({ dirty: false, tabId }))
     }
   }
 
 export const saveAsDataFile =
   () => async (dispatch: AppDispatch, getState: () => RootState) => {
-    const state = getState().dialectics
-    const { filename, data } = state
+    const tab = selectActiveTab(getState())
+    const { id: tabId, filename, entries } = tab
 
     try {
       const newFileHandle = await window.showSaveFilePicker({
@@ -126,20 +149,29 @@ export const saveAsDataFile =
         ],
       })
       const writable = await newFileHandle.createWritable()
-      await writable.write(JSON.stringify(data, null, 2))
+      await writable.write(JSON.stringify({ version: 2, entries }, null, 2))
       await writable.close()
-      dispatch(setFileHandle(newFileHandle))
-      dispatch(setDialecticsData({ filename: newFileHandle.name, data }))
-      dispatch(setIsDirty(false))
+      dispatch(setFileHandle({ handle: newFileHandle, tabId }))
+      dispatch(
+        setDialecticsData({
+          filename: newFileHandle.name,
+          entries,
+          tabId,
+        })
+      )
+      dispatch(setIsDirty({ dirty: false, tabId }))
     } catch (error) {
       return
     }
   }
 
 export const loadExample =
-  (exampleName: string) => async (dispatch: AppDispatch) => {
-    const { filename, data } = examples[exampleName]
-    dispatch(setFileHandle(null))
-    dispatch(setDialecticsData({ filename, data }))
-    dispatch(setIsDirty(false))
+  (exampleName: string) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const example = examples[exampleName]
+    const { entries } = migrateToLatest(example.data)
+    const tabId = selectActiveTab(getState()).id
+    dispatch(setFileHandle({ handle: null, tabId }))
+    dispatch(setDialecticsData({ filename: example.filename, entries, tabId }))
+    dispatch(setIsDirty({ dirty: false, tabId }))
   }

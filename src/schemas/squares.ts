@@ -357,10 +357,23 @@ const rectagularAnnotationParams: (
   }
 }
 
+const squareAnnotationLabel: (text: string, xOffset: number) => Schema = (
+  text,
+  xOffset
+) =>
+  text
+    ? [
+        textElement(xOffset + 150, 360, text, 18, palette.ORANGE, {
+          textAlign: 'center',
+        }),
+      ]
+    : []
+
 export const squareSequence: DialecticsSchema = (
   dualities,
   schemaOptions,
-  translations
+  translations,
+  annotations
 ) => {
   if (schemaOptions.arrangement.value === 'triadas')
     return groupByTriads(dualities).flatMap(([x, y, z], i) =>
@@ -657,6 +670,8 @@ export const squareSequence: DialecticsSchema = (
             squareElementDescriptions(2, schemaOptions, translations)
           )
         )
+        .concat(annotations ? squareAnnotationLabel(annotations[i]?.[0] ?? '', 0) : [])
+        .concat(annotations ? squareAnnotationLabel(annotations[i]?.[1] ?? '', 800) : [])
     )
   )
 }

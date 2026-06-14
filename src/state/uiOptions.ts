@@ -3,6 +3,7 @@ import { SchemaIdentifier } from '../schemas/schema'
 export type SchemaOptionIdentifier =
   | 'diagramAutoupdate'
   | 'factorizations'
+  | 'showAnnotations'
   | 'showDualityIndex'
   | 'elementDescriptions'
   | 'intensionFormContext'
@@ -29,6 +30,12 @@ export const generalSchemaOptions: Record<string, SchemaOption> = {
     name: 'SchemaOptions.AutoRefresh',
     value: true,
     longDescription: 'SchemaOptions.AutoRefreshLngDesc',
+  },
+  showAnnotations: {
+    type: 'bool',
+    name: 'SchemaOptions.ShowAnnotations',
+    value: false,
+    longDescription: 'SchemaOptions.ShowAnnotationsLngDesc',
   },
   factorizations: {
     type: 'select',

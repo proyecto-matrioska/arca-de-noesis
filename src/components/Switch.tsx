@@ -4,6 +4,7 @@ interface ISwitchProps {
   id?: string
   name?: string
   defaultValue?: boolean
+  value?: boolean
   onChange?: (value: boolean) => void
   title?: string
   disabled?: boolean
@@ -13,18 +14,24 @@ const Switch: FC<ISwitchProps> = ({
   id,
   name,
   defaultValue = false,
+  value,
   onChange,
   title,
   disabled = false,
 }) => {
-  const [isChecked, setChecked] = useState<boolean>(defaultValue)
+  const controlled = value !== undefined
+  const [isChecked, setChecked] = useState<boolean>(controlled ? value : defaultValue)
+
   const changeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void = e => {
-    setChecked(e.target.checked)
+    if (!controlled) setChecked(e.target.checked)
     if (onChange) onChange(e.target.checked)
   }
+
+  const checked = controlled ? value : isChecked
+
   return (
     <div
-      className={`Switch ${isChecked ? 'toggled' : ''} ${
+      className={`Switch ${checked ? 'toggled' : ''} ${
         disabled ? 'disabled' : ''
       }`}
     >
@@ -32,7 +39,7 @@ const Switch: FC<ISwitchProps> = ({
         type="checkbox"
         id={id}
         name={name}
-        checked={isChecked}
+        checked={checked}
         onChange={changeHandler}
         title={title}
         disabled={disabled}

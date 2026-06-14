@@ -1,13 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import dialecticsReducer from './dialecticsSlice'
-import uiReducer from './uiSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 const createStore = () =>
   configureStore({
     reducer: {
       dialectics: dialecticsReducer,
-      ui: uiReducer,
     },
   })
 

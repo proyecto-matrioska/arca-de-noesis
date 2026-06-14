@@ -73,3 +73,21 @@
 .Editor .Duality tr td:has(input) {
   padding: 0 0.25rem;
 }
+
+.Editor .annotation-btn {
+  display: inline-flex;
+  padding: 0.1rem 0.25rem;
+  margin-left: 0.2rem;
+  height: 1.5rem;
+  font-size: 0.65rem;
+  opacity: 0.4;
+}
+
+.Editor .annotation-btn:hover {
+  opacity: 1;
+}
+
+.Editor .annotation-btn--set {
+  opacity: 1;
+  color: #e07000;
+}

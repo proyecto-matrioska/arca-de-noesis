@@ -1,0 +1,106 @@
+.FileTabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 0 0 auto;
+  height: 32px;
+  background: var(--island-bg-color);
+  border-bottom: 1px solid var(--default-border-color);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  padding: 0 4px;
+  gap: 2px;
+}
+
+.FileTabs::-webkit-scrollbar {
+  display: none;
+}
+
+.FileTab {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px 0 10px;
+  height: 26px;
+  border: 1px solid transparent;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  max-width: 180px;
+  background: transparent;
+  color: var(--text-primary-color);
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+
+.FileTab:hover {
+  background: var(--button-hover-bg);
+  opacity: 1;
+}
+
+.FileTab--active {
+  background: var(--button-active-bg);
+  border-color: var(--default-border-color);
+  border-bottom-color: var(--button-active-bg);
+  opacity: 1;
+  font-weight: 600;
+}
+
+.FileTab__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.FileTab__dirty {
+  color: #e07000;
+  font-size: 0.85em;
+  flex-shrink: 0;
+}
+
+.FileTab__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--text-primary-color);
+  opacity: 0.5;
+  padding: 0;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.FileTab__close:hover {
+  background: var(--button-hover-bg);
+  opacity: 1;
+}
+
+.FileTabs__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--text-primary-color);
+  opacity: 0.5;
+  flex-shrink: 0;
+  margin-left: 2px;
+}
+
+.FileTabs__add:hover {
+  background: var(--button-hover-bg);
+  opacity: 1;
+}

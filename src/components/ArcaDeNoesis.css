@@ -1,6 +1,13 @@
 .ArcaDeNoesis {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+}
+
+.excalidraw-wrapper {
+  flex: 1 1 auto;
   position: relative;
+  overflow: hidden;
 }
 
 .ArcaDeNoesis .unsavedDataMark {

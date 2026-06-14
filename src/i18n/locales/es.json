@@ -48,10 +48,23 @@
     "SwapExtRow": "Intercambiar renglón Extensión",
     "SwapDualities": "Intercambiar dualidades"
   },
+  "Annotation": {
+    "Tooltip": "Editar anotación",
+    "Placeholder": "Escribe una anotación para esta dualidad…",
+    "EscHint": "para cerrar"
+  },
+  "Tabs": {
+    "Untitled": "sin título",
+    "NewTab": "Nueva pestaña",
+    "Close": "Cerrar pestaña",
+    "UnsavedConfirm": "¿Descartar los cambios no guardados en esta pestaña?"
+  },
   "SchemaOptions": {
     "General": "General",
     "AutoRefresh": "Actualizar diagrama automáticamente",
     "AutoRefreshLngDesc": "Actualizar diagrama automáticamente cuando se realizan cambios",
+    "ShowAnnotations": "Mostrar anotaciones",
+    "ShowAnnotationsLngDesc": "Mostrar las anotaciones de las dualidades como etiquetas en el diagrama",
     "Factorizations": "Factorizar",
     "ShowDualityIndexes": "Mostrar índices de dualidad",
     "ShowDualityIndexesLngDesc": "Mostrar los índices de las dualidades en el diagrama",

@@ -1,0 +1,36 @@
+.AnnotationPopover {
+  position: fixed;
+  z-index: 1000;
+  background: var(--color-surface-high, #fff);
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 200px;
+}
+
+.AnnotationPopover__textarea {
+  width: 100%;
+  min-height: 56px;
+  resize: vertical;
+  font-size: 0.72rem;
+  font-family: inherit;
+  padding: 4px 6px;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.AnnotationPopover__textarea:focus {
+  border-color: var(--color-primary, #6965db);
+}
+
+.AnnotationPopover__hint {
+  font-size: 0.62rem;
+  color: var(--color-text-muted, #999);
+  text-align: right;
+}

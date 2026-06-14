@@ -1,7 +1,12 @@
 import React from 'react'
 import Switch from './Switch'
 import { useAppDispatch, useAppSelector } from '../state/store'
-import { setDiagramOption, setGeneralDiagramOption } from '../state/uiSlice'
+import {
+  setDiagramOption,
+  setGeneralOption,
+  selectActiveTab,
+  schemaNames,
+} from '../state/dialecticsSlice'
 import { SchemaOption } from '../state/uiOptions'
 import './OptionsPanel.css'
 import { useTranslation } from 'react-i18next'
@@ -24,32 +29,22 @@ const BooleanOption = ({
   disabled = false,
 }: IBooleanOptionProps) => {
   const dispatch = useAppDispatch()
-  const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
+  const activeTab = useAppSelector(selectActiveTab)
+  const selectedDiagram = activeTab.selectedDiagram
   const { t } = useTranslation()
   return (
     <div className="BooleanOption" title={longDescription}>
       <div>{t(name)}:</div>
       <div>
         <Switch
-          id={`${selectedDiagram}-checkbox-${optionId}`}
-          name={`${selectedDiagram}-checkbox-${optionId}`}
-          defaultValue={value}
+          id={`${globalOption ? 'global' : selectedDiagram}-checkbox-${optionId}`}
+          name={`${globalOption ? 'global' : selectedDiagram}-checkbox-${optionId}`}
+          value={value}
           onChange={b => {
             if (globalOption) {
-              dispatch(
-                setGeneralDiagramOption({
-                  optionId,
-                  value: b,
-                })
-              )
+              dispatch(setGeneralOption({ optionId, value: b }))
             } else if (selectedDiagram) {
-              dispatch(
-                setDiagramOption({
-                  diagramName: selectedDiagram,
-                  optionId,
-                  value: b,
-                })
-              )
+              dispatch(setDiagramOption({ diagramName: selectedDiagram, optionId, value: b }))
             }
           }}
           title={t(longDescription)}
@@ -80,7 +75,8 @@ const SelectOption = ({
   disabled = false,
 }: ISelectOptionProps) => {
   const dispatch = useAppDispatch()
-  const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
+  const activeTab = useAppSelector(selectActiveTab)
+  const selectedDiagram = activeTab.selectedDiagram
   const { t } = useTranslation()
   return (
     <div className="SelectOption" title={t(longDescription)}>
@@ -88,19 +84,12 @@ const SelectOption = ({
       <div>
         <select
           id={`${globalOption ? 'global' : selectedDiagram}-select-${optionId}`}
-          name={`${
-            globalOption ? 'global' : selectedDiagram
-          }-select-${optionId}`}
+          name={`${globalOption ? 'global' : selectedDiagram}-select-${optionId}`}
           className="dropdown-select"
-          defaultValue={value}
+          value={value}
           onChange={e => {
             if (globalOption) {
-              dispatch(
-                setGeneralDiagramOption({
-                  optionId,
-                  value: e.target.value,
-                })
-              )
+              dispatch(setGeneralOption({ optionId, value: e.target.value }))
             } else if (selectedDiagram) {
               dispatch(
                 setDiagramOption({
@@ -116,9 +105,7 @@ const SelectOption = ({
         >
           {options.map(opt => (
             <option
-              key={`${
-                globalOption ? 'global' : selectedDiagram
-              }-select-${optionId}-${opt.value}`}
+              key={`${globalOption ? 'global' : selectedDiagram}-select-${optionId}-${opt.value}`}
               value={opt.value}
             >
               {t(opt.name)}
@@ -167,31 +154,30 @@ const Option = ({
 }
 
 const OptionsPanel = () => {
-  const schemaName = useAppSelector(state => state.ui.selectedDiagramName)
-  const schemaOptions = useAppSelector(state => state.ui.schemaOptions)
-  const generalSchemaOptions = useAppSelector(
-    state => state.ui.generalSchemaOptions
-  )
-  const selectedDiagram = useAppSelector(state => state.ui.selectedDiagram)
-  const diagramOptions = selectedDiagram ? schemaOptions[selectedDiagram] : {}
+  const activeTab = useAppSelector(selectActiveTab)
+  const activeTabId = useAppSelector(state => state.dialectics.activeTabId)
+  const selectedDiagram = activeTab.selectedDiagram
+  const generalOptions = activeTab.generalOptions
+  const diagramOptions = selectedDiagram ? activeTab.schemaOptions[selectedDiagram] : {}
+  const schemaName = selectedDiagram ? schemaNames[selectedDiagram] : null
   const { t } = useTranslation()
+
   return (
     <div className="OptionsPanel">
       <div className="OptionsPanelContents">
         <div>
           <b>{t('General')}: </b>
         </div>
-        {Object.keys(generalSchemaOptions).map((k, i) => (
+        {Object.keys(generalOptions).map((k, i) => (
           <Option
-            key={`generalSchemaOptions-option-${k}-${i}`}
+            key={`${activeTabId}-generalOption-${k}-${i}`}
             optionId={k}
-            optionData={generalSchemaOptions[k]}
+            optionData={generalOptions[k]}
             globalOption={true}
             disabled={
-              generalSchemaOptions[k].depends &&
-              generalSchemaOptions[
-                generalSchemaOptions[k].depends?.element || ''
-              ].value !== generalSchemaOptions[k].depends?.value
+              generalOptions[k].depends &&
+              generalOptions[generalOptions[k].depends?.element || '']?.value !==
+                generalOptions[k].depends?.value
             }
           />
         ))}
@@ -200,12 +186,12 @@ const OptionsPanel = () => {
         </div>
         {Object.keys(diagramOptions).map((k, i) => (
           <Option
-            key={`${selectedDiagram}-option-${k}-${i}`}
+            key={`${activeTabId}-${selectedDiagram}-option-${k}-${i}`}
             optionId={k}
             optionData={diagramOptions[k]}
             disabled={
               diagramOptions[k].depends &&
-              diagramOptions[diagramOptions[k].depends?.element || ''].value !==
+              diagramOptions[diagramOptions[k].depends?.element || '']?.value !==
                 diagramOptions[k].depends?.value
             }
           />
