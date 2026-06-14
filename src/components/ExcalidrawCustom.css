@@ -1,0 +1,58 @@
+.excalidraw {
+    --base-bg-color: #fcf5e4;
+    --color-brand: #ff2b2b;
+    --text-primary-color: #262626;
+    --color-primary: var(--color-brand);
+    --color-primary-darker: color-mix(in srgb, var(--color-primary) 90%, black);
+    --default-border-color: var(--text-primary-color);
+    --sidebar-bg-color:var(--base-bg-color);
+    --button-active-bg: var(--base-bg-color);
+    --button-hover-bg: color-mix(in srgb, var(--button-active-bg) 90%, black);
+    --island-bg-color: var(--base-bg-color);
+    --color-surface-low: var(--base-bg-color);
+    --color-surface-lowest: var(--text-primary-color);
+    --color-surface-high: var(--base-bg-color);
+    --color-on-surface: var(--text-primary-color);
+    --color-brand-hover: color-mix(in srgb, var(--color-brand) 90%, black);
+    --color-brand-active: color-mix(in srgb, var(--color-brand) 80%, black);
+    --focus-highlight-color: var(--color-brand);
+    --Switch-disabled-color: var(--text-primary-color);
+}
+.excalidraw .dropdown-menu-button:hover {
+    --background: color-mix(in srgb, var(--button-active-bg) 90%, black);
+}
+.excalidraw .excalidraw-button:hover {
+    background-color: color-mix(in srgb, var(--color-primary) 90%, black);
+    border-color: var(--button-hover-border, var(--button-border, var(--default-border-color)));
+    color: var(--base-bg-color);
+}
+.excalidraw .sidebar--docked {
+    box-shadow: var(--sidebar-shadow);
+}
+
+.excalidraw.theme--dark {
+    --base-bg-color: #262626;
+    --color-brand: #ff7b7b;
+    --text-primary-color: #c5b8a1;
+    --color-primary: var(--color-brand);
+    --color-primary-darker: color-mix(in srgb, var(--color-primary) 90%, black);
+    --sidebar-bg-color:var(--base-bg-color);
+    --button-active-bg: var(--base-bg-color);
+    --button-hover-bg: color-mix(in srgb, var(--button-active-bg) 90%, white);
+    --island-bg-color: var(--base-bg-color);
+    --color-surface-low: var(--base-bg-color);
+    --color-surface-high: var(--base-bg-color);
+    --color-on-surface: var(--text-primary-color);
+    --color-brand-hover: color-mix(in srgb, var(--color-brand) 90%, white);
+    --color-brand-active: color-mix(in srgb, var(--color-brand) 80%, white);
+    --focus-highlight-color: var(--color-brand);
+    --Switch-disabled-color: var(--text-primary-color);
+}
+.excalidraw.theme--dark.excalidraw .dropdown-menu-button:hover {
+    --background: color-mix(in srgb, var(--button-active-bg) 90%, white);
+}
+.excalidraw.theme--dark .excalidraw-button:hover {
+    background-color: color-mix(in srgb, var(--color-primary) 90%, white);
+    border-color: var(--button-hover-border, var(--button-border, var(--default-border-color)));
+    color: var(--base-bg-color);
+}

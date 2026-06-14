@@ -12,6 +12,7 @@ import {
 } from '@excalidraw/excalidraw/dist/types/excalidraw/types'
 import { ExcalidrawElementSkeleton } from '@excalidraw/excalidraw/dist/types/excalidraw/data/transform'
 import '@excalidraw/excalidraw/index.css'
+import './ExcalidrawCustom.css'
 import './ArcaDeNoesis.css'
 import Editor from './Editor'
 import FileTabs from './FileTabs'

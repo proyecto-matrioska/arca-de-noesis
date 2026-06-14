@@ -11,7 +11,7 @@
 }
 
 .ArcaDeNoesis .unsavedDataMark {
-  color: red;
+  color: var(--color-brand);
   margin-left: 0.2rem;
 }
 

@@ -25,7 +25,7 @@
 
 .Editor .Dualities > li {
   padding-bottom: 1rem;
-  border-bottom: 1pt solid lightgray;
+  border-bottom: 1pt solid var(--text-primary-color);
 }
 
 .Editor .Dualities ul {
