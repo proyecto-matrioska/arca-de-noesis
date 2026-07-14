@@ -29,6 +29,28 @@
 .excalidraw .sidebar--docked {
     box-shadow: var(--sidebar-shadow);
 }
+.excalidraw .dropdown-select {
+    background-color: var(--base-bg-color);
+    color: var(--text-primary-color);
+    border: 1px solid var(--default-border-color);
+    border-radius: 4px;
+    padding: 0.2rem 0.4rem;
+}
+.excalidraw .dropdown-select:hover {
+    background-color: var(--button-hover-bg);
+}
+.excalidraw .dropdown-select:focus-visible {
+    outline: 2px solid var(--focus-highlight-color);
+    outline-offset: 1px;
+}
+.excalidraw .dropdown-select option {
+    background-color: var(--base-bg-color);
+    color: var(--text-primary-color);
+}
+.excalidraw .dropdown-select option:checked {
+    background-color: var(--color-primary);
+    color: var(--base-bg-color);
+}
 
 .excalidraw.theme--dark {
     --base-bg-color: #262626;
