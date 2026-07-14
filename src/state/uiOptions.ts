@@ -4,7 +4,6 @@ export type SchemaOptionIdentifier =
   | 'diagramAutoupdate'
   | 'factorizations'
   | 'showAnnotations'
-  | 'showDualityIndex'
   | 'elementDescriptions'
   | 'intensionFormContext'
   | 'arrangement'
@@ -34,8 +33,14 @@ export const generalSchemaOptions: Record<string, SchemaOption> = {
   showAnnotations: {
     type: 'bool',
     name: 'SchemaOptions.ShowAnnotations',
-    value: false,
+    value: true,
     longDescription: 'SchemaOptions.ShowAnnotationsLngDesc',
+  },
+  showDualityIndex: {
+    type: 'bool',
+    name: 'SchemaOptions.ShowDualityIndexes',
+    value: true,
+    longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
   },
   factorizations: {
     type: 'select',
@@ -70,12 +75,6 @@ export const generalSchemaOptions: Record<string, SchemaOption> = {
 
 export const schemaOptions: SchemaOptions = {
   dualidades: {
-    showDualityIndex: {
-      type: 'bool',
-      name: 'SchemaOptions.ShowDualityIndexes',
-      value: false,
-      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
-    },
     elementDescriptions: {
       type: 'bool',
       name: 'SchemaOptions.ShowMainElementDescriptions',
@@ -90,12 +89,6 @@ export const schemaOptions: SchemaOptions = {
     },
   },
   cuadros: {
-    showDualityIndex: {
-      type: 'bool',
-      name: 'SchemaOptions.ShowDualityIndexes',
-      value: false,
-      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
-    },
     elementDescriptions: {
       type: 'bool',
       name: 'SchemaOptions.ShowMainElementDescriptions',
@@ -150,12 +143,6 @@ export const schemaOptions: SchemaOptions = {
     },
   },
   'cuadros-complejos': {
-    showDualityIndex: {
-      type: 'bool',
-      name: 'SchemaOptions.ShowDualityIndexes',
-      value: false,
-      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
-    },
     elementDescriptions: {
       type: 'bool',
       name: 'SchemaOptions.ShowMainElementDescriptions',
@@ -209,12 +196,6 @@ export const schemaOptions: SchemaOptions = {
     },
   },
   octagonos: {
-    showDualityIndex: {
-      type: 'bool',
-      name: 'SchemaOptions.ShowDualityIndexes',
-      value: false,
-      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
-    },
     arrangement: {
       type: 'select',
       name: 'SchemaOptions.Arrangement',
@@ -228,12 +209,6 @@ export const schemaOptions: SchemaOptions = {
     },
   },
   'octagonos-empiricos': {
-    showDualityIndex: {
-      type: 'bool',
-      name: 'SchemaOptions.ShowDualityIndexes',
-      value: false,
-      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
-    },
     arrangement: {
       type: 'select',
       name: 'SchemaOptions.Arrangement',
@@ -247,12 +222,6 @@ export const schemaOptions: SchemaOptions = {
     },
   },
   triadas: {
-    showDualityIndex: {
-      type: 'bool',
-      name: 'SchemaOptions.ShowDualityIndexes',
-      value: false,
-      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
-    },
     elementDescriptions: {
       type: 'bool',
       name: 'SchemaOptions.ShowMainElementDescriptions',
@@ -267,12 +236,6 @@ export const schemaOptions: SchemaOptions = {
     },
   },
   'triadas-empiricas': {
-    showDualityIndex: {
-      type: 'bool',
-      name: 'SchemaOptions.ShowDualityIndexes',
-      value: false,
-      longDescription: 'SchemaOptions.ShowDualityIndexesLngDesc',
-    },
     elementDescriptions: {
       type: 'bool',
       name: 'SchemaOptions.ShowMainElementDescriptions',

@@ -189,7 +189,10 @@ function ArcaDeNoesis() {
     const dialecticsSchema = selectedDiagram
       ? maker(
         factorData(factorizationId, dialecticsData),
-        schemaOptions[selectedDiagram],
+        {
+          ...schemaOptions[selectedDiagram],
+          showDualityIndex: generalOptions.showDualityIndex,
+        },
         t,
         annotationsParam
       )
@@ -205,6 +208,7 @@ function ArcaDeNoesis() {
     dialecticsData,
     excalidrawAPI,
     generalOptions.factorizations.value,
+    generalOptions.showDualityIndex,
     schemaOptions,
     selectedDiagram,
     showAnnotations,
