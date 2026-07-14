@@ -228,6 +228,14 @@ export const dialecticsSlice = createSlice({
       }
       tab.isDirty = true
     },
+    prefixEntries: (
+      state: DialecticsState,
+      action: PayloadAction<{ entries: NoesisEntry[]; tabId?: string }>
+    ) => {
+      const tab = resolveTab(state, action.payload.tabId)
+      tab.entries = [...action.payload.entries, ...tab.entries]
+      tab.isDirty = true
+    },
     setTabSelectedDiagram: (
       state: DialecticsState,
       action: PayloadAction<SchemaIdentifier>
@@ -288,6 +296,7 @@ export const {
   moveDownEntry,
   insertEntry,
   deleteEntry,
+  prefixEntries,
   setTabSelectedDiagram,
   setTabSidebarOpen,
   setTabSidebarActiveTab,

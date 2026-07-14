@@ -23,6 +23,7 @@ import {
   saveDataFile,
   loadDataFile,
   loadExample,
+  prefixExampleDualities,
 } from '../state/fileThunks'
 import { DialecticsDataEntry } from '../schemas/schema'
 import { SchemaOption } from '../state/uiOptions'
@@ -134,6 +135,10 @@ function ArcaDeNoesis() {
   const loadExampleHandler = (exampleName: string) => () => {
     if (isDirty && !window.confirm(t('Tabs.UnsavedConfirm'))) return
     dispatch(loadExample(exampleName))
+    editarOptHandler()
+  }
+  const prefixExampleDualitiesHandler = () => {
+    dispatch(prefixExampleDualities(currentLanguage))
     editarOptHandler()
   }
 
@@ -358,6 +363,9 @@ function ArcaDeNoesis() {
               )}
               <MainMenu.Item onSelect={editarOptHandler}>
                 {t('MainMenu.Edit')}
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={prefixExampleDualitiesHandler}>
+                {t('MainMenu.PrefixExampleDualities')}
               </MainMenu.Item>
             </MainMenu.Group>
             <MainMenu.Group title={t('MainMenu.Examples')}>

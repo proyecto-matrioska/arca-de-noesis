@@ -5,6 +5,7 @@ import {
   setFileHandle,
   setIsDirty,
   selectActiveTab,
+  prefixEntries,
 } from './dialecticsSlice'
 import { migrateToLatest } from './noesisFormat'
 import * as FileSaver from 'file-saver'
@@ -174,4 +175,13 @@ export const loadExample =
     dispatch(setFileHandle({ handle: null, tabId }))
     dispatch(setDialecticsData({ filename: example.filename, entries, tabId }))
     dispatch(setIsDirty({ dirty: false, tabId }))
+  }
+
+export const prefixExampleDualities =
+  (language: string) =>
+  (dispatch: AppDispatch, getState: () => RootState) => {
+    const example = examples[language === 'en' ? 'metafisicaEN' : 'metafisica']
+    const { entries } = migrateToLatest(example.data)
+    const tabId = selectActiveTab(getState()).id
+    dispatch(prefixEntries({ entries: entries.slice(0, 3), tabId }))
   }
