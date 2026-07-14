@@ -7,6 +7,12 @@ const createStore = () =>
     reducer: {
       dialectics: dialecticsReducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredPaths: [/^dialectics\.tabs\.\d+\.fileHandle$/],
+        },
+      }),
   })
 
 const store = createStore()
