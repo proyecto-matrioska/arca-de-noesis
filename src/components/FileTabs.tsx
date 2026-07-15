@@ -4,6 +4,13 @@ import { addTab, closeTab, switchTab } from '../state/dialecticsSlice'
 import { useTranslation } from 'react-i18next'
 import { useMediaQuery } from 'react-responsive'
 
+const isMac =
+  typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform)
+const modKeyLabel = isMac ? '⌘' : 'Ctrl'
+const altKeyLabel = isMac ? '⌥' : 'Alt'
+const newTabShortcut = `${modKeyLabel}+${altKeyLabel}+N`
+const closeTabShortcut = `${modKeyLabel}+${altKeyLabel}+W`
+
 function FileTabs() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
@@ -36,6 +43,7 @@ function FileTabs() {
                 type="button"
                 className="FileTab__close"
                 aria-label={t('Tabs.Close')}
+                title={`${t('Tabs.Close')} (${closeTabShortcut})`}
                 onClick={e => handleClose(e, tab.id, tab.isDirty)}
               >
                 ×
@@ -47,7 +55,7 @@ function FileTabs() {
       <button
         type="button"
         className="FileTabs__add"
-        title={t('Tabs.NewTab')}
+        title={`${t('Tabs.NewTab')} (${newTabShortcut})`}
         onClick={() => dispatch(addTab())}
       >
         +

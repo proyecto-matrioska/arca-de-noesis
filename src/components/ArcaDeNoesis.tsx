@@ -56,7 +56,15 @@ import {
   setExcalidrawViewport,
   ExcalidrawViewport,
   SidebarTabId,
+  addTab,
+  closeTab,
+  switchTab,
 } from '../state/dialecticsSlice'
+
+const isMac =
+  typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform)
+const modKeyLabel = isMac ? '⌘' : 'Ctrl'
+const altKeyLabel = isMac ? '⌥' : 'Alt'
 
 const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
@@ -75,6 +83,7 @@ function ArcaDeNoesis() {
   )
 
   const activeTabId = useAppSelector(state => state.dialectics.activeTabId)
+  const tabs = useAppSelector(state => state.dialectics.tabs)
   const isSidebarOpen = activeTab.isSidebarOpen
   const sidebarActiveTab = activeTab.sidebarActiveTab
   const selectedDiagram = activeTab.selectedDiagram
@@ -230,6 +239,78 @@ function ArcaDeNoesis() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [anyDirty])
 
+  // Global keyboard shortcuts: save / save as / open / new tab / close tab / switch tab
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      const mod = e.ctrlKey || e.metaKey
+      if (!mod) return
+
+      // Use event.code (physical key) rather than event.key: on AltGr/international
+      // keyboard layouts, holding Ctrl+Alt can make event.key resolve to a composed
+      // character instead of the plain letter, silently breaking these shortcuts.
+      if (e.altKey) {
+        switch (e.code) {
+          case 'KeyN':
+            e.preventDefault()
+            dispatch(addTab())
+            break
+          case 'KeyW':
+            e.preventDefault()
+            if (activeTab.isDirty && !window.confirm(t('Tabs.UnsavedConfirm')))
+              return
+            dispatch(closeTab({ id: activeTabId }))
+            break
+          case 'ArrowRight':
+          case 'ArrowLeft': {
+            e.preventDefault()
+            const idx = tabs.findIndex(tb => tb.id === activeTabId)
+            if (idx === -1) return
+            const delta = e.code === 'ArrowRight' ? 1 : -1
+            const nextIdx = (idx + delta + tabs.length) % tabs.length
+            dispatch(switchTab({ id: tabs[nextIdx].id }))
+            break
+          }
+          default:
+            break
+        }
+        return
+      }
+
+      switch (e.code) {
+        case 'KeyS':
+          e.preventDefault()
+          if (e.shiftKey) {
+            if (hasFileSystemAccessAPI) dispatch(saveAsDataFile())
+          } else {
+            dispatch(saveDataFile())
+          }
+          break
+        case 'KeyO':
+          e.preventDefault()
+          dispatch(loadDataFile(true))
+          openEditorTab()
+          break
+        case 'KeyE':
+          e.preventDefault()
+          excalidrawAPI?.toggleSidebar({ name: 'edit-sidebar', tab: 'dataEditor' })
+          break
+        default:
+          break
+      }
+    }
+    window.addEventListener('keydown', handleKeydown)
+    return () => window.removeEventListener('keydown', handleKeydown)
+  }, [
+    activeTab.isDirty,
+    activeTabId,
+    dispatch,
+    excalidrawAPI,
+    hasFileSystemAccessAPI,
+    isSidebarOpen,
+    t,
+    tabs,
+  ])
+
   // Diagram update on tab switch or schema change; clear canvas when no schema is selected
   useEffect(() => {
     if (selectedDiagram) {
@@ -350,18 +431,30 @@ function ArcaDeNoesis() {
         >
           <MainMenu>
             <MainMenu.Group title={t('MainMenu.Data')}>
-              <MainMenu.Item onSelect={loadFileOptHandler}>
+              <MainMenu.Item
+                onSelect={loadFileOptHandler}
+                shortcut={`${modKeyLabel}+O`}
+              >
                 {t('MainMenu.Open')}
               </MainMenu.Item>
-              <MainMenu.Item onSelect={saveFileOptHandler}>
+              <MainMenu.Item
+                onSelect={saveFileOptHandler}
+                shortcut={`${modKeyLabel}+S`}
+              >
                 {t('MainMenu.Save')}
               </MainMenu.Item>
               {hasFileSystemAccessAPI && (
-                <MainMenu.Item onSelect={saveAsFileOptHandler}>
+                <MainMenu.Item
+                  onSelect={saveAsFileOptHandler}
+                  shortcut={`${modKeyLabel}+Shift+S`}
+                >
                   {t('MainMenu.SaveAs')}
                 </MainMenu.Item>
               )}
-              <MainMenu.Item onSelect={editarOptHandler}>
+              <MainMenu.Item
+                onSelect={editarOptHandler}
+                shortcut={`${modKeyLabel}+E`}
+              >
                 {t('MainMenu.Edit')}
               </MainMenu.Item>
               <MainMenu.Item onSelect={prefixExampleDualitiesHandler}>
