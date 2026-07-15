@@ -19,6 +19,7 @@
     "Save": "Guardar",
     "SaveAs": "Guardar como...",
     "Edit": "Editar",
+    "Share": "Compartir...",
     "Examples": "Ejemplos",
     "MetaphysicsExample": "Metafísica de la información",
     "IntentionalityVsIntensionExample": "Intentención vs Intensión",
@@ -59,6 +60,19 @@
     "NewTab": "Nueva pestaña",
     "Close": "Cerrar pestaña",
     "UnsavedConfirm": "¿Descartar los cambios no guardados en esta pestaña?"
+  },
+  "Share": {
+    "Title": "Compartir dialéctica",
+    "LinkSectionTitle": "Enlace para compartir",
+    "LinkDescription": "Abre la aplicación en una pestaña nueva con esta dialéctica precargada.",
+    "CopyLink": "Copiar enlace",
+    "CopyLinkSuccess": "¡Enlace copiado!",
+    "EmbedSectionTitle": "Código para embeber",
+    "EmbedDescription": "Pega este HTML en una página para embeber una vista de solo lectura de esta dialéctica.",
+    "CopyEmbedCode": "Copiar código de embed",
+    "CopyEmbedSuccess": "¡Código copiado!",
+    "ViewerModeNote": "La versión embebida es de solo lectura y oculta el menú y el editor.",
+    "NoSchemaSelectedNote": "No hay ningún diagrama seleccionado actualmente — quien reciba el enlace verá los datos pero ningún diagrama dibujado hasta que elija uno."
   },
   "SchemaOptions": {
     "General": "General",

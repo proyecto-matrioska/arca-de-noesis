@@ -19,6 +19,7 @@
     "Save": "Save",
     "SaveAs": "Save as...",
     "Edit": "Edit",
+    "Share": "Share...",
     "Examples": "Examples",
     "MetaphysicsExample": "Metaphysics of Information",
     "IntentionalityVsIntensionExample": "Intentionality vs Intension",
@@ -59,6 +60,19 @@
     "NewTab": "New tab",
     "Close": "Close tab",
     "UnsavedConfirm": "Discard unsaved changes in this tab?"
+  },
+  "Share": {
+    "Title": "Share dialectic",
+    "LinkSectionTitle": "Shareable link",
+    "LinkDescription": "Opens the app in a new tab with this dialectic preloaded.",
+    "CopyLink": "Copy link",
+    "CopyLinkSuccess": "Link copied!",
+    "EmbedSectionTitle": "Embed code",
+    "EmbedDescription": "Paste this HTML into a page to embed a read-only view of this dialectic.",
+    "CopyEmbedCode": "Copy embed code",
+    "CopyEmbedSuccess": "Embed code copied!",
+    "ViewerModeNote": "The embedded version is read-only and hides the menu and editor.",
+    "NoSchemaSelectedNote": "No diagram is currently selected — the recipient will see the data but no rendered diagram until they pick one."
   },
   "SchemaOptions": {
     "General": "General",

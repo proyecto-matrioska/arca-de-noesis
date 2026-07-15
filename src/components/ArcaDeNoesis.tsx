@@ -17,6 +17,7 @@ import './ArcaDeNoesis.css'
 import Editor from './Editor'
 import FileTabs from './FileTabs'
 import OptionsPanel from './OptionsPanel'
+import ShareDialog from './ShareDialog'
 import { useAppDispatch, useAppSelector } from '../state/store'
 import {
   saveAsDataFile,
@@ -25,6 +26,7 @@ import {
   loadExample,
   prefixExampleDualities,
 } from '../state/fileThunks'
+import { isViewerModeActive } from '../state/shareEncoding'
 import { DialecticsDataEntry } from '../schemas/schema'
 import { SchemaOption } from '../state/uiOptions'
 import { SchemaIdentifier } from '../schemas/schema'
@@ -64,7 +66,6 @@ import {
 const isMac =
   typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform)
 const modKeyLabel = isMac ? '⌘' : 'Ctrl'
-const altKeyLabel = isMac ? '⌥' : 'Alt'
 
 const smallButtonClasses =
   'ExcButton ExcButton--color-primary ExcButton--variant-filled ExcButton--size-small'
@@ -85,13 +86,14 @@ function ArcaDeNoesis() {
   const activeTabId = useAppSelector(state => state.dialectics.activeTabId)
   const tabs = useAppSelector(state => state.dialectics.tabs)
   const isSidebarOpen = activeTab.isSidebarOpen
-  const sidebarActiveTab = activeTab.sidebarActiveTab
   const selectedDiagram = activeTab.selectedDiagram
   const schemaOptions = activeTab.schemaOptions
   const generalOptions = activeTab.generalOptions
   const diagramAutoupdate = generalOptions.diagramAutoupdate
   const showAnnotations: boolean = generalOptions.showAnnotations?.value ?? false
 
+  const isViewerMode = isViewerModeActive()
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
   const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>()
   const sidebarActuallyOpen = useRef(false)
   // Prevents onStateChange from writing to Redux during programmatic tab-sync toggles
@@ -111,8 +113,6 @@ function ArcaDeNoesis() {
         },
       })
   )
-  const initialElements = convertToExcalidrawElements(initialScreen())
-  const elements = initialElements
   const hasFileSystemAccessAPI = 'showSaveFilePicker' in window
   const { t, i18n } = useTranslation()
   const currentLanguage = (
@@ -150,8 +150,24 @@ function ArcaDeNoesis() {
     dispatch(prefixExampleDualities(currentLanguage))
     editarOptHandler()
   }
+  const shareOptHandler = () => {
+    if (excalidrawAPI) {
+      const appState = excalidrawAPI.getAppState()
+      dispatch(
+        setExcalidrawViewport({
+          viewport: {
+            scrollX: appState.scrollX,
+            scrollY: appState.scrollY,
+            zoom: appState.zoom.value,
+          },
+          tabId: activeTabId,
+        })
+      )
+    }
+    setIsShareDialogOpen(true)
+  }
 
-  const updateDiagram = useCallback(() => {
+  const buildDiagramElements = useCallback((): ExcalidrawElementSkeleton[] => {
     const factorizationId = generalOptions.factorizations.value
     const annotationsParam = showAnnotations ? annotations : undefined
     let maker: (
@@ -211,22 +227,41 @@ function ArcaDeNoesis() {
         annotationsParam
       )
       : []
-    const excalidrawElements = convertToExcalidrawElements(
+    return convertToExcalidrawElements(
       dialecticsSchema as ExcalidrawElementSkeleton[]
     )
-    excalidrawAPI?.updateScene({
-      elements: excalidrawElements,
-    })
   }, [
     annotations,
     dialecticsData,
-    excalidrawAPI,
     generalOptions.factorizations.value,
     generalOptions.showDualityIndex,
     schemaOptions,
     selectedDiagram,
     showAnnotations,
+    t,
   ])
+
+  const updateDiagram = useCallback(() => {
+    excalidrawAPI?.updateScene({
+      elements: buildDiagramElements(),
+    })
+  }, [buildDiagramElements, excalidrawAPI])
+
+  // Computed fresh every render, but only read once by Excalidraw on mount
+  // (as `initialData.elements`) — when a diagram is preselected (e.g. from a
+  // shared URL, hydrated synchronously into the Redux initial state), this
+  // ensures the correct diagram is already there on first paint instead of
+  // racing with Excalidraw's own async initial-scene setup.
+  const elements = selectedDiagram
+    ? buildDiagramElements()
+    : convertToExcalidrawElements(initialScreen())
+
+  // A viewport hydrated from a shared URL (see hydrateTabFromShareUrl) is
+  // applied directly here rather than via a post-mount updateScene call, for
+  // the same race-avoidance reason as `elements` above. scrollToContent must
+  // be disabled in this case — otherwise Excalidraw's own auto-fit-to-content
+  // computation would override the explicit scroll/zoom we're restoring.
+  const initialViewport = activeTab.excalidrawViewport
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -409,8 +444,11 @@ function ArcaDeNoesis() {
   )
 
   return (
-    <div className="ArcaDeNoesis" ref={containerRef}>
-      <FileTabs />
+    <div
+      className={`ArcaDeNoesis${isViewerMode ? ' viewer-mode' : ''}`}
+      ref={containerRef}
+    >
+      {!isViewerMode && <FileTabs />}
       <div className="excalidraw-wrapper">
         <Excalidraw
           UIOptions={{
@@ -421,14 +459,22 @@ function ArcaDeNoesis() {
             appState: {
               viewBackgroundColor: defaultDarkMode ? '#e8e8e8' : '#fcf5e4',
               viewModeEnabled: true,
-              zoom: { value: 0.5 as NormalizedZoomValue },
+              ...(initialViewport
+                ? {
+                  scrollX: initialViewport.scrollX,
+                  scrollY: initialViewport.scrollY,
+                  zoom: { value: initialViewport.zoom as NormalizedZoomValue },
+                }
+                : { zoom: { value: 0.5 as NormalizedZoomValue } }),
             },
-            scrollToContent: true,
+            scrollToContent: !initialViewport,
           }}
           gridModeEnabled={true}
           theme={defaultDarkMode ? 'dark' : 'light'}
+          viewModeEnabled={isViewerMode || undefined}
           excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
         >
+          {!isViewerMode && (
           <MainMenu>
             <MainMenu.Group title={t('MainMenu.Data')}>
               <MainMenu.Item
@@ -456,6 +502,9 @@ function ArcaDeNoesis() {
                 shortcut={`${modKeyLabel}+E`}
               >
                 {t('MainMenu.Edit')}
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={shareOptHandler}>
+                {t('MainMenu.Share')}
               </MainMenu.Item>
               <MainMenu.Item onSelect={prefixExampleDualitiesHandler}>
                 {t('MainMenu.PrefixExampleDualities')}
@@ -548,6 +597,8 @@ function ArcaDeNoesis() {
               </MainMenu.ItemLink>
             </MainMenu.Group>
           </MainMenu>
+          )}
+          {!isViewerMode && (
           <Sidebar
             name="edit-sidebar"
             docked={true}
@@ -593,8 +644,9 @@ function ArcaDeNoesis() {
               </Sidebar.TabTriggers>
             </Sidebar.Tabs>
           </Sidebar>
+          )}
         </Excalidraw>
-        {isSidebarOpen && (
+        {isSidebarOpen && !isViewerMode && (
           <div
             className="sidebar-resize-handle"
             style={{ right: sidebarWidth - 4 }}
@@ -602,6 +654,9 @@ function ArcaDeNoesis() {
           />
         )}
       </div>
+      {isShareDialogOpen && (
+        <ShareDialog onClose={() => setIsShareDialogOpen(false)} />
+      )}
     </div>
   )
 }

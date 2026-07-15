@@ -4,6 +4,14 @@
   height: 100vh;
 }
 
+/* Excalidraw always renders its own hamburger button, falling back to its
+   own default menu content (Save to..., Excalidraw links, etc.) whenever no
+   custom <MainMenu> is mounted. Hide the trigger outright in viewer mode
+   rather than relying on the absence of a custom MainMenu to hide it. */
+.ArcaDeNoesis.viewer-mode [data-testid="main-menu-trigger"] {
+  display: none;
+}
+
 .excalidraw-wrapper {
   flex: 1 1 auto;
   position: relative;

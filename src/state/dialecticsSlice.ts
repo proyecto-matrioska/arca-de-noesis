@@ -8,6 +8,7 @@ import {
   generalSchemaOptions as defaultGeneralOptions,
   schemaOptions as defaultSchemaOptions,
 } from './uiOptions'
+import { hydrateTabFromShareUrl } from './shareEncoding'
 import type { RootState } from './store'
 
 export const schemaNames: Record<SchemaIdentifier, string> = {
@@ -70,7 +71,7 @@ const defaultTab = (): TabState => ({
 })
 
 const initialState: DialecticsState = (() => {
-  const tab = defaultTab()
+  const tab = hydrateTabFromShareUrl(defaultTab())
   return { tabs: [tab], activeTabId: tab.id }
 })()
 
