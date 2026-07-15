@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { viewportCoordsToSceneCoords } from '@excalidraw/excalidraw'
+import { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/dist/types/excalidraw/types'
 import Modal from './Modal'
 import { useAppSelector } from '../state/store'
 import { selectActiveTab } from '../state/dialecticsSlice'
@@ -7,6 +9,7 @@ import {
   buildEmbedSnippet,
   buildShareEnvelope,
   buildShareUrl,
+  SharedViewportBounds,
 } from '../state/shareEncoding'
 import './ShareDialog.css'
 
@@ -15,6 +18,26 @@ const buttonClasses =
 
 interface ShareDialogProps {
   onClose: () => void
+  excalidrawAPI: ExcalidrawImperativeAPI | undefined
+}
+
+// The scene-space rectangle currently visible on screen — this is what gets
+// shared, so the receiver sees the same framing regardless of their own
+// window/screen size (see fitBoundsToViewport in shareEncoding.ts).
+const currentViewportBounds = (
+  excalidrawAPI: ExcalidrawImperativeAPI | undefined
+): SharedViewportBounds | null => {
+  if (!excalidrawAPI) return null
+  const appState = excalidrawAPI.getAppState()
+  const topLeft = viewportCoordsToSceneCoords(
+    { clientX: 0, clientY: 0 },
+    { zoom: appState.zoom, offsetLeft: 0, offsetTop: 0, scrollX: appState.scrollX, scrollY: appState.scrollY }
+  )
+  const bottomRight = viewportCoordsToSceneCoords(
+    { clientX: appState.width, clientY: appState.height },
+    { zoom: appState.zoom, offsetLeft: 0, offsetTop: 0, scrollX: appState.scrollX, scrollY: appState.scrollY }
+  )
+  return { x1: topLeft.x, y1: topLeft.y, x2: bottomRight.x, y2: bottomRight.y }
 }
 
 const copyToClipboard = async (
@@ -39,7 +62,7 @@ const copyToClipboard = async (
   }
 }
 
-function ShareDialog({ onClose }: ShareDialogProps) {
+function ShareDialog({ onClose, excalidrawAPI }: ShareDialogProps) {
   const { t } = useTranslation()
   const activeTab = useAppSelector(selectActiveTab)
   const linkInputRef = useRef<HTMLInputElement>(null)
@@ -47,7 +70,10 @@ function ShareDialog({ onClose }: ShareDialogProps) {
   const [linkCopied, setLinkCopied] = useState(false)
   const [embedCopied, setEmbedCopied] = useState(false)
 
-  const envelope = buildShareEnvelope(activeTab)
+  const envelope = buildShareEnvelope(
+    activeTab,
+    currentViewportBounds(excalidrawAPI)
+  )
   const shareUrl = buildShareUrl(envelope, { viewer: false })
   const embedUrl = buildShareUrl(envelope, { viewer: true })
   const embedSnippet = buildEmbedSnippet(embedUrl)

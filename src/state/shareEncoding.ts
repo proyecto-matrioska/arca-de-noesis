@@ -3,13 +3,24 @@ import type { ExcalidrawViewport, TabState } from './dialecticsSlice'
 import { CURRENT_VERSION, migrateToLatest } from './noesisFormat'
 import { schemaOptions as defaultSchemaOptionsTree } from './uiOptions'
 
+// The scene-space rectangle that was visible on the sharer's screen —
+// device/display-independent, unlike raw scrollX/scrollY/zoom. On load, this
+// is fitted to the *receiver's* actual viewport size (see fitBoundsToViewport)
+// so the same framing is visible regardless of window/screen size.
+export type SharedViewportBounds = {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+}
+
 export type ShareEnvelopeV1 = {
   shareVersion: 1
   file: unknown
   selectedDiagram: SchemaIdentifier | null
   generalOptions: Record<string, unknown>
   schemaOptions: Record<string, unknown>
-  excalidrawViewport: ExcalidrawViewport | null
+  viewportBounds: SharedViewportBounds | null
 }
 
 export const SHARE_VERSION = 1
@@ -29,7 +40,10 @@ const optionValues = (
   return result
 }
 
-export const buildShareEnvelope = (tab: TabState): ShareEnvelopeV1 => ({
+export const buildShareEnvelope = (
+  tab: TabState,
+  viewportBounds: SharedViewportBounds | null
+): ShareEnvelopeV1 => ({
   shareVersion: SHARE_VERSION,
   file: { version: CURRENT_VERSION, entries: tab.entries },
   selectedDiagram: tab.selectedDiagram,
@@ -37,7 +51,7 @@ export const buildShareEnvelope = (tab: TabState): ShareEnvelopeV1 => ({
   schemaOptions: tab.selectedDiagram
     ? optionValues(tab.schemaOptions[tab.selectedDiagram])
     : {},
-  excalidrawViewport: tab.excalidrawViewport,
+  viewportBounds,
 })
 
 const base64UrlEncode = (bytes: Uint8Array): string => {
@@ -81,17 +95,16 @@ export const decodeShareEnvelope = (param: string): ShareEnvelopeV1 | null => {
         ? (raw.selectedDiagram as SchemaIdentifier)
         : null
 
-    const viewport = raw.excalidrawViewport
-    const excalidrawViewport: ExcalidrawViewport | null =
-      isPlainObject(viewport) &&
-      typeof viewport.scrollX === 'number' &&
-      typeof viewport.scrollY === 'number' &&
-      typeof viewport.zoom === 'number'
-        ? {
-          scrollX: viewport.scrollX,
-          scrollY: viewport.scrollY,
-          zoom: viewport.zoom,
-        }
+    const bounds = raw.viewportBounds
+    const viewportBounds: SharedViewportBounds | null =
+      isPlainObject(bounds) &&
+      typeof bounds.x1 === 'number' &&
+      typeof bounds.y1 === 'number' &&
+      typeof bounds.x2 === 'number' &&
+      typeof bounds.y2 === 'number' &&
+      bounds.x2 > bounds.x1 &&
+      bounds.y2 > bounds.y1
+        ? { x1: bounds.x1, y1: bounds.y1, x2: bounds.x2, y2: bounds.y2 }
         : null
 
     return {
@@ -100,7 +113,7 @@ export const decodeShareEnvelope = (param: string): ShareEnvelopeV1 | null => {
       selectedDiagram,
       generalOptions: isPlainObject(raw.generalOptions) ? raw.generalOptions : {},
       schemaOptions: isPlainObject(raw.schemaOptions) ? raw.schemaOptions : {},
-      excalidrawViewport,
+      viewportBounds,
     }
   } catch (err) {
     console.warn('Invalid share link data, ignoring.', err)
@@ -136,6 +149,38 @@ const applyOptionValues = (
   }
 }
 
+const MIN_FIT_ZOOM = 0.1
+const MAX_FIT_ZOOM = 10
+
+// Computes the scrollX/scrollY/zoom that fits `bounds` (a scene-space
+// rectangle captured on the sharer's screen) entirely within a viewport of
+// the given size — "contain" semantics, so nothing from the shared framing
+// is cropped, whether the receiver's window is a phone or a wide desktop
+// (some extra margin may show on one axis instead). Inverse of Excalidraw's
+// own scene/viewport transform: client = (scene + scroll) * zoom.
+const fitBoundsToViewport = (
+  bounds: SharedViewportBounds,
+  viewportWidth: number,
+  viewportHeight: number
+): ExcalidrawViewport => {
+  const boundsWidth = Math.max(bounds.x2 - bounds.x1, 1)
+  const boundsHeight = Math.max(bounds.y2 - bounds.y1, 1)
+  const zoom = Math.min(
+    MAX_FIT_ZOOM,
+    Math.max(
+      MIN_FIT_ZOOM,
+      Math.min(viewportWidth / boundsWidth, viewportHeight / boundsHeight)
+    )
+  )
+  const centerX = (bounds.x1 + bounds.x2) / 2
+  const centerY = (bounds.y1 + bounds.y2) / 2
+  return {
+    zoom,
+    scrollX: viewportWidth / (2 * zoom) - centerX,
+    scrollY: viewportHeight / (2 * zoom) - centerY,
+  }
+}
+
 // Applies a share envelope (if the URL carries one) directly onto a freshly
 // created tab. Runs synchronously as part of the Redux store's initial state
 // computation — this is the only way to have the correct diagram already
@@ -153,7 +198,13 @@ export const hydrateTabFromShareUrl = (tab: TabState): TabState => {
   const { entries } = migrateToLatest(envelope.file)
   tab.entries = entries
   tab.selectedDiagram = envelope.selectedDiagram
-  tab.excalidrawViewport = envelope.excalidrawViewport
+  tab.excalidrawViewport = envelope.viewportBounds
+    ? fitBoundsToViewport(
+      envelope.viewportBounds,
+      window.innerWidth,
+      window.innerHeight
+    )
+    : null
 
   applyOptionValues(tab.generalOptions, envelope.generalOptions)
   if (envelope.selectedDiagram) {

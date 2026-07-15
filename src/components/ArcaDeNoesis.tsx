@@ -150,22 +150,7 @@ function ArcaDeNoesis() {
     dispatch(prefixExampleDualities(currentLanguage))
     editarOptHandler()
   }
-  const shareOptHandler = () => {
-    if (excalidrawAPI) {
-      const appState = excalidrawAPI.getAppState()
-      dispatch(
-        setExcalidrawViewport({
-          viewport: {
-            scrollX: appState.scrollX,
-            scrollY: appState.scrollY,
-            zoom: appState.zoom.value,
-          },
-          tabId: activeTabId,
-        })
-      )
-    }
-    setIsShareDialogOpen(true)
-  }
+  const shareOptHandler = () => setIsShareDialogOpen(true)
 
   const buildDiagramElements = useCallback((): ExcalidrawElementSkeleton[] => {
     const factorizationId = generalOptions.factorizations.value
@@ -655,7 +640,10 @@ function ArcaDeNoesis() {
         )}
       </div>
       {isShareDialogOpen && (
-        <ShareDialog onClose={() => setIsShareDialogOpen(false)} />
+        <ShareDialog
+          onClose={() => setIsShareDialogOpen(false)}
+          excalidrawAPI={excalidrawAPI}
+        />
       )}
     </div>
   )
