@@ -133,30 +133,32 @@ export const procesualSequence: DialecticsSchema = (
     const c: DualityData = dualities[i + 2]
       ? dualities[i + 2][1]
       : ['', '', '', '']
+    const isOdd = i % 2 !== 0
+    const rowNumber = Math.floor(i / 2)
     return translateElements(
       0,
-      400 * i,
-      procesual(x[0], y[3], z[0], translations)
+      400 * rowNumber,
+      translateElements(800 * 0 + (isOdd ? 800*2 : 0), 0, procesual(x[0], y[3], z[0], translations))
         .concat(
-          translateElements(800, 0, procesual(x[1], y[2], z[1], translations))
+          translateElements(800 * 2 + (isOdd ? 800 : -800), 0, procesual(x[1], y[2], z[1], translations))
         )
         .concat(
-          translateElements(1600, 0, procesual(x[2], y[1], z[2], translations))
+          translateElements(800 * 4 + (isOdd ? 800*2 : 0), 0, procesual(x[2], y[1], z[2], translations))
         )
         .concat(
-          translateElements(2400, 0, procesual(x[3], y[0], z[3], translations))
+          translateElements(800 * 6 + (isOdd ? 800 : -800), 0, procesual(x[3], y[0], z[3], translations))
         )
         .concat(
-          translateElements(3200, 0, procesual(a[0], b[3], c[0], translations))
+          translateElements(800 * 8 + (isOdd ? 800*2 : 0), 0, procesual(a[0], b[3], c[0], translations))
         )
         .concat(
-          translateElements(4000, 0, procesual(a[1], b[2], c[1], translations))
+          translateElements(800 * 10 + (isOdd ? 800 : -800), 0, procesual(a[1], b[2], c[1], translations))
         )
         .concat(
-          translateElements(4800, 0, procesual(a[2], b[1], c[2], translations))
+          translateElements(800 * 12 + (isOdd ? 800*2 : 0), 0, procesual(a[2], b[1], c[2], translations))
         )
         .concat(
-          translateElements(5600, 0, procesual(a[3], b[0], c[3], translations))
+          translateElements(800 * 14 + (isOdd ? 800 : -800), 0, procesual(a[3], b[0], c[3], translations))
         )
     )
   })

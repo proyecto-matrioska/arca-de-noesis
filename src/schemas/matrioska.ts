@@ -5234,27 +5234,33 @@ export const matrioskaSequence: DialecticsSchema = dualities =>
     const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']
     const b = dualities[i + 1] ? dualities[i + 1][1] : ['', '', '', '']
     const c = dualities[i + 2] ? dualities[i + 2][1] : ['', '', '', '']
+    const isOdd = i % 2 !== 0
+    const rowNumber = Math.floor(i / 2)
     return translateElements(
       0,
-      1000 * i,
-      matrioska([x[0], x[1]], [z[0], z[1]], [b[2], b[3]], [y[0], y[1]])
+      1000 * rowNumber,
+      translateElements(
+        1200 * 0 + (isOdd ? 1200 : 0),
+        0,
+        matrioska([x[0], x[1]], [z[0], z[1]], [b[2], b[3]], [y[0], y[1]])
+      )
         .concat(
           translateElements(
-            1200,
+            1200 * 2 + (isOdd ? 1200 : 0),
             0,
             matrioska([x[2], x[3]], [z[2], z[3]], [b[0], b[1]], [y[2], y[3]])
           )
         )
         .concat(
           translateElements(
-            2400,
+            1200 * 4 + (isOdd ? 1200 : 0),
             0,
             matrioska([a[0], a[1]], [c[0], c[1]], [y[2], y[3]], [b[0], b[1]])
           )
         )
         .concat(
           translateElements(
-            3600,
+            1200 * 6 + (isOdd ? 1200 : 0),
             0,
             matrioska([a[2], a[3]], [c[2], c[3]], [y[0], y[1]], [b[2], b[3]])
           )

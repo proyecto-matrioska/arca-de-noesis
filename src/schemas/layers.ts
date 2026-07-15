@@ -166,13 +166,19 @@ export const capasDiscursivasSequence: DialecticsSchema = (
     const z = dualities[i + 2] ? dualities[i + 2][0] : ['', '', '', '']
     const b = dualities[i + 1] ? dualities[i + 1][1] : ['', '', '', '']
     const c = dualities[i + 2] ? dualities[i + 2][1] : ['', '', '', '']
+    const isOdd = i % 2 !== 0
+    const rowNumber = Math.floor(i / 2)
     return translateElements(
       0,
-      600 * i,
-      dialecticLayers([x[0], x[1]], [y[2], y[3]], [z[0], z[1]], translations)
+      600 * rowNumber,
+      translateElements(
+        0 + (isOdd ? 1000 : 0),
+        0,
+        dialecticLayers([x[0], x[1]], [y[2], y[3]], [z[0], z[1]], translations)
+      )
         .concat(
           translateElements(
-            1000,
+            2000 + (isOdd ? 1000 : 0),
             0,
             dialecticLayers(
               [x[2], x[3]],
@@ -184,7 +190,7 @@ export const capasDiscursivasSequence: DialecticsSchema = (
         )
         .concat(
           translateElements(
-            2000,
+            4000 + (isOdd ? 1000 : 0),
             0,
             dialecticLayers(
               [a[0], a[1]],
@@ -196,7 +202,7 @@ export const capasDiscursivasSequence: DialecticsSchema = (
         )
         .concat(
           translateElements(
-            3000,
+            6000 + (isOdd ? 1000 : 0),
             0,
             dialecticLayers(
               [a[2], a[3]],
