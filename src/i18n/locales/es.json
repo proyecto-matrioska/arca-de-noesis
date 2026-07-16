@@ -28,7 +28,8 @@
     "CurrentDiagram": "Diagrama actual",
     "SchemasGallery": "Galería de esquemas",
     "About": "Acerca de",
-    "ProyectoMatrioska": "Proyecto Matrioska"
+    "ProyectoMatrioska": "Proyecto Matrioska",
+    "OpenInApp": "Abrir en la aplicación (vista completa)"
   },
   "Sidebar": {
     "RefreshDiagram": "Actualizar diagrama",

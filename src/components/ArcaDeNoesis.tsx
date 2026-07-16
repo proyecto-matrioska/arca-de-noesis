@@ -26,7 +26,7 @@ import {
   loadExample,
   prefixExampleDualities,
 } from '../state/fileThunks'
-import { isViewerModeActive } from '../state/shareEncoding'
+import { isViewerModeActive, VIEW_PARAM } from '../state/shareEncoding'
 import { DialecticsDataEntry } from '../schemas/schema'
 import { SchemaOption } from '../state/uiOptions'
 import { SchemaIdentifier } from '../schemas/schema'
@@ -93,6 +93,13 @@ function ArcaDeNoesis() {
   const showAnnotations: boolean = generalOptions.showAnnotations?.value ?? false
 
   const isViewerMode = isViewerModeActive()
+  // Same shared link, minus the viewer flag — lets an embedded/read-only
+  // view escape into the full editable app in a new tab.
+  const fullAppUrl = (() => {
+    const url = new URL(window.location.href)
+    url.searchParams.delete(VIEW_PARAM)
+    return url.toString()
+  })()
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
   const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>()
   const sidebarActuallyOpen = useRef(false)
@@ -428,6 +435,55 @@ function ArcaDeNoesis() {
     [sidebarWidth]
   )
 
+  const schemasGalleryGroup = (
+    <MainMenu.Group title={t('MainMenu.SchemasGallery')}>
+      <MainMenu.Item onSelect={selectSchemaHandler('dualidades')}>
+        {t('SchemaNames.Dualities')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('cuadros')}>
+        {t('SchemaNames.Squares')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('cuadros-complejos')}>
+        {t('SchemaNames.ComplexSquares')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('octagonos')}>
+        {t('SchemaNames.Octagons')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('octagonos-empiricos')}>
+        {t('SchemaNames.EmpiricalOctagons')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('triadas')}>
+        {t('SchemaNames.Triads')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('triadas-empiricas')}>
+        {t('SchemaNames.EmpiricalTriads')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('dialectica')}>
+        {t('SchemaNames.Dialectics')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('dialectica-empirica')}>
+        {t('SchemaNames.EmpiricalDialectics')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('procesual')}>
+        {t('SchemaNames.Procesual')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('capas-discursivas')}>
+        {t('SchemaNames.DiscursiveLayers')}
+      </MainMenu.Item>
+      <MainMenu.Item onSelect={selectSchemaHandler('matrioskas')}>
+        {t('SchemaNames.Matrioskas')}
+      </MainMenu.Item>
+    </MainMenu.Group>
+  )
+
+  const aboutGroup = (
+    <MainMenu.Group title={t('MainMenu.About')}>
+      <MainMenu.ItemLink href="https://proyecto-matrioska.github.io/notas/Proyecto%20Matrioska/">
+        {t('MainMenu.ProyectoMatrioska')}
+      </MainMenu.ItemLink>
+    </MainMenu.Group>
+  )
+
   return (
     <div
       className={`ArcaDeNoesis${isViewerMode ? ' viewer-mode' : ''}`}
@@ -459,130 +515,94 @@ function ArcaDeNoesis() {
           viewModeEnabled={isViewerMode || undefined}
           excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
         >
-          {!isViewerMode && (
           <MainMenu>
-            <MainMenu.Group title={t('MainMenu.Data')}>
-              <MainMenu.Item
-                onSelect={loadFileOptHandler}
-                shortcut={`${modKeyLabel}+O`}
-              >
-                {t('MainMenu.Open')}
-              </MainMenu.Item>
-              <MainMenu.Item
-                onSelect={saveFileOptHandler}
-                shortcut={`${modKeyLabel}+S`}
-              >
-                {t('MainMenu.Save')}
-              </MainMenu.Item>
-              {hasFileSystemAccessAPI && (
-                <MainMenu.Item
-                  onSelect={saveAsFileOptHandler}
-                  shortcut={`${modKeyLabel}+Shift+S`}
+            {isViewerMode ? (
+              <>
+                {schemasGalleryGroup}
+                {aboutGroup}
+                <MainMenu.Separator />
+                <MainMenu.ItemLink
+                  href={fullAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {t('MainMenu.SaveAs')}
-                </MainMenu.Item>
-              )}
-              <MainMenu.Item
-                onSelect={editarOptHandler}
-                shortcut={`${modKeyLabel}+E`}
-              >
-                {t('MainMenu.Edit')}
-              </MainMenu.Item>
-              <MainMenu.Item onSelect={shareOptHandler}>
-                {t('MainMenu.Share')}
-              </MainMenu.Item>
-              <MainMenu.Item onSelect={prefixExampleDualitiesHandler}>
-                {t('MainMenu.PrefixExampleDualities')}
-              </MainMenu.Item>
-            </MainMenu.Group>
-            <MainMenu.Group title={t('MainMenu.Examples')}>
-              <MainMenu.Item
-                onSelect={loadExampleHandler(
-                  currentLanguage === 'en' ? 'metafisicaEN' : 'metafisica'
-                )}
-              >
-                {t('MainMenu.MetaphysicsExample')}
-              </MainMenu.Item>
-              <MainMenu.Item
-                onSelect={loadExampleHandler(
-                  currentLanguage === 'en'
-                    ? 'intensionalidadEN'
-                    : 'intensionalidad'
-                )}
-              >
-                {t('MainMenu.IntentionalityVsIntensionExample')}
-              </MainMenu.Item>
-              <MainMenu.Item
-                onSelect={loadExampleHandler(
-                  currentLanguage === 'en'
-                    ? 'rosalindKraussEN'
-                    : 'rosalindKrauss'
-                )}
-              >
-                {t('MainMenu.KraussExample')}
-              </MainMenu.Item>
-            </MainMenu.Group>
-            <MainMenu.Separator />
-            <MainMenu.Group title={t('MainMenu.CurrentDiagram')}>
-              <MainMenu.DefaultItems.Export />
-              <MainMenu.DefaultItems.SaveAsImage />
-            </MainMenu.Group>
-            <MainMenu.Separator />
-            <MainMenu.Group title={t('MainMenu.SchemasGallery')}>
-              <MainMenu.Item onSelect={selectSchemaHandler('dualidades')}>
-                {t('SchemaNames.Dualities')}
-              </MainMenu.Item>
-              <MainMenu.Item onSelect={selectSchemaHandler('cuadros')}>
-                {t('SchemaNames.Squares')}
-              </MainMenu.Item>
-              <MainMenu.Item
-                onSelect={selectSchemaHandler('cuadros-complejos')}
-              >
-                {t('SchemaNames.ComplexSquares')}
-              </MainMenu.Item>
-              <MainMenu.Item onSelect={selectSchemaHandler('octagonos')}>
-                {t('SchemaNames.Octagons')}
-              </MainMenu.Item>
-              <MainMenu.Item
-                onSelect={selectSchemaHandler('octagonos-empiricos')}
-              >
-                {t('SchemaNames.EmpiricalOctagons')}
-              </MainMenu.Item>
-              <MainMenu.Item onSelect={selectSchemaHandler('triadas')}>
-                {t('SchemaNames.Triads')}
-              </MainMenu.Item>
-              <MainMenu.Item
-                onSelect={selectSchemaHandler('triadas-empiricas')}
-              >
-                {t('SchemaNames.EmpiricalTriads')}
-              </MainMenu.Item>
-              <MainMenu.Item onSelect={selectSchemaHandler('dialectica')}>
-                {t('SchemaNames.Dialectics')}
-              </MainMenu.Item>
-              <MainMenu.Item
-                onSelect={selectSchemaHandler('dialectica-empirica')}
-              >
-                {t('SchemaNames.EmpiricalDialectics')}
-              </MainMenu.Item>
-              <MainMenu.Item onSelect={selectSchemaHandler('procesual')}>
-                {t('SchemaNames.Procesual')}
-              </MainMenu.Item>
-              <MainMenu.Item
-                onSelect={selectSchemaHandler('capas-discursivas')}
-              >
-                {t('SchemaNames.DiscursiveLayers')}
-              </MainMenu.Item>
-              <MainMenu.Item onSelect={selectSchemaHandler('matrioskas')}>
-                {t('SchemaNames.Matrioskas')}
-              </MainMenu.Item>
-            </MainMenu.Group>
-            <MainMenu.Group title={t('MainMenu.About')}>
-              <MainMenu.ItemLink href="https://proyecto-matrioska.github.io/notas/Proyecto%20Matrioska/">
-                {t('MainMenu.ProyectoMatrioska')}
-              </MainMenu.ItemLink>
-            </MainMenu.Group>
+                  {t('MainMenu.OpenInApp')}
+                </MainMenu.ItemLink>
+              </>
+            ) : (
+              <>
+                <MainMenu.Group title={t('MainMenu.Data')}>
+                  <MainMenu.Item
+                    onSelect={loadFileOptHandler}
+                    shortcut={`${modKeyLabel}+O`}
+                  >
+                    {t('MainMenu.Open')}
+                  </MainMenu.Item>
+                  <MainMenu.Item
+                    onSelect={saveFileOptHandler}
+                    shortcut={`${modKeyLabel}+S`}
+                  >
+                    {t('MainMenu.Save')}
+                  </MainMenu.Item>
+                  {hasFileSystemAccessAPI && (
+                    <MainMenu.Item
+                      onSelect={saveAsFileOptHandler}
+                      shortcut={`${modKeyLabel}+Shift+S`}
+                    >
+                      {t('MainMenu.SaveAs')}
+                    </MainMenu.Item>
+                  )}
+                  <MainMenu.Item
+                    onSelect={editarOptHandler}
+                    shortcut={`${modKeyLabel}+E`}
+                  >
+                    {t('MainMenu.Edit')}
+                  </MainMenu.Item>
+                  <MainMenu.Item onSelect={shareOptHandler}>
+                    {t('MainMenu.Share')}
+                  </MainMenu.Item>
+                  <MainMenu.Item onSelect={prefixExampleDualitiesHandler}>
+                    {t('MainMenu.PrefixExampleDualities')}
+                  </MainMenu.Item>
+                </MainMenu.Group>
+                <MainMenu.Group title={t('MainMenu.Examples')}>
+                  <MainMenu.Item
+                    onSelect={loadExampleHandler(
+                      currentLanguage === 'en' ? 'metafisicaEN' : 'metafisica'
+                    )}
+                  >
+                    {t('MainMenu.MetaphysicsExample')}
+                  </MainMenu.Item>
+                  <MainMenu.Item
+                    onSelect={loadExampleHandler(
+                      currentLanguage === 'en'
+                        ? 'intensionalidadEN'
+                        : 'intensionalidad'
+                    )}
+                  >
+                    {t('MainMenu.IntentionalityVsIntensionExample')}
+                  </MainMenu.Item>
+                  <MainMenu.Item
+                    onSelect={loadExampleHandler(
+                      currentLanguage === 'en'
+                        ? 'rosalindKraussEN'
+                        : 'rosalindKrauss'
+                    )}
+                  >
+                    {t('MainMenu.KraussExample')}
+                  </MainMenu.Item>
+                </MainMenu.Group>
+                <MainMenu.Separator />
+                <MainMenu.Group title={t('MainMenu.CurrentDiagram')}>
+                  <MainMenu.DefaultItems.Export />
+                  <MainMenu.DefaultItems.SaveAsImage />
+                </MainMenu.Group>
+                <MainMenu.Separator />
+                {schemasGalleryGroup}
+                {aboutGroup}
+              </>
+            )}
           </MainMenu>
-          )}
           {!isViewerMode && (
           <Sidebar
             name="edit-sidebar"
