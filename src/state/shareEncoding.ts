@@ -1,7 +1,11 @@
+import { deflateSync, inflateSync } from 'fflate'
 import { SchemaIdentifier } from '../schemas/schema'
 import type { ExcalidrawViewport, TabState } from './dialecticsSlice'
-import { CURRENT_VERSION, migrateToLatest } from './noesisFormat'
-import { schemaOptions as defaultSchemaOptionsTree } from './uiOptions'
+import { CURRENT_VERSION, NoesisEntry, migrateToLatest } from './noesisFormat'
+import {
+  generalSchemaOptions as defaultGeneralOptions,
+  schemaOptions as defaultSchemaOptionsTree,
+} from './uiOptions'
 
 // The scene-space rectangle that was visible on the sharer's screen —
 // device/display-independent, unlike raw scrollX/scrollY/zoom. On load, this
@@ -14,9 +18,10 @@ export type SharedViewportBounds = {
   y2: number
 }
 
-export type ShareEnvelopeV1 = {
-  shareVersion: 1
-  file: unknown
+// In-memory shape of a share. `generalOptions`/`schemaOptions` only carry the
+// values that differ from the defaults, to keep the URL short.
+export type ShareEnvelope = {
+  entries: NoesisEntry[]
   selectedDiagram: SchemaIdentifier | null
   generalOptions: Record<string, unknown>
   schemaOptions: Record<string, unknown>
@@ -29,13 +34,18 @@ export const VIEW_PARAM = 'view'
 
 const validSchemaIdentifiers = new Set(Object.keys(defaultSchemaOptionsTree))
 
-const optionValues = (
-  options: Record<string, { value: unknown } | undefined> | undefined
+const nonDefaultOptionValues = (
+  options: Record<string, { value: unknown } | undefined> | undefined,
+  defaults: Record<string, { value: unknown } | undefined> | undefined
 ): Record<string, unknown> => {
   const result: Record<string, unknown> = {}
   if (!options) return result
   for (const [optionId, option] of Object.entries(options)) {
-    if (option) result[optionId] = option.value
+    if (!option) continue
+    const defaultValue = defaults?.[optionId]?.value
+    if (JSON.stringify(option.value) !== JSON.stringify(defaultValue)) {
+      result[optionId] = option.value
+    }
   }
   return result
 }
@@ -43,13 +53,15 @@ const optionValues = (
 export const buildShareEnvelope = (
   tab: TabState,
   viewportBounds: SharedViewportBounds | null
-): ShareEnvelopeV1 => ({
-  shareVersion: SHARE_VERSION,
-  file: { version: CURRENT_VERSION, entries: tab.entries },
+): ShareEnvelope => ({
+  entries: tab.entries,
   selectedDiagram: tab.selectedDiagram,
-  generalOptions: optionValues(tab.generalOptions),
+  generalOptions: nonDefaultOptionValues(tab.generalOptions, defaultGeneralOptions),
   schemaOptions: tab.selectedDiagram
-    ? optionValues(tab.schemaOptions[tab.selectedDiagram])
+    ? nonDefaultOptionValues(
+      tab.schemaOptions[tab.selectedDiagram],
+      defaultSchemaOptionsTree[tab.selectedDiagram]
+    )
     : {},
   viewportBounds,
 })
@@ -72,47 +84,63 @@ const base64UrlDecode = (value: string): Uint8Array => {
   return bytes
 }
 
-export const encodeShareEnvelope = (envelope: ShareEnvelopeV1): string => {
-  const json = JSON.stringify(envelope)
-  return base64UrlEncode(new TextEncoder().encode(json))
+// Wire format (before deflate + base64url): short keys, empty parts omitted.
+type ShareWire = {
+  v: number
+  e: NoesisEntry[]
+  s?: SchemaIdentifier
+  g?: Record<string, unknown>
+  o?: Record<string, unknown>
+  b?: [number, number, number, number]
+}
+
+const isEmpty = (obj: Record<string, unknown>) => Object.keys(obj).length === 0
+
+export const encodeShareEnvelope = (envelope: ShareEnvelope): string => {
+  const { viewportBounds: vb } = envelope
+  const wire: ShareWire = { v: SHARE_VERSION, e: envelope.entries }
+  if (envelope.selectedDiagram) wire.s = envelope.selectedDiagram
+  if (!isEmpty(envelope.generalOptions)) wire.g = envelope.generalOptions
+  if (!isEmpty(envelope.schemaOptions)) wire.o = envelope.schemaOptions
+  if (vb) {
+    wire.b = [Math.round(vb.x1), Math.round(vb.y1), Math.round(vb.x2), Math.round(vb.y2)]
+  }
+  const json = new TextEncoder().encode(JSON.stringify(wire))
+  return base64UrlEncode(deflateSync(json, { level: 9 }))
 }
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
-export const decodeShareEnvelope = (param: string): ShareEnvelopeV1 | null => {
+export const decodeShareEnvelope = (param: string): ShareEnvelope | null => {
   try {
-    const json = new TextDecoder().decode(base64UrlDecode(param))
+    const json = new TextDecoder().decode(inflateSync(base64UrlDecode(param)))
     const raw = JSON.parse(json)
-    if (!isPlainObject(raw) || raw.shareVersion !== SHARE_VERSION) return null
+    if (!isPlainObject(raw) || raw.v !== SHARE_VERSION) return null
 
-    // Validates the wrapped .noesis file shape and upgrades legacy versions.
-    migrateToLatest(raw.file)
+    // Validates the entries' shape (and upgrades legacy versions).
+    const { entries } = migrateToLatest({ version: CURRENT_VERSION, entries: raw.e })
 
     const selectedDiagram =
-      typeof raw.selectedDiagram === 'string' &&
-      validSchemaIdentifiers.has(raw.selectedDiagram)
-        ? (raw.selectedDiagram as SchemaIdentifier)
+      typeof raw.s === 'string' && validSchemaIdentifiers.has(raw.s)
+        ? (raw.s as SchemaIdentifier)
         : null
 
-    const bounds = raw.viewportBounds
+    const b = raw.b
     const viewportBounds: SharedViewportBounds | null =
-      isPlainObject(bounds) &&
-      typeof bounds.x1 === 'number' &&
-      typeof bounds.y1 === 'number' &&
-      typeof bounds.x2 === 'number' &&
-      typeof bounds.y2 === 'number' &&
-      bounds.x2 > bounds.x1 &&
-      bounds.y2 > bounds.y1
-        ? { x1: bounds.x1, y1: bounds.y1, x2: bounds.x2, y2: bounds.y2 }
+      Array.isArray(b) &&
+      b.length === 4 &&
+      b.every(n => typeof n === 'number' && Number.isFinite(n)) &&
+      b[2] > b[0] &&
+      b[3] > b[1]
+        ? { x1: b[0], y1: b[1], x2: b[2], y2: b[3] }
         : null
 
     return {
-      shareVersion: SHARE_VERSION,
-      file: raw.file,
+      entries,
       selectedDiagram,
-      generalOptions: isPlainObject(raw.generalOptions) ? raw.generalOptions : {},
-      schemaOptions: isPlainObject(raw.schemaOptions) ? raw.schemaOptions : {},
+      generalOptions: isPlainObject(raw.g) ? raw.g : {},
+      schemaOptions: isPlainObject(raw.o) ? raw.o : {},
       viewportBounds,
     }
   } catch (err) {
@@ -125,7 +153,7 @@ export const isViewerModeActive = (): boolean =>
   new URLSearchParams(window.location.search).get(VIEW_PARAM) === '1'
 
 export const buildShareUrl = (
-  envelope: ShareEnvelopeV1,
+  envelope: ShareEnvelope,
   { viewer }: { viewer: boolean }
 ): string => {
   const base = `${window.location.origin}${import.meta.env.BASE_URL}`
@@ -195,8 +223,7 @@ export const hydrateTabFromShareUrl = (tab: TabState): TabState => {
   const envelope = decodeShareEnvelope(raw)
   if (!envelope) return tab
 
-  const { entries } = migrateToLatest(envelope.file)
-  tab.entries = entries
+  tab.entries = envelope.entries
   tab.selectedDiagram = envelope.selectedDiagram
   tab.excalidrawViewport = envelope.viewportBounds
     ? fitBoundsToViewport(
